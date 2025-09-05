@@ -506,6 +506,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="CuahangNongduoc.ico" />
+    <Content Include="lib\cuahang.dll" />
+    <Content Include="lib\Microsoft.ReportViewer.Common.dll" />
+    <Content Include="lib\Microsoft.ReportViewer.WinForms.dll" />
+    <Content Include="lib\XPExplorerBar.dll" />
     <None Include="Resources\LyDoChi.png" />
     <None Include="Resources\DonViTinh.png" />
     <None Include="Resources\PhieuChi.png" />
