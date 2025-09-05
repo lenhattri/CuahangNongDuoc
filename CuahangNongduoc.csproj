@@ -95,6 +95,12 @@
     <Compile Include="Controller\SanPhamController.cs" />
     <Compile Include="Controller\DonViTinhController.cs" />
     <Compile Include="DataLayer\PhieuChiFactory.cs" />
+    <Compile Include="UI\In\frmInPhieuNhapVatTu.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\In\frmInPhieuNhapVatTu.Designer.cs">
+      <DependentUpon>frmInPhieuNhapVatTu.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\In\frmInPhieuChi.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -299,6 +305,9 @@
     <Compile Include="Functions\Num2Str.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="UI\In\frmInPhieuNhapVatTu.resx">
+      <DependentUpon>frmInPhieuNhapVatTu.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UI\In\frmInPhieuChi.resx">
       <SubType>Designer</SubType>
       <DependentUpon>frmInPhieuChi.cs</DependentUpon>
