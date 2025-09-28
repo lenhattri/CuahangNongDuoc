@@ -68,20 +68,30 @@
     <Reference Include="XPExplorerBar, Version=3.3.0.0, Culture=neutral, PublicKeyToken=26272737b5f33015" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Domain\Entities\ChiTietPhieuBan.cs" />
-    <Compile Include="Domain\Entities\PhieuChi.cs" />
-    <Compile Include="Domain\Entities\LyDoChi.cs" />
-    <Compile Include="Domain\Entities\NhaCungCap.cs" />
-    <Compile Include="Domain\Entities\CuaHang.cs" />
-    <Compile Include="Domain\Entities\DuNoKhachHang.cs" />
-    <Compile Include="Domain\Entities\PhieuThanhToan.cs" />
-    <Compile Include="Domain\Entities\DonViTinh.cs" />
-    <Compile Include="Domain\Entities\KhachHang.cs" />
-    <Compile Include="Domain\Entities\MaSanPham.cs" />
-    <Compile Include="Domain\Entities\PhieuBan.cs" />
-    <Compile Include="Domain\Entities\PhieuNhap.cs" />
-    <Compile Include="Domain\Entities\SanPham.cs" />
-    <Compile Include="Domain\Entities\SoLuongTon.cs" />
+    <Compile Include="BLL\DTOs\MaSanPhamBasic.cs" />
+    <Compile Include="BLL\Interfaces\IMaSanPhamService.cs" />
+    <Compile Include="BLL\Interfaces\ISanPhamService.cs" />
+    <Compile Include="BLL\Services\MaSanPhamService.cs" />
+    <Compile Include="BLL\Services\SanPhamService.cs" />
+    <Compile Include="Configs\GlobalConfig.cs" />
+    <Compile Include="DAL\Interfaces\IMaSanPhamRepository.cs" />
+    <Compile Include="DAL\Interfaces\ISanPhamRepository.cs" />
+    <Compile Include="DAL\Repositories\MaSanPhamRepository.cs" />
+    <Compile Include="DAL\Repositories\SanPhamRepository.cs" />
+    <Compile Include="Entities\ChiTietPhieuBan.cs" />
+    <Compile Include="Entities\PhieuChi.cs" />
+    <Compile Include="Entities\LyDoChi.cs" />
+    <Compile Include="Entities\NhaCungCap.cs" />
+    <Compile Include="Entities\CuaHang.cs" />
+    <Compile Include="Entities\DuNoKhachHang.cs" />
+    <Compile Include="Entities\PhieuThanhToan.cs" />
+    <Compile Include="Entities\DonViTinh.cs" />
+    <Compile Include="Entities\KhachHang.cs" />
+    <Compile Include="Entities\MaSanPham.cs" />
+    <Compile Include="Entities\PhieuBan.cs" />
+    <Compile Include="Entities\PhieuNhap.cs" />
+    <Compile Include="Entities\SanPham.cs" />
+    <Compile Include="Entities\SoLuongTon.cs" />
     <Compile Include="BLL\Controller\ChiTietPhieuBanController.cs" />
     <Compile Include="BLL\Controller\PhieuChiController.cs" />
     <Compile Include="BLL\Controller\LyDoChiController.cs" />
@@ -90,9 +100,7 @@
     <Compile Include="BLL\Controller\PhieuThanhToanController.cs" />
     <Compile Include="BLL\Controller\PhieuNhapController.cs" />
     <Compile Include="BLL\Controller\KhachHangController.cs" />
-    <Compile Include="BLL\Controller\MaSanPhamController.cs" />
     <Compile Include="BLL\Controller\PhieuBanController.cs" />
-    <Compile Include="BLL\Controller\SanPhamController.cs" />
     <Compile Include="BLL\Controller\DonViTinhController.cs" />
     <Compile Include="DAL\DataLayer\PhieuChiFactory.cs" />
     <Compile Include="UI\In\frmInPhieuChi.cs">
@@ -138,7 +146,6 @@
     <Compile Include="DAL\DataLayer\ChiTietPhieuBanFactory.cs" />
     <Compile Include="DAL\DataLayer\ChiTietPhieuNhapFactory.cs" />
     <Compile Include="DAL\DataLayer\PhieuNhapFactory.cs" />
-    <Compile Include="DAL\DataLayer\MaSanPhanFactory.cs" />
     <Compile Include="DAL\DataLayer\PhieuBanFactory.cs" />
     <Compile Include="UI\BanHang\frmBanLe.cs">
       <SubType>Form</SubType>
@@ -554,12 +561,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="BLL\DTOs\" />
-    <Folder Include="BLL\Interfaces\" />
-    <Folder Include="BLL\Services\" />
-    <Folder Include="DAL\Repositories\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -5,33 +5,45 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using CuahangNongduoc.Controller;
-using CuahangNongduoc.BusinessObject;
+
+using CuahangNongduoc.Controller;      // GIỮ: KhachHang/PhieuBan/ChiTietPhieuBan
+using CuahangNongduoc.BusinessObject;  // GIỮ để dùng model cũ khác nếu cần
+
+// NEW: Service BLL thay cho SanPhamController/MaSanPhamController
+using CuahangNongduoc.BLL.Interfaces;
+using CuahangNongduoc.BLL.Services;
+using CuahangNongduoc.Entities;
 
 namespace CuahangNongduoc
 {
-    public partial class frmBanSi: Form
+    public partial class frmBanSi : Form
     {
-        SanPhamController ctrlSanPham = new SanPhamController();
+        // GIỮ LẠI: các controller cũ cho KH, Phiếu bán, Chi tiết
         KhachHangController ctrlKhachHang = new KhachHangController();
-        MaSanPhamController ctrlMaSanPham = new MaSanPhamController();
         PhieuBanController ctrlPhieuBan = new PhieuBanController();
         ChiTietPhieuBanController ctrlChiTiet = new ChiTietPhieuBanController();
-        IList<MaSanPham> deleted = new List<MaSanPham>();
 
+        // THAY THẾ: dùng Service thay vì SanPhamController & MaSanPhamController
+        private readonly ISanPhamService _sanPhamService;
+        private readonly IMaSanPhamService _maSanPhamService;
+
+        // danh sách mã lô đã xoá để cộng trả tồn khi Save
+        private IList<Tuple<string, int>> deleted = new List<Tuple<string, int>>();
 
         Controll status = Controll.Normal;
 
         public frmBanSi()
         {
             InitializeComponent();
-            
+
+            // Khởi tạo service (dùng GlobalConfig.ConnectionString mặc định)
+            _sanPhamService = new SanPhamService();
+            _maSanPhamService = new MaSanPhamService();
+
             status = Controll.AddNew;
         }
 
-
-        public frmBanSi(PhieuBanController ctrlPB)
-            : this()
+        public frmBanSi(PhieuBanController ctrlPB) : this()
         {
             this.ctrlPhieuBan = ctrlPB;
             status = Controll.Normal;
@@ -39,20 +51,35 @@ namespace CuahangNongduoc
 
         private void frmNhapHang_Load(object sender, EventArgs e)
         {
+            // ====== SAN PHAM: Combo theo tên ======
+            var dtSanPham = _sanPhamService.DanhSachSanPham_DataTable();
+            cmbSanPham.DataSource = dtSanPham;
+            cmbSanPham.DisplayMember = "TEN_SAN_PHAM";
+            cmbSanPham.ValueMember = "ID";
+            cmbSanPham.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+            cmbSanPham.AutoCompleteSource = AutoCompleteSource.ListItems;
 
-            ctrlSanPham.HienthiAutoComboBox(cmbSanPham);
-            ctrlMaSanPham.HienThiDataGridViewComboBox(colMaSanPham);
+            // ====== MA SAN PHAM: cột combobox trên lưới (chỉ các mã còn hàng) ======
+            colMaSanPham.DataSource = _maSanPhamService.DanhSachConHang_Table();
+            colMaSanPham.DisplayMember = "ID";
+            colMaSanPham.ValueMember = "ID";
+            colMaSanPham.DataPropertyName = "ID_MA_SAN_PHAM";
+            colMaSanPham.HeaderText = "Mã sản phẩm";
+            colMaSanPham.AutoComplete = true;
 
             cmbSanPham.SelectedIndexChanged += new EventHandler(cmbSanPham_SelectedIndexChanged);
 
+            // Khách hàng (đại lý = true) như code cũ
             ctrlKhachHang.HienthiAutoComboBox(cmbKhachHang, true);
 
-            
-            ctrlPhieuBan.HienthiPhieuBan(bindingNavigator,cmbKhachHang, txtMaPhieu, dtNgayLapPhieu, numTongTien, numDaTra, numConNo);
-            bindingNavigator.BindingSource.CurrentChanged += new EventHandler(BindingSource_CurrentChanged);
-            
-            ctrlChiTiet.HienThiChiTiet(dgvDanhsachSP, txtMaPhieu.Text);
+            // Phiếu bán header như cũ
+            ctrlPhieuBan.HienthiPhieuBan(bindingNavigator, cmbKhachHang, txtMaPhieu,
+                dtNgayLapPhieu, numTongTien, numDaTra, numConNo);
 
+            bindingNavigator.BindingSource.CurrentChanged += new EventHandler(BindingSource_CurrentChanged);
+
+            // Chi tiết như cũ (tạm thời dùng Controller cũ)
+            ctrlChiTiet.HienThiChiTiet(dgvDanhsachSP, txtMaPhieu.Text);
 
             if (status == Controll.AddNew)
             {
@@ -62,8 +89,6 @@ namespace CuahangNongduoc
             {
                 this.Allow(false);
             }
-
-
         }
 
         void BindingSource_CurrentChanged(object sender, EventArgs e)
@@ -74,35 +99,49 @@ namespace CuahangNongduoc
             }
         }
 
-
+        // Chọn Sản phẩm => nạp danh sách mã lô còn hàng cho combo mã
         void cmbSanPham_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (cmbSanPham.SelectedValue != null)
             {
-                MaSanPhamController ctrlMSP = new MaSanPhamController();
-
                 cmbMaSanPham.SelectedIndexChanged -= new EventHandler(cmbMaSanPham_SelectedIndexChanged);
-                ctrlMSP.HienThiAutoComboBox(cmbSanPham.SelectedValue.ToString(), cmbMaSanPham);
+
+                var idSp = cmbSanPham.SelectedValue.ToString();
+                var dtMa = _maSanPhamService.DanhSachMaSanPhamConHang_Table(idSp);
+
+                cmbMaSanPham.DataSource = dtMa;
+                cmbMaSanPham.DisplayMember = "ID";
+                cmbMaSanPham.ValueMember = "ID";
+
                 cmbMaSanPham.SelectedIndexChanged += new EventHandler(cmbMaSanPham_SelectedIndexChanged);
             }
         }
 
+        // Chọn Mã sản phẩm => hiển thị giá sỉ/lẻ/nhập/bình quân
         void cmbMaSanPham_SelectedIndexChanged(object sender, EventArgs e)
         {
-            MaSanPhamController ctrl = new MaSanPhamController();
-            MaSanPham masp = ctrl.LayMaSanPham(cmbMaSanPham.SelectedValue.ToString());
-            numDonGia.Value = masp.SanPham.GiaBanSi;
-            txtGiaNhap.Text = masp.GiaNhap.ToString("#,###0");
-            txtGiaBanSi.Text = masp.SanPham.GiaBanSi.ToString("#,###0");
-            txtGiaBanLe.Text = masp.SanPham.GiaBanLe.ToString("#,###0");
-            txtGiaBQGQ.Text = masp.SanPham.DonGiaNhap.ToString("#,###0");
+            if (cmbMaSanPham.SelectedValue == null) return;
 
+            var idMa = cmbMaSanPham.SelectedValue.ToString();
+            var msp = _maSanPhamService.LayMaSanPham(idMa);
+            if (msp == null) return;
 
+            var sp = _sanPhamService.LaySanPham(msp.IdSanPham);
+            var giaBanSi = sp != null ? sp.GiaBanSi : 0;
+            var giaBanLe = sp != null ? sp.GiaBanLe : 0;
+            var giaBQ = sp != null ? sp.DonGiaNhap : 0;
+
+            // Bán sỉ: mặc định đơn giá = giá bán sỉ
+            numDonGia.Value = (decimal)giaBanSi;
+
+            txtGiaNhap.Text = msp.DonGiaNhap.ToString("#,###0");
+            txtGiaBanSi.Text = giaBanSi.ToString("#,###0");
+            txtGiaBanLe.Text = giaBanLe.ToString("#,###0");
+            txtGiaBQGQ.Text = giaBQ.ToString("#,###0");
         }
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
-
             if (cmbMaSanPham.SelectedValue == null)
             {
                 MessageBox.Show("Vui lòng chon Mã sản phẩm !", "Phieu Nhap", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -118,16 +157,16 @@ namespace CuahangNongduoc
             else
             {
                 numTongTien.Value += numThanhTien.Value;
-                DataRow row = ctrlChiTiet.NewRow();
+
+                DataRow row = ctrlChiTiet.NewRow(); // tạm dùng controller cũ
                 row["ID_MA_SAN_PHAM"] = cmbMaSanPham.SelectedValue;
                 row["ID_PHIEU_BAN"] = txtMaPhieu.Text;
-                row["DON_GIA"] = numDonGia.Value;
-                row["SO_LUONG"] = numSoLuong.Value;
-                row["THANH_TIEN"] = numThanhTien.Value;
+                row["DON_GIA"] = (int)numDonGia.Value;     // DB int
+                row["SO_LUONG"] = (int)numSoLuong.Value;    // DB int
+                row["THANH_TIEN"] = (int)numThanhTien.Value;  // DB int
+
                 ctrlChiTiet.Add(row);
-
             }
-
         }
 
         private void numDonGia_ValueChanged(object sender, EventArgs e)
@@ -145,42 +184,36 @@ namespace CuahangNongduoc
             bindingNavigatorPositionItem.Focus();
             this.Luu();
             status = Controll.Normal;
-           
         }
+
         void Luu()
         {
-            if (status == Controll.AddNew)
-            {
-                ThemMoi();
-            }
-            else
-            {
-                CapNhat();
-            }
+            if (status == Controll.AddNew) ThemMoi();
+            else CapNhat();
         }
+
         void CapNhat()
         {
-
-            foreach (MaSanPham masp in deleted)
+            // cộng trả tồn lại cho các mã đã xoá khỏi chi tiết
+            foreach (var t in deleted)
             {
-                CuahangNongduoc.DataLayer.MaSanPhanFactory.CapNhatSoLuong(masp.Id, masp.SoLuong);
+                _maSanPhamService.CapNhatSoLuong(t.Item1, t.Item2); // ID_MA_SAN_PHAM, SO_LUONG
             }
             deleted.Clear();
 
             ctrlChiTiet.Save();
-
             ctrlPhieuBan.Update();
-
         }
+
         void ThemMoi()
         {
             DataRow row = ctrlPhieuBan.NewRow();
             row["ID"] = txtMaPhieu.Text;
             row["ID_KHACH_HANG"] = cmbKhachHang.SelectedValue;
             row["NGAY_BAN"] = dtNgayLapPhieu.Value.Date;
-            row["TONG_TIEN"] = numTongTien.Value;
-            row["DA_TRA"] = numDaTra.Value;
-            row["CON_NO"] = numConNo.Value;
+            row["TONG_TIEN"] = (int)numTongTien.Value;
+            row["DA_TRA"] = (int)numDaTra.Value;
+            row["CON_NO"] = (int)numConNo.Value;
             ctrlPhieuBan.Add(row);
 
             PhieuBanController ctrl = new PhieuBanController();
@@ -200,9 +233,7 @@ namespace CuahangNongduoc
             }
 
             ctrlPhieuBan.Save();
-
             ctrlChiTiet.Save();
-
         }
 
         private void toolLuu_Them_Click(object sender, EventArgs e)
@@ -221,10 +252,16 @@ namespace CuahangNongduoc
             {
                 BindingSource bs = ((BindingSource)dgvDanhsachSP.DataSource);
                 DataRowView row = (DataRowView)bs.Current;
+
                 numTongTien.Value -= Convert.ToInt64(row["THANH_TIEN"]);
-                deleted.Add(new MaSanPham(Convert.ToString(row["ID_MA_SAN_PHAM"]), Convert.ToInt32(row["SO_LUONG"])));
+
+                // lưu lại để trả tồn khi Save
+                deleted.Add(Tuple.Create(
+                    Convert.ToString(row["ID_MA_SAN_PHAM"]),
+                    Convert.ToInt32(row["SO_LUONG"])
+                ));
+
                 bs.RemoveCurrent();
-                
             }
         }
 
@@ -238,8 +275,14 @@ namespace CuahangNongduoc
             {
                 BindingSource bs = ((BindingSource)dgvDanhsachSP.DataSource);
                 DataRowView row = (DataRowView)bs.Current;
+
                 numTongTien.Value -= Convert.ToInt64(row["THANH_TIEN"]);
-                deleted.Add(new MaSanPham(Convert.ToString( row["ID_MA_SAN_PHAM"]), Convert.ToInt32(row["SO_LUONG"])) );
+
+                // lưu lại để trả tồn khi Save
+                deleted.Add(Tuple.Create(
+                    Convert.ToString(row["ID_MA_SAN_PHAM"]),
+                    Convert.ToInt32(row["SO_LUONG"])
+                ));
             }
         }
 
@@ -254,13 +297,10 @@ namespace CuahangNongduoc
                 String ma_phieu = txtMaPhieu.Text;
 
                 PhieuBanController ctrlPB = new PhieuBanController();
-
                 CuahangNongduoc.BusinessObject.PhieuBan ph = ctrlPB.LayPhieuBan(ma_phieu);
 
                 frmInPhieuBan InPhieuBan = new frmInPhieuBan(ph);
-
                 InPhieuBan.Show();
-
             }
         }
 
@@ -293,35 +333,37 @@ namespace CuahangNongduoc
                 {
                     this.Luu();
                 }
-
             }
             this.Close();
         }
 
         private void toolXoa_Click(object sender, EventArgs e)
         {
-             DataRowView view =  (DataRowView)bindingNavigator.BindingSource.Current;
-             if (view != null)
-             {
+            DataRowView view = (DataRowView)bindingNavigator.BindingSource.Current;
+            if (view != null)
+            {
+                if (MessageBox.Show("Bạn có chắc chắn xóa không?", "Phieu Ban Si", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    ChiTietPhieuBanController ctrl = new ChiTietPhieuBanController();
+                    IList<ChiTietPhieuBan> ds = ctrl.ChiTietPhieuBan(view["ID"].ToString());
 
-                 if (MessageBox.Show("Bạn có chắc chắn xóa không?", "Phieu Ban Si", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-                 {
-                     ChiTietPhieuBanController ctrl = new ChiTietPhieuBanController();
-                     IList<ChiTietPhieuBan> ds = ctrl.ChiTietPhieuBan(view["ID"].ToString());
-                     foreach (ChiTietPhieuBan ct in ds)
-                     {
-                         CuahangNongduoc.DataLayer.MaSanPhanFactory.CapNhatSoLuong(ct.MaSanPham.Id, ct.SoLuong);
-                     }
-                     bindingNavigator.BindingSource.RemoveCurrent();
-                     ctrlPhieuBan.Save();
-                 }
-             }
+                    // Trả tồn theo chi tiết đã xoá
+                    foreach (ChiTietPhieuBan ct in ds)
+                    {
+                        _maSanPhamService.CapNhatSoLuong(ct.MaSanPham.Id, ct.SoLuong);
+                    }
+
+                    bindingNavigator.BindingSource.RemoveCurrent();
+                    ctrlPhieuBan.Save();
+                }
+            }
         }
 
         private void toolXemLai_Click(object sender, EventArgs e)
         {
-            ctrlSanPham.HienthiAutoComboBox(cmbSanPham);
-            ctrlMaSanPham.HienThiDataGridViewComboBox(colMaSanPham);
+            // Reload nguồn dữ liệu đã chuyển sang service
+            cmbSanPham.DataSource = _sanPhamService.DanhSachSanPham_DataTable();
+            colMaSanPham.DataSource = _maSanPhamService.DanhSachConHang_Table();
             ctrlKhachHang.HienthiAutoComboBox(cmbKhachHang, true);
         }
 
@@ -330,16 +372,13 @@ namespace CuahangNongduoc
             frmDaiLy DaiLy = new frmDaiLy();
             DaiLy.ShowDialog();
             ctrlKhachHang.HienthiAutoComboBox(cmbKhachHang, true);
-            
         }
 
         private void btnThemSanPham_Click(object sender, EventArgs e)
         {
             frmSanPham SanPham = new frmSanPham();
             SanPham.ShowDialog();
-            ctrlSanPham.HienthiAutoComboBox(cmbSanPham);
+            cmbSanPham.DataSource = _sanPhamService.DanhSachSanPham_DataTable();
         }
-        
-
-     }
+    }
 }

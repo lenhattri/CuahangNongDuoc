@@ -6,54 +6,82 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+
+// GIỮ: các controller cũ cho các phần chưa refactor
 using CuahangNongduoc.Controller;
 using CuahangNongduoc.BusinessObject;
+
+// NEW: services cho SanPham/MaSanPham
+using CuahangNongduoc.BLL.Interfaces;
+using CuahangNongduoc.BLL.Services;
+using CuahangNongduoc.Entities;
 
 namespace CuahangNongduoc
 {
     public partial class frmNhapHang : Form
     {
-        SanPhamController ctrlSanPham = new SanPhamController();
+        // GIỮ: controller cũ cho phiếu nhập, NCC, chi tiết (dựa trên DataTable)
         PhieuNhapController ctrl = new PhieuNhapController();
         MaSanPhamController ctrlMaSP = new MaSanPhamController();
         NhaCungCapController ctrlNCC = new NhaCungCapController();
-        PhieuNhap m_PhieuNhap = null;
 
+        // NEW: thay SanPhamController bằng service
+        private readonly ISanPhamService _sanPhamService;
+        private readonly IMaSanPhamService _maSanPhamService;
+
+        PhieuNhap m_PhieuNhap = null;
 
         Controll status = Controll.Normal;
 
         public frmNhapHang()
         {
             InitializeComponent();
+
+            _sanPhamService = new SanPhamService();
+            _maSanPhamService = new MaSanPhamService();
+
             status = Controll.AddNew;
         }
-        public frmNhapHang(PhieuNhapController ctrlPN)
-            : this()
+
+        public frmNhapHang(PhieuNhapController ctrlPN) : this()
         {
             this.ctrl = ctrlPN;
             status = Controll.Normal;
         }
-
 
         void BindingSource_CurrentChanged(object sender, EventArgs e)
         {
             if (status == Controll.Normal)
                 ctrlMaSP.HienThiChiTietPhieuNhap(txtMaPhieu.Text, dataGridView);
         }
-      
+
         private void frmNhapHang_Load(object sender, EventArgs e)
         {
-            
-            ctrlSanPham.HienthiAutoComboBox(cmbSanPham);
-            ctrlSanPham.HienthiDataGridViewComboBoxColumn(colSanPham);
+            // ===== SAN PHAM Combo trên form =====
+            var dtSp = _sanPhamService.DanhSachSanPham_DataTable();
+            cmbSanPham.DataSource = dtSp;
+            cmbSanPham.DisplayMember = "TEN_SAN_PHAM";
+            cmbSanPham.ValueMember = "ID";
+            cmbSanPham.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+            cmbSanPham.AutoCompleteSource = AutoCompleteSource.ListItems;
+
+            // ===== SAN PHAM Column trên lưới =====
+            colSanPham.DataSource = dtSp;
+            colSanPham.DisplayMember = "TEN_SAN_PHAM";
+            colSanPham.ValueMember = "ID";
+            colSanPham.DisplayStyle = DataGridViewComboBoxDisplayStyle.DropDownButton;
+
+            // ===== NHA CUNG CAP =====
             ctrlNCC.HienthiAutoComboBox(cmbNhaCungCap);
 
+            // ===== Header phiếu nhập =====
+            ctrl.HienthiPhieuNhap(bindingNavigator, txtMaPhieu, cmbNhaCungCap, dtNgayNhap,
+                                  numTongTien, numDaTra, numConNo);
 
-            
-            ctrl.HienthiPhieuNhap(bindingNavigator, txtMaPhieu,cmbNhaCungCap, dtNgayNhap, numTongTien, numDaTra, numConNo);
             bindingNavigator.BindingSource.CurrentChanged -= new EventHandler(BindingSource_CurrentChanged);
             bindingNavigator.BindingSource.CurrentChanged += new EventHandler(BindingSource_CurrentChanged);
-            
+
+            // ===== Chi tiết phiếu nhập (DataTable) =====
             ctrlMaSP.HienThiChiTietPhieuNhap(txtMaPhieu.Text, dataGridView);
 
             if (status == Controll.AddNew)
@@ -65,41 +93,38 @@ namespace CuahangNongduoc
             {
                 Allow(false);
             }
-
-
         }
-
-       
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
-            
+            // kiểm tra xem mã lô đã tồn tại trong DB chưa (service)
+            var idMa = txtMaSo.Text.Trim();
+            var existed = !string.IsNullOrEmpty(idMa) ? _maSanPhamService.LayMaSanPhamBasic(idMa) : null;
 
-            MaSanPhamController ctrl = new MaSanPhamController();
-            MaSanPham masp  = ctrl.LayMaSanPham(txtMaSo.Text.Trim());
-            if (masp == null)
+            if (existed == null)
             {
+                // kiểm tra trùng ngay trong lưới
                 foreach (DataGridViewRow view in dataGridView.Rows)
                 {
-                    if (txtMaSo.Text.Trim().Equals(view.Cells["colMaSanPham"].Value))
+                    var cellVal = view.Cells["colMaSanPham"].Value;
+                    if (cellVal != null && idMa.Equals(Convert.ToString(cellVal)))
                     {
-                        MessageBox.Show("Mã sản phẩm này đã tồn tại trong danh sách! Vui lòng nhập lại !", "Phieu Nhap", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show("Mã sản phẩm này đã tồn tại trong danh sách! Vui lòng nhập lại!", "Phieu Nhap", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
-
                 }
 
-                if (txtMaSo.Text.Trim().Length <=0)
+                if (idMa.Length <= 0)
                 {
-                    MessageBox.Show("Vui lòng nhập Mã sản phẩm !", "Phieu Nhap", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Vui lòng nhập Mã sản phẩm!", "Phieu Nhap", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 else if (numGiaNhap.Value <= 0)
                 {
-                    MessageBox.Show("Vui lòng nhập Đơn giá !", "Phieu Nhap", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Vui lòng nhập Đơn giá!", "Phieu Nhap", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 else if (numSoLuong.Value <= 0)
                 {
-                    MessageBox.Show("Vui lòng nhập Số lượng !", "Phieu Nhap", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Vui lòng nhập Số lượng!", "Phieu Nhap", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 else if (dtNgaySanXuat.Value >= dtNgayHetHan.Value)
                 {
@@ -108,33 +133,32 @@ namespace CuahangNongduoc
                 else
                 {
                     numTongTien.Value += numThanhTien.Value;
+
                     DataRow row = ctrlMaSP.NewRow();
                     row["ID_SAN_PHAM"] = cmbSanPham.SelectedValue;
                     row["ID_PHIEU_NHAP"] = txtMaPhieu.Text;
-                    row["ID"] = txtMaSo.Text;
-                    row["DON_GIA_NHAP"] = numGiaNhap.Value;
-                    row["SO_LUONG"] = numSoLuong.Value;
-                    row["NGAY_NHAP"] = dtNgaySanXuat.Value.Date;
+                    row["ID"] = idMa;
+                    row["DON_GIA_NHAP"] = (int)numGiaNhap.Value;   // DB int
+                    row["SO_LUONG"] = (int)numSoLuong.Value;   // DB int
+
+                    // SỬA BUG: NGAY_NHAP phải lấy từ dtNgayNhap (header), không phải ngày SX
+                    row["NGAY_NHAP"] = dtNgayNhap.Value.Date;
                     row["NGAY_SAN_XUAT"] = dtNgaySanXuat.Value.Date;
                     row["NGAY_HET_HAN"] = dtNgayHetHan.Value.Date;
+
                     ctrlMaSP.Add(row);
-                    
                 }
             }
             else
             {
-                MessageBox.Show("Mã sản phẩm này đã tồn tại! Vui lòng nhập lại !", "Phieu Nhap", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Mã sản phẩm này đã tồn tại! Vui lòng nhập lại!", "Phieu Nhap", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
-      
 
         private void numGiaNhap_ValueChanged(object sender, EventArgs e)
         {
             numThanhTien.Value = numGiaNhap.Value * numSoLuong.Value;
         }
-
-   
 
         private void toolLuuThoat_Click(object sender, EventArgs e)
         {
@@ -149,35 +173,35 @@ namespace CuahangNongduoc
             if (status == Controll.AddNew)
             {
                 ThemMoi();
-
             }
             else
             {
                 CapNhat();
             }
         }
+
         void CapNhat()
         {
-            ctrlMaSP.Save();
-
-            ctrl.Update();
+            ctrlMaSP.Save();   // lưu chi tiết lô
+            ctrl.Update();     // cập nhật đầu phiếu
         }
+
         void ThemMoi()
         {
             DataRow row = ctrl.NewRow();
             row["ID"] = txtMaPhieu.Text;
             row["NGAY_NHAP"] = dtNgayNhap.Value.Date;
-            row["TONG_TIEN"] = numTongTien.Value;
+            row["TONG_TIEN"] = (int)numTongTien.Value;
             row["ID_NHA_CUNG_CAP"] = cmbNhaCungCap.SelectedValue;
-            row["DA_TRA"] = numDaTra.Value;
-            row["CON_NO"] = numConNo.Value;
+            row["DA_TRA"] = (int)numDaTra.Value;
+            row["CON_NO"] = (int)numConNo.Value;
             ctrl.Add(row);
 
             PhieuNhapController ctrlPN = new PhieuNhapController();
 
             if (ctrlPN.LayPhieuNhap(txtMaPhieu.Text) != null)
             {
-                MessageBox.Show("Mã Phiếu nhập này đã tồn tại !", "Phieu Nhap", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Mã Phiếu nhập này đã tồn tại!", "Phieu Nhap", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -190,24 +214,25 @@ namespace CuahangNongduoc
                 }
             }
 
-            ctrl.Save();
-            ctrlMaSP.Save();
+            ctrl.Save();      // lưu đầu phiếu
+            ctrlMaSP.Save();  // lưu chi tiết lô
 
-            SanPhamController ctrlSP = new SanPhamController();
+            // Cập nhật giá nhập bình quân của sản phẩm
             foreach (DataGridViewRow view in dataGridView.Rows)
             {
-                ctrlSP.CapNhatGiaNhap(Convert.ToString(view.Cells["colSanPham"].Value),
-                    Convert.ToInt64(view.Cells["colDonGiaNhap"].Value),
-                Convert.ToInt64(view.Cells["colSoLuong"].Value));
+                if (view.IsNewRow) continue;
 
+                var idSp = Convert.ToString(view.Cells["colSanPham"].Value);
+                var giaNhap = Convert.ToInt64(view.Cells["colDonGiaNhap"].Value);
+                var soLuong = Convert.ToInt64(view.Cells["colSoLuong"].Value);
+
+                _sanPhamService.CapNhatGiaNhap(idSp, giaNhap, soLuong);
             }
-
         }
 
         private void toolLuuThem_Click(object sender, EventArgs e)
         {
             ctrl = new PhieuNhapController();
-
             status = Controll.AddNew;
 
             txtMaPhieu.Text = ThamSo.LayMaPhieuNhap().ToString();
@@ -226,15 +251,11 @@ namespace CuahangNongduoc
             }
             else
             {
-
-                String ma_phieu = txtMaPhieu.Text;
-
+                string ma_phieu = txtMaPhieu.Text;
                 PhieuNhapController ctrlPN = new PhieuNhapController();
-
                 CuahangNongduoc.BusinessObject.PhieuNhap ph = ctrlPN.LayPhieuNhap(ma_phieu);
 
                 frmInPhieuNhap PhieuNhap = new frmInPhieuNhap(ph);
-
                 PhieuNhap.Show();
             }
         }
@@ -248,7 +269,6 @@ namespace CuahangNongduoc
                     this.Luu();
                 }
             }
-           
             this.Close();
         }
 
@@ -256,7 +276,10 @@ namespace CuahangNongduoc
         {
             frmSanPham SanPham = new frmSanPham();
             SanPham.ShowDialog();
-            ctrlSanPham.HienthiAutoComboBox(cmbSanPham);
+            // reload danh sách sản phẩm sau khi thêm mới
+            var dtSp = _sanPhamService.DanhSachSanPham_DataTable();
+            cmbSanPham.DataSource = dtSp;
+            colSanPham.DataSource = dtSp;
         }
 
         private void dataGridView_DataError(object sender, DataGridViewDataErrorEventArgs e)
@@ -285,16 +308,21 @@ namespace CuahangNongduoc
 
         private void btnRemove_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Bạn chắc chắn xóa Phiếu Nhập này không?", "Phieu Nhap", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            if (MessageBox.Show("Bạn chắc chắn xóa dòng chi tiết này không?", "Phieu Nhap", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                DataRowView row = (DataRowView)bindingNavigator.BindingSource.Current;
-                numTongTien.Value -= Convert.ToInt64(row["DON_GIA_NHAP"]) * Convert.ToInt64(row["SO_LUONG"]);
+                BindingSource bs = (BindingSource)dataGridView.DataSource;
+                DataRowView row = (DataRowView)bs.Current;
+                if (row != null)
+                {
+                    numTongTien.Value -= Convert.ToInt64(row["DON_GIA_NHAP"]) * Convert.ToInt64(row["SO_LUONG"]);
+                    bs.RemoveCurrent();
+                }
             }
         }
 
         private void dataGridView_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
         {
-            if (MessageBox.Show("Bạn chắc chắn xóa Phiếu Nhập này không?", "Phieu Nhap", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+            if (MessageBox.Show("Bạn chắc chắn xóa dòng chi tiết này không?", "Phieu Nhap", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
             {
                 e.Cancel = true;
             }
@@ -306,7 +334,7 @@ namespace CuahangNongduoc
 
         private void toolXoa_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Bạn có chắc chắn xóa không?", "Phieu Nhap", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            if (MessageBox.Show("Bạn có chắc chắn xóa phiếu nhập hiện tại không?", "Phieu Nhap", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 bindingNavigator.BindingSource.RemoveCurrent();
                 ctrl.Save();
@@ -324,8 +352,5 @@ namespace CuahangNongduoc
             NCC.ShowDialog();
             ctrlNCC.HienthiAutoComboBox(cmbNhaCungCap);
         }
-    
-     
-
     }
 }
