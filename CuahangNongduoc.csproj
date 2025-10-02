@@ -69,6 +69,9 @@
     <Reference Include="XPExplorerBar, Version=3.3.0.0, Culture=neutral, PublicKeyToken=26272737b5f33015" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DAL\DataService.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Domain\Entities\ChiTietPhieuBan.cs" />
     <Compile Include="Domain\Entities\PhieuChi.cs" />
     <Compile Include="Domain\Entities\LyDoChi.cs" />
@@ -156,9 +159,6 @@
     <Compile Include="DAL\DataLayer\KhachHangFactory.cs" />
     <Compile Include="DAL\DataLayer\SanPhamFactory.cs" />
     <Compile Include="DAL\DataLayer\DonViTinhFactory.cs" />
-    <Compile Include="DAL\DataService.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="UI\NhapHang\frmDanhsachPhieuNhap.cs">
       <SubType>Form</SubType>
     </Compile>
