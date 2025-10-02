@@ -13,8 +13,8 @@ namespace CuahangNongduoc.DataLayer
         public DataTable DanhsachSanPham()
         {
             SqlCommand cmd = new SqlCommand("SELECT * FROM SAN_PHAM");
-       
 
+            m_Ds.Load(cmd);
             return m_Ds;
         }
 
