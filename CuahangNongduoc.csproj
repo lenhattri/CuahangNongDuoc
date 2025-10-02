@@ -55,8 +55,24 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.ReportViewer.Common, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-    <Reference Include="Microsoft.ReportViewer.WinForms, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.ReportViewer.Common, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.ReportingServices.ReportViewerControl.Winforms.150.1652.0\lib\net40\Microsoft.ReportViewer.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.DataVisualization, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.ReportingServices.ReportViewerControl.Winforms.150.1652.0\lib\net40\Microsoft.ReportViewer.DataVisualization.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.Design, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.ReportingServices.ReportViewerControl.Winforms.150.1652.0\lib\net40\Microsoft.ReportViewer.Design.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.ProcessingObjectModel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.ReportingServices.ReportViewerControl.Winforms.150.1652.0\lib\net40\Microsoft.ReportViewer.ProcessingObjectModel.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.WinForms, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.ReportingServices.ReportViewerControl.Winforms.150.1652.0\lib\net40\Microsoft.ReportViewer.WinForms.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SqlServer.Types, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.SqlServer.Types.14.0.314.76\lib\net40\Microsoft.SqlServer.Types.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
@@ -96,6 +112,7 @@
     <Compile Include="BLL\Controller\SanPhamController.cs" />
     <Compile Include="BLL\Controller\DonViTinhController.cs" />
     <Compile Include="DAL\DataLayer\PhieuChiFactory.cs" />
+    <Compile Include="DTO\PhieuThanhToanReport.cs" />
     <Compile Include="UI\In\frmInPhieuChi.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -117,7 +134,7 @@
     </Compile>
     <Compile Include="DAL\DataLayer\NhaCungCapFactory.cs" />
     <Compile Include="DAL\DataLayer\DuNoKhachHangFactory.cs" />
-    <Compile Include="DAL\DataLayer\PhieuThanhToanFactory.cs" />
+    <Compile Include="DAL\DataLayer\PhieuThanhToanDAL.cs" />
     <Compile Include="UI\BanHang\frmBanSi.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -446,6 +463,10 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <None Include="app.config" />
+    <None Include="packages.config" />
+    <None Include="Properties\DataSources\CuahangNongduoc.BusinessObject.PhieuThanhToan.datasource" />
+    <None Include="Properties\DataSources\CuahangNongduoc.BusinessObject.PhieuThanhToanReport.datasource" />
+    <None Include="Properties\DataSources\frmInPhieuThanhToan.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -455,6 +476,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Utils\Functions\ReportHanler.cs" />
     <Compile Include="Utils\Functions\Settings.cs" />
     <Compile Include="Utils\Functions\ThamSo.cs" />
   </ItemGroup>
@@ -526,7 +548,6 @@
     <None Include="Properties\DataSources\CuahangNongduoc.BusinessObject.ChiTietPhieuBan.datasource" />
     <None Include="Properties\DataSources\CuahangNongduoc.BusinessObject.DuNoKhachHang.datasource" />
     <None Include="Properties\DataSources\CuahangNongduoc.BusinessObject.PhieuBan.datasource" />
-    <None Include="Properties\DataSources\CuahangNongduoc.BusinessObject.PhieuThanhToan.datasource" />
     <None Include="Resources\save_print.png" />
     <None Include="Properties\DataSources\CuahangNongduoc.BusinessObject.MaSanPham.datasource" />
     <None Include="Properties\DataSources\CuahangNongduoc.BusinessObject.PhieuNhap.datasource" />
