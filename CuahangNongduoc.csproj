@@ -58,6 +58,7 @@
     <Reference Include="Microsoft.ReportViewer.Common, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.ReportViewer.WinForms, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
@@ -68,33 +69,33 @@
     <Reference Include="XPExplorerBar, Version=3.3.0.0, Culture=neutral, PublicKeyToken=26272737b5f33015" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BusinessObject\ChiTietPhieuBan.cs" />
-    <Compile Include="BusinessObject\PhieuChi.cs" />
-    <Compile Include="BusinessObject\LyDoChi.cs" />
-    <Compile Include="BusinessObject\NhaCungCap.cs" />
-    <Compile Include="BusinessObject\CuaHang.cs" />
-    <Compile Include="BusinessObject\DuNoKhachHang.cs" />
-    <Compile Include="BusinessObject\PhieuThanhToan.cs" />
-    <Compile Include="BusinessObject\DonViTinh.cs" />
-    <Compile Include="BusinessObject\KhachHang.cs" />
-    <Compile Include="BusinessObject\MaSanPham.cs" />
-    <Compile Include="BusinessObject\PhieuBan.cs" />
-    <Compile Include="BusinessObject\PhieuNhap.cs" />
-    <Compile Include="BusinessObject\SanPham.cs" />
-    <Compile Include="BusinessObject\SoLuongTon.cs" />
-    <Compile Include="Controller\ChiTietPhieuBanController.cs" />
-    <Compile Include="Controller\PhieuChiController.cs" />
-    <Compile Include="Controller\LyDoChiController.cs" />
-    <Compile Include="Controller\NhaCungCapController.cs" />
-    <Compile Include="Controller\DuNoKhachHangController.cs" />
-    <Compile Include="Controller\PhieuThanhToanController.cs" />
-    <Compile Include="Controller\PhieuNhapController.cs" />
-    <Compile Include="Controller\KhachHangController.cs" />
-    <Compile Include="Controller\MaSanPhamController.cs" />
-    <Compile Include="Controller\PhieuBanController.cs" />
-    <Compile Include="Controller\SanPhamController.cs" />
-    <Compile Include="Controller\DonViTinhController.cs" />
-    <Compile Include="DataLayer\PhieuChiFactory.cs" />
+    <Compile Include="Domain\Entities\ChiTietPhieuBan.cs" />
+    <Compile Include="Domain\Entities\PhieuChi.cs" />
+    <Compile Include="Domain\Entities\LyDoChi.cs" />
+    <Compile Include="Domain\Entities\NhaCungCap.cs" />
+    <Compile Include="Domain\Entities\CuaHang.cs" />
+    <Compile Include="Domain\Entities\DuNoKhachHang.cs" />
+    <Compile Include="Domain\Entities\PhieuThanhToan.cs" />
+    <Compile Include="Domain\Entities\DonViTinh.cs" />
+    <Compile Include="Domain\Entities\KhachHang.cs" />
+    <Compile Include="Domain\Entities\MaSanPham.cs" />
+    <Compile Include="Domain\Entities\PhieuBan.cs" />
+    <Compile Include="Domain\Entities\PhieuNhap.cs" />
+    <Compile Include="Domain\Entities\SanPham.cs" />
+    <Compile Include="Domain\Entities\SoLuongTon.cs" />
+    <Compile Include="BLL\Controller\ChiTietPhieuBanController.cs" />
+    <Compile Include="BLL\Controller\PhieuChiController.cs" />
+    <Compile Include="BLL\Controller\LyDoChiController.cs" />
+    <Compile Include="BLL\Controller\NhaCungCapController.cs" />
+    <Compile Include="BLL\Controller\DuNoKhachHangController.cs" />
+    <Compile Include="BLL\Controller\PhieuThanhToanController.cs" />
+    <Compile Include="BLL\Controller\PhieuNhapController.cs" />
+    <Compile Include="BLL\Controller\KhachHangController.cs" />
+    <Compile Include="BLL\Controller\MaSanPhamController.cs" />
+    <Compile Include="BLL\Controller\PhieuBanController.cs" />
+    <Compile Include="BLL\Controller\SanPhamController.cs" />
+    <Compile Include="BLL\Controller\DonViTinhController.cs" />
+    <Compile Include="DAL\DataLayer\PhieuChiFactory.cs" />
     <Compile Include="UI\In\frmInPhieuChi.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -107,16 +108,16 @@
     <Compile Include="UI\PhieuThuChi\frmPhieuChi.Designer.cs">
       <DependentUpon>frmPhieuChi.cs</DependentUpon>
     </Compile>
-    <Compile Include="DataLayer\LyDoChiFactory.cs" />
+    <Compile Include="DAL\DataLayer\LyDoChiFactory.cs" />
     <Compile Include="UI\PhieuThuChi\frmLyDoChi.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="UI\PhieuThuChi\frmLyDoChi.Designer.cs">
       <DependentUpon>frmLyDoChi.cs</DependentUpon>
     </Compile>
-    <Compile Include="DataLayer\NhaCungCapFactory.cs" />
-    <Compile Include="DataLayer\DuNoKhachHangFactory.cs" />
-    <Compile Include="DataLayer\PhieuThanhToanFactory.cs" />
+    <Compile Include="DAL\DataLayer\NhaCungCapFactory.cs" />
+    <Compile Include="DAL\DataLayer\DuNoKhachHangFactory.cs" />
+    <Compile Include="DAL\DataLayer\PhieuThanhToanFactory.cs" />
     <Compile Include="UI\BanHang\frmBanSi.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -135,11 +136,11 @@
     <Compile Include="UI\BanHang\frmDanhsachPhieuBanLe.Designer.cs">
       <DependentUpon>frmDanhsachPhieuBanLe.cs</DependentUpon>
     </Compile>
-    <Compile Include="DataLayer\ChiTietPhieuBanFactory.cs" />
-    <Compile Include="DataLayer\ChiTietPhieuNhapFactory.cs" />
-    <Compile Include="DataLayer\PhieuNhapFactory.cs" />
-    <Compile Include="DataLayer\MaSanPhanFactory.cs" />
-    <Compile Include="DataLayer\PhieuBanFactory.cs" />
+    <Compile Include="DAL\DataLayer\ChiTietPhieuBanFactory.cs" />
+    <Compile Include="DAL\DataLayer\ChiTietPhieuNhapFactory.cs" />
+    <Compile Include="DAL\DataLayer\PhieuNhapFactory.cs" />
+    <Compile Include="DAL\DataLayer\MaSanPhanFactory.cs" />
+    <Compile Include="DAL\DataLayer\PhieuBanFactory.cs" />
     <Compile Include="UI\BanHang\frmBanLe.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -152,10 +153,10 @@
     <Compile Include="UI\BaoCaoThongKe\frmDaiLy.Designer.cs">
       <DependentUpon>frmDaiLy.cs</DependentUpon>
     </Compile>
-    <Compile Include="DataLayer\KhachHangFactory.cs" />
-    <Compile Include="DataLayer\SanPhamFactory.cs" />
-    <Compile Include="DataLayer\DonViTinhFactory.cs" />
-    <Compile Include="DataService.cs">
+    <Compile Include="DAL\DataLayer\KhachHangFactory.cs" />
+    <Compile Include="DAL\DataLayer\SanPhamFactory.cs" />
+    <Compile Include="DAL\DataLayer\DonViTinhFactory.cs" />
+    <Compile Include="DAL\DataService.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="UI\NhapHang\frmDanhsachPhieuNhap.cs">
@@ -296,7 +297,7 @@
     <Compile Include="UI\TimKiem\frmTimPhieuThu.Designer.cs">
       <DependentUpon>frmTimPhieuThu.cs</DependentUpon>
     </Compile>
-    <Compile Include="Functions\Num2Str.cs" />
+    <Compile Include="Utils\Functions\Num2Str.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="UI\In\frmInPhieuChi.resx">
@@ -454,8 +455,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Functions\Settings.cs" />
-    <Compile Include="Functions\ThamSo.cs" />
+    <Compile Include="Utils\Functions\Settings.cs" />
+    <Compile Include="Utils\Functions\ThamSo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\save.png" />
@@ -554,7 +555,12 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="BLL\DTOs\" />
+    <Folder Include="BLL\Interfaces\" />
+    <Folder Include="BLL\Services\" />
+    <Folder Include="DAL\Repositories\" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
