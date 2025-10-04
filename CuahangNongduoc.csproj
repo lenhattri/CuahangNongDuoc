@@ -69,6 +69,7 @@
     <Reference Include="XPExplorerBar, Version=3.3.0.0, Culture=neutral, PublicKeyToken=26272737b5f33015" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BLL\Controller\ChiTietPhieuNhapController.cs" />
     <Compile Include="Domain\Entities\ChiTietPhieuBan.cs" />
     <Compile Include="Domain\Entities\PhieuChi.cs" />
     <Compile Include="Domain\Entities\LyDoChi.cs" />
