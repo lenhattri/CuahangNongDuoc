@@ -24,6 +24,7 @@ namespace CuahangNongduoc
             ctrlKH.HienthiKhachHangChungDataGridviewComboBox(colKhachHang);
             ctrl.HienthiPhieuThanhToan(bindingNavigator, dataGridView, cmbKhachHang, txtMaPhieu, dtNgayThanhToan, numTongTien, txtGhiChu);
             bindingNavigator.BindingSource.AddingNew += new AddingNewEventHandler(BindingSource_AddingNew);
+            dataGridView.AllowUserToAddRows = false;
         }
 
         void BindingSource_AddingNew(object sender, AddingNewEventArgs e)
@@ -40,6 +41,7 @@ namespace CuahangNongduoc
             row["ID"] = maphieu;
             row["NGAY_THANH_TOAN"] = DateTime.Now.Date;
             row["TONG_TIEN"] = numTongTien.Value;
+            row["ID_KHACH_HANG"] = 21; //TODO: sửa sau
             ctrl.Add(row);
             bindingNavigator.BindingSource.MoveLast();
         }
@@ -57,7 +59,7 @@ namespace CuahangNongduoc
             if (MessageBox.Show("Bạn chắc chắn xóa phiếu thanh toán này không?", "Phieu Thanh Toan", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 bindingNavigator.BindingSource.RemoveCurrent();
-                ctrl.Save();
+   
             }
         }
 
@@ -100,6 +102,5 @@ namespace CuahangNongduoc
                     Tim.cmbKhachHang.SelectedValue.ToString(), Tim.dtNgayThu.Value.Date);
             }
         }
-
     }
 }
