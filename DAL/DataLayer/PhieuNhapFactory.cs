@@ -16,7 +16,7 @@ namespace CuahangNongduoc.DataLayer
         }
 
 
-        // Tạo schema tương thích với bảng PHIEU_NHAP để NewRow/Add hoạt động trước khi Load
+        //tương thích với bảng PHIEU_NHAP 
         private static DataTable CreateSchema()
         {
             var dt = new DataTable("PHIEU_NHAP");
@@ -29,7 +29,6 @@ namespace CuahangNongduoc.DataLayer
             dt.PrimaryKey = new[] { dt.Columns["ID"] };
             return dt;
         }
-        // ===== API tương thích phiên bản cũ =====
         public DataRow NewRow() => _buffer.NewRow();
 
 
@@ -74,9 +73,9 @@ namespace CuahangNongduoc.DataLayer
         public DataTable TimPhieuNhap(string maNCC, DateTime ngay)
         {
             return _db.ExecuteDataTable(@"SELECT ID, ID_NHA_CUNG_CAP, NGAY_NHAP, TONG_TIEN, DA_TRA, CON_NO
-FROM PHIEU_NHAP
-WHERE (@NCC IS NULL OR ID_NHA_CUNG_CAP=@NCC)
-AND CAST(NGAY_NHAP AS DATE)=@NGAY",
+                FROM PHIEU_NHAP
+                WHERE (@NCC IS NULL OR ID_NHA_CUNG_CAP=@NCC)
+                AND CAST(NGAY_NHAP AS DATE)=@NGAY",
             CommandType.Text,
             _db.P("@NCC", SqlDbType.NVarChar, string.IsNullOrWhiteSpace(maNCC) ? (object)DBNull.Value : maNCC, 50),
             _db.P("@NGAY", SqlDbType.Date, ngay.Date));
@@ -93,7 +92,8 @@ AND CAST(NGAY_NHAP AS DATE)=@NGAY",
                     if (r.RowState == DataRowState.Added)
                     {
                         using (var cmd = _db.Cmd(cn, @"INSERT INTO PHIEU_NHAP(ID, ID_NHA_CUNG_CAP, NGAY_NHAP, TONG_TIEN, DA_TRA, CON_NO)
-VALUES(@ID,@NCC,@NGAY,@TONG,@DTRA,@CNO)", CommandType.Text, tx, 30,
+                            VALUES(@ID,@NCC,@NGAY,@TONG,@DTRA,@CNO)",
+                            CommandType.Text, tx, 30,
                         _db.P("@ID", SqlDbType.NVarChar, r["ID"], 50),
                         _db.P("@NCC", SqlDbType.NVarChar, r["ID_NHA_CUNG_CAP"], 50),
                         _db.P("@NGAY", SqlDbType.DateTime, r["NGAY_NHAP"]),
@@ -105,7 +105,7 @@ VALUES(@ID,@NCC,@NGAY,@TONG,@DTRA,@CNO)", CommandType.Text, tx, 30,
                     else if (r.RowState == DataRowState.Modified)
                     {
                         using (var cmd = _db.Cmd(cn, @"UPDATE PHIEU_NHAP SET ID_NHA_CUNG_CAP=@NCC, NGAY_NHAP=@NGAY,
-TONG_TIEN=@TONG, DA_TRA=@DTRA, CON_NO=@CNO WHERE ID=@ID",
+                            TONG_TIEN=@TONG, DA_TRA=@DTRA, CON_NO=@CNO WHERE ID=@ID",
                         CommandType.Text, tx, 30,
                         _db.P("@NCC", SqlDbType.NVarChar, r["ID_NHA_CUNG_CAP"], 50),
                         _db.P("@NGAY", SqlDbType.DateTime, r["NGAY_NHAP"]),
