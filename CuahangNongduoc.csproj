@@ -71,6 +71,7 @@
   <ItemGroup>
     <Compile Include="BLL\Controller\ChiTietPhieuNhapController.cs" />
     <Compile Include="Domain\Entities\ChiTietPhieuBan.cs" />
+    <Compile Include="Domain\Entities\ChiTietPhieuNhap.cs" />
     <Compile Include="Domain\Entities\PhieuChi.cs" />
     <Compile Include="Domain\Entities\LyDoChi.cs" />
     <Compile Include="Domain\Entities\NhaCungCap.cs" />
