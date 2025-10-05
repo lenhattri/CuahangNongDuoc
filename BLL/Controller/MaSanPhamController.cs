@@ -24,6 +24,12 @@ namespace CuahangNongduoc.Controller
         {
             return factory.Save();
         }
+        public void Update()
+        {
+            // Nếu bạn không cần thao tác với BindingSource
+            factory.Save();
+        }
+
 
         public SanPham LaySanPham(String idMaSanPham)
         {
