@@ -22,7 +22,7 @@ namespace CuahangNongduoc
         private void frmDanhsachPhieuNhap_Load(object sender, EventArgs e)
         {
             ctrlNCC.HienthiDataGridviewComboBox(colNhaCungCap);
-            ctrl.HienThiPhieuNhap(bindingNavigator, dataGridView);
+            ctrl.HienthiPhieuNhap(bindingNavigator, dataGridView);
         }
         frmNhapHang NhapHang = null;
         private void dataGridView_DoubleClick(object sender, EventArgs e)
@@ -71,23 +71,17 @@ namespace CuahangNongduoc
 
         private void toolTimKiem_Click(object sender, EventArgs e)
         {
+            
             frmTimPhieuNhap TimPhieu = new frmTimPhieuNhap();
             Point p = PointToScreen(toolTimKiem.Bounds.Location);
             p.X += toolTimKiem.Width;
             p.Y += toolTimKiem.Height;
             TimPhieu.Location = p;
             TimPhieu.ShowDialog();
-
             if (TimPhieu.DialogResult == DialogResult.OK)
             {
-                // Gọi method TimPhieuNhap đúng tham số
-                ctrl.TimPhieuNhap(
-                    TimPhieu.cmbNCC.SelectedValue.ToString(),
-                    TimPhieu.dtNgayNhap.Value.Date,
-                    bindingNavigator,
-                    dataGridView);
+                ctrl.TimPhieuNhap(TimPhieu.cmbNCC.SelectedValue.ToString(), TimPhieu.dtNgayNhap.Value.Date);
             }
         }
-
     }
 }
