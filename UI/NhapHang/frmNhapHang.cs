@@ -50,7 +50,7 @@ namespace CuahangNongduoc
 
 
             
-            ctrl.HienThiPhieuNhap(bindingNavigator, txtMaPhieu,cmbNhaCungCap, dtNgayNhap, numTongTien, numDaTra, numConNo);
+            ctrl.HienthiPhieuNhap(bindingNavigator, txtMaPhieu,cmbNhaCungCap, dtNgayNhap, numTongTien, numDaTra, numConNo);
             bindingNavigator.BindingSource.CurrentChanged -= new EventHandler(BindingSource_CurrentChanged);
             bindingNavigator.BindingSource.CurrentChanged += new EventHandler(BindingSource_CurrentChanged);
             
@@ -160,7 +160,7 @@ namespace CuahangNongduoc
         {
             ctrlMaSP.Save();
 
-            
+            ctrl.Update();
         }
         void ThemMoi()
         {
