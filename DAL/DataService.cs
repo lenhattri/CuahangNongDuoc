@@ -1,187 +1,116 @@
 ﻿using System;
 using System.Data;
-using System.Data.OleDb;
 using System.Data.SqlClient;
-using System.IO;
+using System.Configuration;
+using System.Data.OleDb;
 
 namespace CuahangNongduoc
 {
-
     public class DataService : DataTable
     {
+        private static SqlConnection m_Connection;
 
-        // The connection to a database of this data service.
-        private static OleDbConnection m_Connection;
-
-        static string dbPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\lib\cuahang.dll");
-        public static String m_ConnectString = $"Provider=Microsoft.Jet.OLEDB.4.0;Data Source={dbPath};";
-        // The command to execute query or non-query command on a database of this data service.
-        private OleDbCommand m_Command;
-
-        // The data adapter to execute query on a database of this data service.
-        private OleDbDataAdapter m_DataAdapter;
-
-        public DataService() { }
-
-
-        public OleDbCommand Command
+        static DataService()
         {
-            get { return m_Command; }
-            set { m_Command = value; }
+            // Đọc chuỗi kết nối từ app.config
+            string connectionString = ConfigurationManager.ConnectionStrings["ConnStr"].ConnectionString;
+            m_Connection = new SqlConnection(connectionString);
         }
 
-        public void Load(OleDbCommand command)
+        // Load dữ liệu từ SqlCommand
+        public void Load(SqlCommand cmd)
         {
-            OpenConnection();
-            m_Command = command;
-            try
-            {
-
-                m_Command.Connection = m_Connection;
-
-                m_DataAdapter = new OleDbDataAdapter();
-                m_DataAdapter.SelectCommand = m_Command;
-
-                this.Clear();
-                m_DataAdapter.Fill(this);
-
-            }
-            catch (Exception e)
-            {
-                String str = e.Message;
-            }
+            cmd.Connection = m_Connection;
+            SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+            this.Clear();
+            adapter.Fill(this);
         }
 
-
-        public static bool OpenConnection()
-        {
-            try
-            {
-                if (m_Connection == null)
-                    //m_Connection = new OleDbConnection("Data Source=LAPTOP07\\OleDbEXPRESS;Initial Catalog=VCB;Integrated Security=True;");
-                    //m_Connection = new OleDbConnection("Data Source=localhost;Initial Catalog=phongkham;User ID=sa; Password=tvteo;");
-                    m_Connection = new OleDbConnection(m_ConnectString);
-
-
-                if (m_Connection.State == ConnectionState.Closed)
-                    m_Connection.Open();
-                return true;
-            }
-            catch (Exception e)
-            {
-                m_Connection.Close();
-                return false;
-            }
-
-        }
-        /// <summary>
-        /// Closes the connection of this data service.
-        /// </summary>
-        public void CloseConnection()
-        {
-            m_Connection.Close();
-        }
-
-        /// <summary>
-        /// Update DataTable
-        /// </summary>
-        /// <returns></returns>
+        // Thực thi câu lệnh không trả về (INSERT, UPDATE, DELETE)
         public int ExecuteNoneQuery(SqlCommand cmd)
         {
             int result = 0;
-            OleDbTransaction tr = null;
             try
             {
-                tr = m_Connection.BeginTransaction();
-
-                m_Command.Connection = m_Connection;
-                m_Command.Transaction = tr;
-
-                m_DataAdapter = new OleDbDataAdapter();
-                m_DataAdapter.SelectCommand = m_Command;
-
-                OleDbCommandBuilder builder = new OleDbCommandBuilder(m_DataAdapter);
-
-                result = m_DataAdapter.Update(this);
-
-
-                tr.Commit();
-
-            }
-            catch (Exception e)
-            {
-                if (tr != null) tr.Rollback();
-
-            }
-            return result;
-        }
-        /// <summary>
-        /// Thuc thi mot command
-        /// </summary>
-        /// <param name="command">OleDb hay Store Procedure</param>
-        /// <returns></returns>
-        public int ExecuteNoneQuery(OleDbCommand cmd)
-        {
-
-            int result = 0;
-            OleDbTransaction tr = null;
-
-            try
-            {
-                tr = m_Connection.BeginTransaction();
-
                 cmd.Connection = m_Connection;
-
-                cmd.Transaction = tr;
+                if (m_Connection.State == ConnectionState.Closed)
+                    m_Connection.Open();
 
                 result = cmd.ExecuteNonQuery();
-
-                this.AcceptChanges();
-
-                tr.Commit();
-
             }
-            catch (Exception e)
+            finally
             {
-                if (tr != null) tr.Rollback();
-                throw;
+                if (m_Connection.State == ConnectionState.Open)
+                    m_Connection.Close();
             }
             return result;
-
         }
 
-        public object ExecuteScalar(OleDbCommand cmd)
+        // Hàm này không cần thiết nếu không dùng DataAdapter.Update
+        // nhưng giữ lại nếu bạn có các thao tác cập nhật DataTable
+        public int ExecuteNoneQuery(System.Data.OleDb.OleDbCommand cmd)
         {
-            object result = null;
-            OleDbTransaction tr = null;
-
+            int result = 0;
             try
             {
-                tr = m_Connection.BeginTransaction();
-
-                cmd.Connection = m_Connection;
-
-                cmd.Transaction = tr;
-
-                result = cmd.ExecuteScalar();
-
-                this.AcceptChanges();
-
-                tr.Commit();
-
-                if (result == DBNull.Value)
-                {
-                    result = null;
-                }
+                SqlDataAdapter adapter = new SqlDataAdapter();
+                SqlCommandBuilder builder = new SqlCommandBuilder(adapter);
+                result = adapter.Update(this);
             }
             catch
             {
-                if (tr != null) tr.Rollback();
                 throw;
             }
             return result;
         }
 
-       
+        internal void Load1(SqlCommand cmd)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["ConnStr"].ConnectionString;
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                cmd.Connection = conn;
+                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                this.Clear(); // xóa dữ liệu cũ trong DataTable nếu có
+                adapter.Fill(this);
+            }
+        }
+
+
+        internal int ExecuteNoneQuery()
+        {
+            throw new NotImplementedException();
+        }
+
+        internal object ExecuteScalar(OleDbCommand cmd)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal static void OpenConnection()
+        {
+            if (m_Connection == null)
+            {
+                string connectionString = ConfigurationManager.ConnectionStrings["ConnStr"].ConnectionString;
+                m_Connection = new SqlConnection(connectionString);
+            }
+
+            if (m_Connection.State == ConnectionState.Closed)
+            {
+                m_Connection.Open();
+            }
+        }
+
+        internal void Load1(OleDbCommand cmd)
+        { if (m_Connection == null) {
+            string connectionString = ConfigurationManager.ConnectionStrings["ConnStr"].ConnectionString;
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                cmd.Connection = conn;
+                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                this.Clear(); // xóa dữ liệu cũ trong DataTable nếu có
+                adapter.Fill(this);
+            }
+        }
     }
 }
