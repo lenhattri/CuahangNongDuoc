@@ -11,37 +11,37 @@ namespace CuahangNongduoc.Controller
     
     public class PhieuNhapController
     {
-        PhieuNhapFactory factory = new PhieuNhapFactory();
+        PhieuNhapDAL dal = new PhieuNhapDAL();
         BindingSource bs = new BindingSource();
 
         public PhieuNhapController()
         {
-            bs.DataSource = factory.LayPhieuNhap("-1");
+            bs.DataSource = dal.LayPhieuNhap("-1");
         }
 
         public DataRow NewRow()
         {
-            return factory.NewRow();
+            return dal.NewRow();
         }
         public void Add(DataRow row)
         {
-            factory.Add(row);
+            dal.Add(row);
         }
 
         public void Update()
         {
             bs.MoveNext();
-            factory.Save();
+            dal.Save();
         }
         public void Save()
         {
-            factory.Save();
+            dal.Save();
         }
 
     
         public PhieuNhap LayPhieuNhap(String id)
         {
-            DataTable tbl = factory.LayPhieuNhap(id);
+            DataTable tbl = dal.LayPhieuNhap(id);
             PhieuNhap ph = null;
             NhaCungCapController ctrlNCC = new NhaCungCapController();
             if (tbl.Rows.Count > 0)
@@ -62,7 +62,7 @@ namespace CuahangNongduoc.Controller
         public void HienthiPhieuNhap(BindingNavigator bn, DataGridView dg)
         {
             
-            bs.DataSource = factory.DanhsachPhieuNhap();
+            bs.DataSource = dal.DanhsachPhieuNhap();
             bn.BindingSource = bs;
             dg.DataSource = bs;
         }
@@ -94,7 +94,7 @@ namespace CuahangNongduoc.Controller
 
         public void TimPhieuNhap(String maNCC, DateTime dt)
         {
-            factory.TimPhieuNhap(maNCC, dt);
+            dal.TimPhieuNhap(maNCC, dt);
         }
    
     }
