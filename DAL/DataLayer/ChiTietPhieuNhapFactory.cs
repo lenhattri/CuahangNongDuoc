@@ -1,49 +1,159 @@
+﻿//using System;
+//using System.Collections.Generic;
+//using System.Text;
+//using System.Data;
+//using System.Data.OleDb;
+
+//namespace CuahangNongduoc.DataLayer
+//{
+//    public class ChiTietPhieuNhapFactory
+//    {
+//        DataService m_Ds = new DataService();
+
+//        public void LoadSchema()
+//        {
+//            OleDbCommand cmd = new OleDbCommand("SELECT * FROM CHI_TIET_PHIEU_NHAP WHERE ID_PHIEU_NHAP = '-1'");
+//            m_Ds.Load(cmd);
+//        }
+
+//        public DataTable LayChiTietPhieuNhap(String id)
+//        {
+//            OleDbCommand cmd = new OleDbCommand("SELECT * FROM CHI_TIET_PHIEU_NHAP WHERE ID_PHIEU_NHAP = @id");
+//            cmd.Parameters.Add("id", OleDbType.VarChar,50).Value = id;
+//            m_Ds.Load(cmd);
+//            return m_Ds;
+//        }
+
+//        public int XoaChiTietPhieuNhap(String id)
+//        {
+//            OleDbCommand cmd = new OleDbCommand("DELETE FROM CHI_TIET_PHIEU_NHAP WHERE ID_PHIEU_NHAP = @id");
+//            cmd.Parameters.Add("id", OleDbType.VarChar, 50).Value = id;
+//            return m_Ds.ExecuteNoneQuery(cmd);
+//        }
+
+
+//        public DataRow NewRow()
+//        {
+//            return m_Ds.NewRow();
+//        }
+//        public void Add(DataRow row)
+//        {
+//            m_Ds.Rows.Add(row);
+//        }
+//        public bool Save()
+//        {
+
+//           return m_Ds.ExecuteNoneQuery() > 0;
+//        }
+//    }
+//}
+
+
+
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Data;
-using System.Data.OleDb;
+using System.Data.SqlClient;
+using System.Configuration;
 
 namespace CuahangNongduoc.DataLayer
 {
-    public class ChiTietPhieuNhapFactory
+    public class ChiTietPhieuNhapDAL
     {
-        DataService m_Ds = new DataService();
+        private readonly string _cs = ConfigurationManager.ConnectionStrings["ConnStr"].ConnectionString;
 
-        public void LoadSchema()
+        /* ===================== SELECT ===================== */
+
+        public DataTable LayChiTietPhieuNhap(string idPhieuNhap)
         {
-            OleDbCommand cmd = new OleDbCommand("SELECT * FROM CHI_TIET_PHIEU_NHAP WHERE ID_PHIEU_NHAP = '-1'");
-            m_Ds.Load(cmd);
+            var dt = new DataTable();
+            using (var conn = new SqlConnection(_cs))
+            using (var cmd = new SqlCommand(
+                "SELECT * FROM CHI_TIET_PHIEU_NHAP WHERE ID_PHIEU_NHAP = @id", conn))
+            using (var da = new SqlDataAdapter(cmd))
+            {
+                cmd.Parameters.Add("@id", SqlDbType.VarChar, 50).Value = idPhieuNhap;
+                da.Fill(dt);
+            }
+            return dt;
         }
 
-        public DataTable LayChiTietPhieuNhap(String id)
+        /* ===================== DELETE ===================== */
+
+        public int XoaChiTietPhieuNhap(string idPhieuNhap)
         {
-            OleDbCommand cmd = new OleDbCommand("SELECT * FROM CHI_TIET_PHIEU_NHAP WHERE ID_PHIEU_NHAP = @id");
-            cmd.Parameters.Add("id", OleDbType.VarChar,50).Value = id;
-            m_Ds.Load(cmd);
-            return m_Ds;
+            using (var conn = new SqlConnection(_cs))
+            using (var cmd = new SqlCommand(
+                "DELETE FROM CHI_TIET_PHIEU_NHAP WHERE ID_PHIEU_NHAP = @id", conn))
+            {
+                cmd.Parameters.Add("@id", SqlDbType.VarChar, 50).Value = idPhieuNhap;
+                conn.Open();
+                return cmd.ExecuteNonQuery();
+            }
         }
 
-        public int XoaChiTietPhieuNhap(String id)
+        /* ===================== LOAD SCHEMA ===================== */
+
+        public DataTable LoadSchema()
         {
-            OleDbCommand cmd = new OleDbCommand("DELETE FROM CHI_TIET_PHIEU_NHAP WHERE ID_PHIEU_NHAP = @id");
-            cmd.Parameters.Add("id", OleDbType.VarChar, 50).Value = id;
-            return m_Ds.ExecuteNoneQuery(cmd);
+            var dt = new DataTable();
+            using (var conn = new SqlConnection(_cs))
+            using (var cmd = new SqlCommand(
+                "SELECT * FROM CHI_TIET_PHIEU_NHAP WHERE ID_PHIEU_NHAP = '-1'", conn))
+            using (var da = new SqlDataAdapter(cmd))
+            {
+                da.FillSchema(dt, SchemaType.Source);
+            }
+            return dt;
         }
-        
-        
-        public DataRow NewRow()
+
+        /* ===================== INSERT ===================== */
+
+        public int Insert(DataRow row, SqlTransaction tx = null)
         {
-            return m_Ds.NewRow();
+            const string sql =
+                @"INSERT INTO CHI_TIET_PHIEU_NHAP
+                    (ID_PHIEU_NHAP, ID_MA_SAN_PHAM, SO_LUONG, DON_GIA, THANH_TIEN)
+                  VALUES (@ID_PHIEU_NHAP, @ID_MA_SAN_PHAM, @SO_LUONG, @DON_GIA, @THANH_TIEN)";
+
+            using (var cmd = new SqlCommand(sql, tx?.Connection, tx))
+            {
+                cmd.Parameters.Add("@ID_PHIEU_NHAP", SqlDbType.VarChar, 50).Value = row["ID_PHIEU_NHAP"];
+                cmd.Parameters.Add("@ID_MA_SAN_PHAM", SqlDbType.VarChar, 50).Value = row["ID_MA_SAN_PHAM"];
+                cmd.Parameters.Add("@SO_LUONG", SqlDbType.Int).Value = row["SO_LUONG"];
+                cmd.Parameters.Add("@DON_GIA", SqlDbType.Decimal).Value = row["DON_GIA"];
+                cmd.Parameters.Add("@THANH_TIEN", SqlDbType.Decimal).Value = row["THANH_TIEN"];
+                return cmd.ExecuteNonQuery();
+            }
         }
-        public void Add(DataRow row)
+
+        /* ===================== SAVE ADDED ROWS ===================== */
+
+        public bool SaveAddedRows(DataTable table)
         {
-            m_Ds.Rows.Add(row);
-        }
-        public bool Save()
-        {
-               
-           return m_Ds.ExecuteNoneQuery() > 0;
+            using (var conn = new SqlConnection(_cs))
+            {
+                conn.Open();
+                using (var tx = conn.BeginTransaction())
+                {
+                    try
+                    {
+                        foreach (DataRow row in table.Rows)
+                        {
+                            if (row.RowState != DataRowState.Added) continue;
+
+                            Insert(row, tx);
+                        }
+
+                        tx.Commit();
+                        return true;
+                    }
+                    catch
+                    {
+                        tx.Rollback();
+                        throw; // cho BLL bắt và báo lỗi UI
+                    }
+                }
+            }
         }
     }
 }
