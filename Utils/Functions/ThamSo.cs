@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Data.OleDb;
+using System.Data.SqlClient;
+using System.Text;
 
 namespace CuahangNongduoc
 {
@@ -40,39 +41,39 @@ namespace CuahangNongduoc
         public static long LayMaPhieuNhap()
         {
             DataService ds = new DataService();
-            object obj = ds.ExecuteScalar(new OleDbCommand("SELECT PHIEU_NHAP FROM THAM_SO"));
+            object obj = ds.ExecuteScalar(new SqlCommand("SELECT PHIEU_NHAP FROM THAM_SO"));
             return Convert.ToInt64(obj);
         }
         public static void GanMaPhieuNhap(long id)
         {
             DataService ds = new DataService();
-            ds.ExecuteNoneQuery(new OleDbCommand("UPDATE THAM_SO SET PHIEU_NHAP = " + id));
+            ds.ExecuteNoneQuery(new SqlCommand("UPDATE THAM_SO SET PHIEU_NHAP = " + id));
             
         }
 
         public static long LayMaPhieuBan()
         {
             DataService ds = new DataService();
-            object obj = ds.ExecuteScalar(new OleDbCommand("SELECT PHIEU_BAN FROM THAM_SO"));
+            object obj = ds.ExecuteScalar(new SqlCommand("SELECT PHIEU_BAN FROM THAM_SO"));
             return Convert.ToInt64(obj);
         }
         public static void GanMaPhieuBan(long id)
         {
             DataService ds = new DataService();
-            ds.ExecuteNoneQuery(new OleDbCommand("UPDATE THAM_SO SET PHIEU_BAN = " + id));
+            ds.ExecuteNoneQuery(new SqlCommand("UPDATE THAM_SO SET PHIEU_BAN = " + id));
 
         }
 
         public static long LayMaPhieuThanhToan()
         {
             DataService ds = new DataService();
-            object obj = ds.ExecuteScalar(new OleDbCommand("SELECT PHIEU_THANH_TOAN FROM THAM_SO"));
+            object obj = ds.ExecuteScalar(new SqlCommand("SELECT PHIEU_THANH_TOAN FROM THAM_SO"));
             return Convert.ToInt64(obj);
         }
         public static void GanMaPhieuThanhToan(long id)
         {
             DataService ds = new DataService();
-            ds.ExecuteNoneQuery(new OleDbCommand("UPDATE THAM_SO SET PHIEU_THANH_TOAN = " + id));
+            ds.ExecuteNoneQuery(new SqlCommand("UPDATE THAM_SO SET PHIEU_THANH_TOAN = " + id));
 
         }
 
@@ -80,25 +81,29 @@ namespace CuahangNongduoc
 
         public static long SanPham
         {
-            get 
+            get
             {
                 DataService ds = new DataService();
-                object obj = ds.ExecuteScalar(new OleDbCommand("SELECT SAN_PHAM FROM THAM_SO"));
+                SqlCommand cmd = new SqlCommand("SELECT SAN_PHAM FROM THAM_SO");
+                object obj = ds.ExecuteScalar(cmd); // Dùng SqlCommand thay vì OleDbCommand
                 return Convert.ToInt64(obj);
             }
-            set 
+            set
             {
                 DataService ds = new DataService();
-                ds.ExecuteNoneQuery(new OleDbCommand("UPDATE THAM_SO SET SAN_PHAM = " + value));
+                SqlCommand cmd = new SqlCommand("UPDATE THAM_SO SET SAN_PHAM = @value");
+                cmd.Parameters.AddWithValue("@value", value);
+                ds.ExecuteNoneQuery(cmd);
             }
         }
-	
-        
+
+
+
         public static CuahangNongduoc.BusinessObject.CuaHang LayCuaHang()
         {
             CuahangNongduoc.BusinessObject.CuaHang ch = new CuahangNongduoc.BusinessObject.CuaHang();
             DataService ds = new DataService();
-            ds.Load(new OleDbCommand("SELECT TEN_CUA_HANG, DIA_CHI, DIEN_THOAI FROM THAM_SO"));
+            ds.Load(new SqlCommand("SELECT TEN_CUA_HANG, DIA_CHI, DIEN_THOAI FROM THAM_SO"));
             if (ds.Rows.Count > 0)
             {
                 ch.TenCuaHang = ds.Rows[0]["TEN_CUA_HANG"].ToString();
@@ -110,7 +115,7 @@ namespace CuahangNongduoc
         public static void GanCuaHang(String ten_cua_hang, String dia_chi , String dien_thoai)
         {
             DataService ds = new DataService();
-            OleDbCommand cmd = new OleDbCommand("UPDATE THAM_SO SET TEN_CUA_HANG = @ten_cua_hang, DIA_CHI = @dia_chi, DIEN_THOAI = @dien_thoai ");
+            SqlCommand cmd = new SqlCommand("UPDATE THAM_SO SET TEN_CUA_HANG = @ten_cua_hang, DIA_CHI = @dia_chi, DIEN_THOAI = @dien_thoai ");
             cmd.Parameters.Add("@ten_cua_hang", OleDbType.VarChar).Value = ten_cua_hang;
             cmd.Parameters.Add("@dia_chi", OleDbType.VarChar).Value = dia_chi;
             cmd.Parameters.Add("@dien_thoai", OleDbType.VarChar).Value = dien_thoai;
@@ -125,13 +130,13 @@ namespace CuahangNongduoc
             get
             {
                 DataService ds = new DataService();
-                object obj = ds.ExecuteScalar(new OleDbCommand("SELECT NHA_CUNG_CAP FROM THAM_SO"));
+                object obj = ds.ExecuteScalar(new SqlCommand("SELECT NHA_CUNG_CAP FROM THAM_SO"));
                 return Convert.ToInt64(obj);
             }
             set
             {
                 DataService ds = new DataService();
-                ds.ExecuteNoneQuery(new OleDbCommand("UPDATE THAM_SO SET NHA_CUNG_CAP = " + value));
+                ds.ExecuteNoneQuery(new SqlCommand("UPDATE THAM_SO SET NHA_CUNG_CAP = " + value));
             }
         }
 
@@ -140,13 +145,13 @@ namespace CuahangNongduoc
             get
             {
                 DataService ds = new DataService();
-                object obj = ds.ExecuteScalar(new OleDbCommand("SELECT KHACH_HANG FROM THAM_SO"));
+                object obj = ds.ExecuteScalar(new SqlCommand("SELECT KHACH_HANG FROM THAM_SO"));
                 return Convert.ToInt64(obj);
             }
             set
             {
                 DataService ds = new DataService();
-                ds.ExecuteNoneQuery(new OleDbCommand("UPDATE THAM_SO SET KHACH_HANG = " + value));
+                ds.ExecuteNoneQuery(new SqlCommand("UPDATE THAM_SO SET KHACH_HANG = " + value));
             }
         }
 
@@ -155,13 +160,13 @@ namespace CuahangNongduoc
             get
             {
                 DataService ds = new DataService();
-                object obj = ds.ExecuteScalar(new OleDbCommand("SELECT PHIEU_CHI FROM THAM_SO"));
+                object obj = ds.ExecuteScalar(new SqlCommand("SELECT PHIEU_CHI FROM THAM_SO"));
                 return Convert.ToInt64(obj);
             }
             set
             {
                 DataService ds = new DataService();
-                ds.ExecuteNoneQuery(new OleDbCommand("UPDATE THAM_SO SET PHIEU_CHI = " + value));
+                ds.ExecuteNoneQuery(new SqlCommand("UPDATE THAM_SO SET PHIEU_CHI = " + value));
             }
         }
 

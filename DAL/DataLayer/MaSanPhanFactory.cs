@@ -88,9 +88,9 @@ namespace CuahangNongduoc.DataLayer
             m_Ds.Rows.Add(row);
         }
 
-        public bool Save()
+        public bool Save(SqlCommand cmd)
         {
-            return m_Ds.ExecuteNoneQuery() > 0;
+            return m_Ds.ExecuteNoneQuery(cmd) > 0;
         }
     }
 }

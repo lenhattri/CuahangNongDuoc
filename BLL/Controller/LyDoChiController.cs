@@ -4,6 +4,7 @@ using System.Text;
 using System.Data;
 using CuahangNongduoc.BusinessObject;
 using CuahangNongduoc.DataLayer;
+using System.Data.SqlClient;
 
 
 namespace CuahangNongduoc.Controller
@@ -52,9 +53,9 @@ namespace CuahangNongduoc.Controller
             return lydo;
         }
 
-        public bool Save()
+        public bool Save(SqlCommand cmd)
         {
-            return factory.Save();
+            return factory.Save(cmd);
         }
     }
 }

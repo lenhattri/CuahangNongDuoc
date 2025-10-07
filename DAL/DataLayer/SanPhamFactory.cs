@@ -1,8 +1,9 @@
-﻿using System;
+﻿using CuahangNongduoc.BusinessObject;
+using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Data;
 using System.Data.SqlClient;
+using System.Text;
 
 namespace CuahangNongduoc.DataLayer
 {
@@ -68,9 +69,52 @@ namespace CuahangNongduoc.DataLayer
             m_Ds.Rows.Add(row);
         }
 
-        public bool Save()
+        public bool Save(SqlCommand cmd)
         {
-            return m_Ds.ExecuteNoneQuery() > 0;
+            return m_Ds.ExecuteNoneQuery(cmd) > 0;
         }
+
+        public bool Insert(SanPham sp)
+        {
+            SqlCommand cmd = new SqlCommand(
+                "INSERT INTO SAN_PHAM (ID, TEN_SAN_PHAM, ID_DON_VI_TINH, SO_LUONG, DON_GIA_NHAP, GIA_BAN_SI, GIA_BAN_LE) " +
+                "VALUES (@id, @ten, @id_dvt, @soluong, @gianhap, @giabansi, @giabanle)"
+            );
+            cmd.Parameters.Add("@id", SqlDbType.VarChar).Value = sp.Id;
+            cmd.Parameters.Add("@ten", SqlDbType.NVarChar).Value = sp.TenSanPham;
+            cmd.Parameters.Add("@id_dvt", SqlDbType.Int).Value = sp.DonViTinh.Id;
+            cmd.Parameters.Add("@soluong", SqlDbType.Int).Value = sp.SoLuong;
+            cmd.Parameters.Add("@gianhap", SqlDbType.BigInt).Value = sp.DonGiaNhap;
+            cmd.Parameters.Add("@giabansi", SqlDbType.BigInt).Value = sp.GiaBanSi;
+            cmd.Parameters.Add("@giabanle", SqlDbType.BigInt).Value = sp.GiaBanLe;
+
+            return m_Ds.ExecuteNoneQuery(cmd) > 0;
+        }
+
+        public bool Update(SanPham sp)
+        {
+            SqlCommand cmd = new SqlCommand(
+                "UPDATE SAN_PHAM SET TEN_SAN_PHAM=@ten, ID_DON_VI_TINH=@id_dvt, SO_LUONG=@soluong, " +
+                "DON_GIA_NHAP=@gianhap, GIA_BAN_SI=@giabansi, GIA_BAN_LE=@giabanle WHERE ID=@id"
+            );
+            cmd.Parameters.Add("@id", SqlDbType.VarChar).Value = sp.Id;
+            cmd.Parameters.Add("@ten", SqlDbType.NVarChar).Value = sp.TenSanPham;
+            cmd.Parameters.Add("@id_dvt", SqlDbType.Int).Value = sp.DonViTinh.Id;
+            cmd.Parameters.Add("@soluong", SqlDbType.Int).Value = sp.SoLuong;
+            cmd.Parameters.Add("@gianhap", SqlDbType.BigInt).Value = sp.DonGiaNhap;
+            cmd.Parameters.Add("@giabansi", SqlDbType.BigInt).Value = sp.GiaBanSi;
+            cmd.Parameters.Add("@giabanle", SqlDbType.BigInt).Value = sp.GiaBanLe;
+
+            return m_Ds.ExecuteNoneQuery(cmd) > 0;
+        }
+
+        public bool Delete(string id)
+        {
+            SqlCommand cmd = new SqlCommand("DELETE FROM SAN_PHAM WHERE ID=@id");
+            cmd.Parameters.Add("@id", SqlDbType.VarChar).Value = id;
+
+            return m_Ds.ExecuteNoneQuery(cmd) > 0;
+        }
+
     }
 }

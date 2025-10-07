@@ -127,9 +127,9 @@ namespace CuahangNongduoc.Controller
         {
             factory.Add(row);
         }
-        public bool Save()
+        /*public bool Save()
         {
             return factory.Save();
-        }
+        }*/
     }
 }

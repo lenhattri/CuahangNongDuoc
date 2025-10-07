@@ -150,5 +150,21 @@ namespace CuahangNongduoc.Controller
         {
             return factory.Save();
         }
+
+        public bool ThemSanPham(SanPham sp)
+        {
+            return factory.Insert(sp);
+        }
+
+        public bool SuaSanPham(SanPham sp)
+        {
+            return factory.Update(sp);
+        }
+
+        public bool XoaSanPham(string id)
+        {
+            return factory.Delete(id);
+        }
+
     }
 }

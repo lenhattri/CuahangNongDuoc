@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Data;
-using System.Data.OleDb;
+using System.Data.SqlClient;
 
 namespace CuahangNongduoc.DataLayer
 {
@@ -12,14 +12,14 @@ namespace CuahangNongduoc.DataLayer
 
         public void LoadSchema()
         {
-           OleDbCommand cmd = new OleDbCommand("SELECT * FROM PHIEU_NHAP WHERE ID='-1'");
+           SqlCommand cmd = new SqlCommand("SELECT * FROM PHIEU_NHAP WHERE ID='-1'");
             m_Ds.Load(cmd);
 
         }
 
         public DataTable DanhsachPhieuNhap()
         {
-            OleDbCommand cmd = new OleDbCommand("SELECT * FROM PHIEU_NHAP");
+            SqlCommand cmd = new SqlCommand("SELECT * FROM PHIEU_NHAP");
             m_Ds.Load(cmd);
 
             return m_Ds;
@@ -28,9 +28,9 @@ namespace CuahangNongduoc.DataLayer
         public DataTable TimPhieuNhap(String maNCC, DateTime dt)
         {
             String sql = "SELECT * FROM PHIEU_NHAP WHERE NGAY_NHAP = @ngay AND ID_NHA_CUNG_CAP = @ncc";
-            OleDbCommand cmd = new OleDbCommand(sql);
-            cmd.Parameters.Add("ngay", OleDbType.Date).Value = dt;
-            cmd.Parameters.Add("ncc", OleDbType.VarChar).Value = maNCC;
+            SqlCommand cmd = new SqlCommand(sql);
+            cmd.Parameters.Add("ngay", SqlDbType.Date).Value = dt;
+            cmd.Parameters.Add("ncc", SqlDbType.VarChar).Value = maNCC;
             
             m_Ds.Load(cmd);
 
@@ -40,8 +40,8 @@ namespace CuahangNongduoc.DataLayer
 
         public DataTable LayPhieuNhap(String id)
         {
-            OleDbCommand cmd = new OleDbCommand("SELECT * FROM PHIEU_NHAP WHERE ID = @id");
-            cmd.Parameters.Add("id", OleDbType.VarChar,50).Value = id;
+            SqlCommand cmd = new SqlCommand("SELECT * FROM PHIEU_NHAP WHERE ID = @id");
+            cmd.Parameters.Add("id", SqlDbType.VarChar,50).Value = id;
             m_Ds.Load(cmd);
             return m_Ds;
         }
@@ -56,10 +56,10 @@ namespace CuahangNongduoc.DataLayer
         {
             m_Ds.Rows.Add(row);
         }
-       public bool Save()
+       public bool Save(SqlCommand cmd)
         {
            
-            return m_Ds.ExecuteNoneQuery() > 0;
+            return m_Ds.ExecuteNoneQuery(cmd) > 0;
         }
     }
 }

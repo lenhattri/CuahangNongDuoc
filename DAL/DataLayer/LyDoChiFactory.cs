@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Data;
-using System.Data.OleDb;
+using System.Data.SqlClient;
 
 
 namespace CuahangNongduoc.DataLayer
@@ -13,7 +13,7 @@ namespace CuahangNongduoc.DataLayer
 
         public DataTable DanhsachLyDo()
         {
-            OleDbCommand cmd = new OleDbCommand("SELECT * FROM LY_DO_CHI");
+            SqlCommand cmd = new SqlCommand("SELECT * FROM LY_DO_CHI");
             m_Ds.Load(cmd);
 
             return m_Ds;
@@ -21,15 +21,15 @@ namespace CuahangNongduoc.DataLayer
 
         public DataTable LayLyDoChi(long id)
         {
-            OleDbCommand cmd = new OleDbCommand("SELECT * FROM LY_DO_CHI WHERE ID = " + id);
+            SqlCommand cmd = new SqlCommand("SELECT * FROM LY_DO_CHI WHERE ID = " + id);
             m_Ds.Load(cmd);
 
             return m_Ds;
         }
 
-        public bool Save()
+        public bool Save(SqlCommand cmd)
         {
-            return m_Ds.ExecuteNoneQuery() > 0;
+            return m_Ds.ExecuteNoneQuery(cmd) > 0;
         }
     }
 }
