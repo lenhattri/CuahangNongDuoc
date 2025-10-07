@@ -48,8 +48,5 @@ namespace CuahangNongduoc.BusinessObject
             get { return m_GhiChu; }
             set { m_GhiChu = value; }
         }
-	
-
-	
     }
 }
