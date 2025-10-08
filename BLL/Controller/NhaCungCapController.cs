@@ -4,6 +4,7 @@ using System.Text;
 using System.Data;
 using CuahangNongduoc.BusinessObject;
 using CuahangNongduoc.DataLayer;
+using System.Data.SqlClient;
 
 
 namespace CuahangNongduoc.Controller
@@ -100,7 +101,13 @@ namespace CuahangNongduoc.Controller
         }
         public bool Save()
         {
-            return factory.Save();
+            SqlCommand cmd = new SqlCommand();
+            return Save(cmd);
+        }
+
+        private bool Save(SqlCommand cmd)
+        {
+            throw new NotImplementedException();
         }
     }
 }

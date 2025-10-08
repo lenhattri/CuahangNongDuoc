@@ -55,7 +55,13 @@ namespace CuahangNongduoc.Controller
 
         public bool Save(SqlCommand cmd)
         {
-            return factory.Save(cmd);
+            SqlCommand cmd1 = new SqlCommand();
+            return Save(cmd);
+        }
+
+        internal void Save()
+        {
+            throw new NotImplementedException();
         }
     }
 }

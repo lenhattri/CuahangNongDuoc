@@ -61,5 +61,10 @@ namespace CuahangNongduoc.DataLayer
            
             return m_Ds.ExecuteNoneQuery(cmd) > 0;
         }
+
+        internal void Save()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

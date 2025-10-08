@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Data;
-using System.Windows.Forms;
-using CuahangNongduoc.BusinessObject;
+﻿using CuahangNongduoc.BusinessObject;
 using CuahangNongduoc.DataLayer;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Text;
+using System.Windows.Forms;
 
 
 
@@ -148,7 +149,8 @@ namespace CuahangNongduoc.Controller
         }
         public bool Save()
         {
-            return factory.Save();
+            SqlCommand cmd = new SqlCommand();
+            return factory.Save(cmd);
         }
 
         public bool ThemSanPham(SanPham sp)

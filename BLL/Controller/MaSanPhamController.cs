@@ -1,10 +1,11 @@
-﻿using System;
+﻿using CuahangNongduoc.BusinessObject;
+using CuahangNongduoc.DataLayer;
+using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Text;
 using System.Windows.Forms;
-using System.Data;
-using CuahangNongduoc.DataLayer;
-using CuahangNongduoc.BusinessObject;
 
 namespace CuahangNongduoc.Controller
 {
@@ -22,7 +23,8 @@ namespace CuahangNongduoc.Controller
         }
         public bool Save()
         {
-            return factory.Save();
+            SqlCommand cmd = new SqlCommand();
+            return factory.Save(cmd);
         }
 
         public SanPham LaySanPham(String idMaSanPham)

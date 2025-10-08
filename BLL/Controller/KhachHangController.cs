@@ -127,9 +127,14 @@ namespace CuahangNongduoc.Controller
         {
             factory.Add(row);
         }
-        /*public bool Save()
+
+        internal void Save()
         {
-            return factory.Save();
-        }*/
+            throw new NotImplementedException();
+        }
+        /*public bool Save()
+{
+   return factory.Save();
+}*/
     }
 }

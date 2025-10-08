@@ -1,10 +1,11 @@
+using CuahangNongduoc.BusinessObject;
+using CuahangNongduoc.DataLayer;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using CuahangNongduoc.DataLayer;
-using CuahangNongduoc.BusinessObject;
-using System.Windows.Forms;
 using System.Data;
+using System.Data.SqlClient;
+using System.Text;
+using System.Windows.Forms;
 
 namespace CuahangNongduoc.Controller
 {
@@ -22,9 +23,10 @@ namespace CuahangNongduoc.Controller
         {
             factory.Add(row);
         }
-        public void Save()
+        public bool Save()
         {
-            factory.Save();
+            SqlCommand cmd = new SqlCommand();
+            return factory.Save(cmd);
         }
 
         public PhieuChi LayPhieuChi(String id)
