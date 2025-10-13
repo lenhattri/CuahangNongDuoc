@@ -1,101 +1,120 @@
+﻿// fix mapping tiền tệ, binding an toàn
+
 using System;
-using System.Collections.Generic;
-using System.Text;
-using CuahangNongduoc.DataLayer;
-using CuahangNongduoc.BusinessObject;
-using System.Windows.Forms;
 using System.Data;
+using System.Windows.Forms;
+using CuahangNongduoc.BusinessObject;
+using CuahangNongduoc.DataLayer;
 
 namespace CuahangNongduoc.Controller
 {
-    
     public class PhieuNhapController
     {
-        PhieuNhapFactory factory = new PhieuNhapFactory();
-        BindingSource bs = new BindingSource();
+        private readonly PhieuNhapFactory factory = new PhieuNhapFactory();
+        private readonly BindingSource bs = new BindingSource();
 
         public PhieuNhapController()
         {
+            // Bind schema rỗng để tránh lỗi khi UI khởi tạo
             bs.DataSource = factory.LayPhieuNhap("-1");
         }
 
-        public DataRow NewRow()
-        {
-            return factory.NewRow();
-        }
-        public void Add(DataRow row)
-        {
-            factory.Add(row);
-        }
+        public DataRow NewRow() => factory.NewRow();
+        public void Add(DataRow row) => factory.Add(row);
 
         public void Update()
         {
-            bs.MoveNext();
-            factory.Save();
-        }
-        public void Save()
-        {
+            //   EndCurrentEdit để commit dữ liệu từ UI -> DataRow
+            var cm = GetCurrencyManager();
+            cm?.EndCurrentEdit();
             factory.Save();
         }
 
-    
-        public PhieuNhap LayPhieuNhap(String id)
+        public void Save() => factory.Save();
+
+        public PhieuNhap LayPhieuNhap(string id)
         {
-            DataTable tbl = factory.LayPhieuNhap(id);
+            var tbl = factory.LayPhieuNhap(id);
             PhieuNhap ph = null;
-            NhaCungCapController ctrlNCC = new NhaCungCapController();
+            var ctrlNCC = new NhaCungCapController();
             if (tbl.Rows.Count > 0)
             {
+                var r = tbl.Rows[0];
 
-                ph = new PhieuNhap();
-                ph.Id =Convert.ToString( tbl.Rows[0]["ID"]);
-                ph.NgayNhap = Convert.ToDateTime(tbl.Rows[0]["NGAY_NHAP"]);
-                ph.TongTien = Convert.ToInt64(tbl.Rows[0]["TONG_TIEN"]);
-                ph.DaTra = Convert.ToInt64(tbl.Rows[0]["TONG_TIEN"]);
-                ph.ConNo = Convert.ToInt64(tbl.Rows[0]["TONG_TIEN"]);
-                ph.NhaCungCap = ctrlNCC.LayNCC(Convert.ToString(tbl.Rows[0]["ID_NHA_CUNG_CAP"]));
-                MaSanPhamController ctrl = new MaSanPhamController();
+                //  DB decimal -> long BO
+                long ReadLong(object v)
+                {
+                    if (v == null || v == DBNull.Value) return 0L;
+                    // Hỗ trợ decimal, string, int64
+                    return Convert.ToInt64(v);
+                }
+
+                ph = new PhieuNhap
+                {
+                    Id = Convert.ToString(r["ID"]),
+                    NgayNhap = (r["NGAY_NHAP"] == DBNull.Value) ? DateTime.MinValue : Convert.ToDateTime(r["NGAY_NHAP"]),
+                    TongTien = ReadLong(r["TONG_TIEN"]),
+                    DaTra = ReadLong(r["DA_TRA"]),
+                    ConNo = ReadLong(r["CON_NO"])
+                };
+                ph.NhaCungCap = ctrlNCC.LayNCC(Convert.ToString(r["ID_NHA_CUNG_CAP"]));
+
+                var ctrl = new MaSanPhamController();
                 ph.ChiTiet = ctrl.ChiTietPhieuNhap(ph.Id);
             }
             return ph;
         }
+
         public void HienthiPhieuNhap(BindingNavigator bn, DataGridView dg)
         {
-            
             bs.DataSource = factory.DanhsachPhieuNhap();
             bn.BindingSource = bs;
             dg.DataSource = bs;
         }
 
-        public void HienthiPhieuNhap(BindingNavigator bn,TextBox txt,ComboBox cmb, DateTimePicker dt, NumericUpDown numTongTien, NumericUpDown numDaTra, NumericUpDown numConNo)
+        public void HienthiPhieuNhap(
+            BindingNavigator bn,
+            TextBox txt,
+            ComboBox cmb,
+            DateTimePicker dt,
+            NumericUpDown numTongTien,
+            NumericUpDown numDaTra,
+            NumericUpDown numConNo)
         {
-
             bn.BindingSource = bs;
 
             txt.DataBindings.Clear();
-            txt.DataBindings.Add("Text", bs,"ID");
+            txt.DataBindings.Add("Text", bs, "ID", true, DataSourceUpdateMode.OnPropertyChanged);
 
             cmb.DataBindings.Clear();
-            cmb.DataBindings.Add("SelectedValue", bs, "ID_NHA_CUNG_CAP");
+            cmb.DataBindings.Add("SelectedValue", bs, "ID_NHA_CUNG_CAP", true, DataSourceUpdateMode.OnPropertyChanged);
 
             dt.DataBindings.Clear();
-            dt.DataBindings.Add("Value", bs, "NGAY_NHAP");
+            dt.DataBindings.Add("Value", bs, "NGAY_NHAP", true, DataSourceUpdateMode.OnPropertyChanged);
 
             numTongTien.DataBindings.Clear();
-            numTongTien.DataBindings.Add("Value", bs, "TONG_TIEN");
+            numTongTien.DataBindings.Add("Value", bs, "TONG_TIEN", true, DataSourceUpdateMode.OnPropertyChanged, 0m);
 
             numDaTra.DataBindings.Clear();
-            numDaTra.DataBindings.Add("Value", bs, "DA_TRA");
+            numDaTra.DataBindings.Add("Value", bs, "DA_TRA", true, DataSourceUpdateMode.OnPropertyChanged, 0m);
 
             numConNo.DataBindings.Clear();
-            numConNo.DataBindings.Add("Value", bs, "CON_NO");
-            
+            numConNo.DataBindings.Add("Value", bs, "CON_NO", true, DataSourceUpdateMode.OnPropertyChanged, 0m);
         }
 
-        public void TimPhieuNhap(String maNCC, DateTime dt)
+        public void TimPhieuNhap(string maNCC, DateTime dt)
         {
-            factory.TimPhieuNhap(maNCC, dt);
+            bs.DataSource = factory.TimPhieuNhap(maNCC, dt);
         }
-   
+
+        private CurrencyManager GetCurrencyManager()
+        {
+            foreach (Form f in Application.OpenForms)
+            {
+                var cm = f.BindingContext[bs] as CurrencyManager;
+                if (cm != null) return cm;
+            }
+            return null;
+        }
     }
 }
