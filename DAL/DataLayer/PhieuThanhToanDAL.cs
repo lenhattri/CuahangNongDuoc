@@ -75,6 +75,7 @@ using System;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Windows.Forms;
 
 namespace CuahangNongduoc.DataLayer
 {
@@ -182,6 +183,13 @@ namespace CuahangNongduoc.DataLayer
             using (var builder = new SqlCommandBuilder(da))
             {
                 conn.Open();
+                da.RowUpdated += (s, e) =>
+                {
+                    if (e.StatementType == StatementType.Insert)
+                    {
+                        MessageBox.Show("Inserted ID: " + e.Row["ID"].ToString());
+                    }
+                };
                 int affectedRows = da.Update(m_DataTable);
                 return affectedRows > 0;
             }
