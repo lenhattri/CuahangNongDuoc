@@ -5,6 +5,8 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using CuahangNongduoc.UI.HeThong;
+using CuahangNongduoc.Utils;
 using Microsoft.Win32;
 
 namespace CuahangNongduoc
@@ -295,6 +297,40 @@ namespace CuahangNongduoc
         private void mnuTrogiupHuongdan_Click(object sender, EventArgs e)
         {
            // Help.ShowHelp(this, "CPP.CHM");
+        }
+
+        frmDangNhap DangNhap = null;
+        private void mnuDangNhap_Click(object sender, EventArgs e)
+        {
+            if (DangNhap == null || DangNhap.IsDisposed)
+            {
+                DangNhap = new frmDangNhap();
+                //DangNhap.MdiParent = this;
+                if( DangNhap.ShowDialog() == DialogResult.OK )
+                {
+                    toolstlb_StatusLogin.Text = "Người dùng: " + Session.CurrentUser.HoTen + " - Quyền: " + Session.CurrentUser.Quyen;
+                }
+            }
+            else
+                DangNhap.Activate();
+        }
+
+        private void mnuDangXuat_Click(object sender, EventArgs e)
+        {
+            Session.CurrentUser = null;
+        }
+
+        frmNguoiDung NguoiDung = null;
+        private void mnuNguoiDung_Click(object sender, EventArgs e)
+        {
+            if (NguoiDung == null || NguoiDung.IsDisposed)
+            {
+                NguoiDung = new frmNguoiDung();
+                NguoiDung.MdiParent = this;
+                NguoiDung.Show();
+            }
+            else
+                NguoiDung.Activate();
         }
     }
 }
