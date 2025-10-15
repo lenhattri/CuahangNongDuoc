@@ -27,16 +27,16 @@ namespace CuahangNongduoc.BusinessObject
             get { return m_SoLuong; }
             set { m_SoLuong = value; }
         }
-        private long m_DonGia;
+        private decimal m_DonGia;
 
-        public long DonGia
+        public decimal DonGia
         {
             get { return m_DonGia; }
             set { m_DonGia = value; }
         }
-        private long m_ThanhTien;
+        private decimal m_ThanhTien;
 
-        public long ThanhTien
+        public decimal ThanhTien
         {
             get { return m_ThanhTien; }
             set { m_ThanhTien = value; }

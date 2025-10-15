@@ -1,129 +1,90 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Text;
-//using System.Data;
-//using System.Data.OleDb;
-
-//namespace CuahangNongduoc.DataLayer
-//{
-//    public class DonViTinhFactory
-//    {
-//        DataService m_Ds = new DataService();
-
-//        public DataTable DanhsachDVT()
-//        {
-//            OleDbCommand cmd = new OleDbCommand("SELECT * FROM DON_VI_TINH");
-//            m_Ds.Load(cmd);
-
-//            return m_Ds;
-//        }
-
-
-//        public DataTable LayDVT(int id)
-//        {
-//            OleDbCommand cmd = new OleDbCommand("SELECT * FROM DON_VI_TINH WHERE ID = @id");
-//            cmd.Parameters.Add("id", OleDbType.Integer).Value = id;
-//            m_Ds.Load(cmd);
-//            return m_Ds;
-//        }
-//        public bool Save()
-//        {
-//            return m_Ds.ExecuteNoneQuery() > 0;
-//        }
-//    }
-//}
+﻿// Path: DataLayer/DonViTinhDAL.cs
 using System;
 using System.Data;
 using System.Data.SqlClient;
-using System.Configuration;
+using CuahangNongduoc.DAL.Infrastructure;
 
 namespace CuahangNongduoc.DataLayer
 {
     public class DonViTinhDAL
     {
-        private readonly string _cs =
-            ConfigurationManager.ConnectionStrings["ConnStr"].ConnectionString;
+        private readonly DbClient _db = DbClient.Instance;
 
-        // SELECT * FROM DON_VI_TINH
+        // SELECT ID, TEN, GHI_CHU FROM DON_VI_TINH
         public DataTable DanhSachDVT()
         {
-            var dt = new DataTable();
-            using (var conn = new SqlConnection(_cs))
-            using (var cmd = new SqlCommand("SELECT * FROM DON_VI_TINH", conn))
-            using (var da = new SqlDataAdapter(cmd))
-            {
-                da.Fill(dt);
-            }
-            return dt;
+            const string sql = @"SELECT ID, TEN, GHI_CHU FROM DON_VI_TINH ORDER BY ID DESC";
+            return _db.ExecuteDataTable(sql, CommandType.Text);
         }
 
-        // SELECT * FROM DON_VI_TINH WHERE ID = @id
+        // SELECT ... WHERE ID = @id
         public DataTable LayDVT(int id)
         {
-            var dt = new DataTable();
-            using (var conn = new SqlConnection(_cs))
-            using (var cmd = new SqlCommand("SELECT * FROM DON_VI_TINH WHERE ID = @id", conn))
-            using (var da = new SqlDataAdapter(cmd))
-            {
-                cmd.Parameters.Add("@id", SqlDbType.Int).Value = id;
-                da.Fill(dt);
-            }
-            return dt;
+            const string sql = @"SELECT ID, TEN, GHI_CHU FROM DON_VI_TINH WHERE ID = @ID";
+            return _db.ExecuteDataTable(sql, CommandType.Text,
+                _db.P("@ID", SqlDbType.Int, id));
         }
 
-        /* ==== CRUD nhanh (tuỳ dùng) ==== */
-        // Nếu bảng có cột TEN (và có thể có GHI_CHU). Bổ sung cột nếu DB của bạn khác.
+        /* ============ CRUD ============ */
+
+        // Trả về số dòng ảnh hưởng (hoặc dùng ExecuteScalar<int> để lấy ID mới)
         public int Insert(string ten, string ghiChu = null)
         {
-            using (var conn = new SqlConnection(_cs))
-            using (var cmd = new SqlCommand(
-                "INSERT INTO DON_VI_TINH(TEN, GHI_CHU) VALUES(@TEN, @GHI_CHU)", conn))
-            {
-                cmd.Parameters.Add("@TEN", SqlDbType.NVarChar, 100).Value = ten;
-                cmd.Parameters.Add("@GHI_CHU", SqlDbType.NVarChar, 255).Value =
-                    (object)ghiChu ?? DBNull.Value;
-                conn.Open();
-                return cmd.ExecuteNonQuery();
-            }
+            const string sql = @"INSERT INTO DON_VI_TINH(TEN, GHI_CHU)
+                                 VALUES(@TEN, @GHI_CHU)";
+            return _db.ExecuteNonQuery(sql, CommandType.Text,
+                _db.P("@TEN", SqlDbType.NVarChar, ten, 100),
+                _db.P("@GHI_CHU", SqlDbType.NVarChar, (object)ghiChu ?? DBNull.Value, 255));
+        }
+
+        // Nếu muốn trả về ID mới tạo:
+        public int InsertReturnId(string ten, string ghiChu = null)
+        {
+            const string sql = @"INSERT INTO DON_VI_TINH(TEN, GHI_CHU)
+                                 VALUES(@TEN, @GHI_CHU);
+                                 SELECT CAST(SCOPE_IDENTITY() AS INT);";
+            return _db.ExecuteScalar<int>(sql, CommandType.Text,
+                _db.P("@TEN", SqlDbType.NVarChar, ten, 100),
+                _db.P("@GHI_CHU", SqlDbType.NVarChar, (object)ghiChu ?? DBNull.Value, 255));
         }
 
         public int Update(int id, string ten, string ghiChu = null)
         {
-            using (var conn = new SqlConnection(_cs))
-            using (var cmd = new SqlCommand(
-                "UPDATE DON_VI_TINH SET TEN=@TEN, GHI_CHU=@GHI_CHU WHERE ID=@ID", conn))
-            {
-                cmd.Parameters.Add("@TEN", SqlDbType.NVarChar, 100).Value = ten;
-                cmd.Parameters.Add("@GHI_CHU", SqlDbType.NVarChar, 255).Value =
-                    (object)ghiChu ?? DBNull.Value;
-                cmd.Parameters.Add("@ID", SqlDbType.Int).Value = id;
-                conn.Open();
-                return cmd.ExecuteNonQuery();
-            }
+            const string sql = @"UPDATE DON_VI_TINH
+                                 SET TEN = @TEN, GHI_CHU = @GHI_CHU
+                                 WHERE ID = @ID";
+            return _db.ExecuteNonQuery(sql, CommandType.Text,
+                _db.P("@TEN", SqlDbType.NVarChar, ten, 100),
+                _db.P("@GHI_CHU", SqlDbType.NVarChar, (object)ghiChu ?? DBNull.Value, 255),
+                _db.P("@ID", SqlDbType.Int, id));
         }
 
         public int Delete(int id)
         {
-            using (var conn = new SqlConnection(_cs))
-            using (var cmd = new SqlCommand(
-                "DELETE FROM DON_VI_TINH WHERE ID=@ID", conn))
-            {
-                cmd.Parameters.Add("@ID", SqlDbType.Int).Value = id;
-                conn.Open();
-                return cmd.ExecuteNonQuery();
-            }
+            const string sql = @"DELETE FROM DON_VI_TINH WHERE ID = @ID";
+            return _db.ExecuteNonQuery(sql, CommandType.Text,
+                _db.P("@ID", SqlDbType.Int, id));
         }
 
-        /* ==== Phiên bản "Save(DataTable)" tương tự DataService.ExecuteNoneQuery() ==== */
-        // Gọi khi bạn đang có 1 DataTable đã Add/Modify/Delete rows và muốn đẩy lên DB.
+        //Save(DataTable) tự sinh Insert/Update/Delete.
+        
         public bool Save(DataTable table)
         {
-            using (var conn = new SqlConnection(_cs))
-            using (var da = new SqlDataAdapter("SELECT * FROM DON_VI_TINH", conn))
-            using (var cb = new SqlCommandBuilder(da))
+            using (var cn = _db.Open())
+            using (var da = new SqlDataAdapter())
             {
-                // SqlCommandBuilder tự sinh Insert/Update/Delete nếu SELECT có cột khóa (ID).
-                return da.Update(table) > 0;
+                // SelectCommand tối thiểu phải có cột khóa (ID) để CommandBuilder sinh lệnh
+                da.SelectCommand = _db.Cmd(cn, "SELECT ID, TEN, GHI_CHU FROM DON_VI_TINH", CommandType.Text);
+
+                using (var cb = new SqlCommandBuilder(da))
+                {
+                   
+                    // da.InsertCommand = cb.GetInsertCommand();
+                    // da.UpdateCommand = cb.GetUpdateCommand();
+                    // da.DeleteCommand = cb.GetDeleteCommand();
+
+                    return da.Update(table) > 0;
+                }
             }
         }
     }
