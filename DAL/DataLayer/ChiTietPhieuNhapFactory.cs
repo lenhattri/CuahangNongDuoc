@@ -1,49 +1,87 @@
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
-    using System.Data;
-    using System.Data.OleDb;
+﻿// DAL/DataLayer/ChiTietPhieuNhapFactory.cs
+using System;
+using System.Data;
 using System.Data.SqlClient;
+using CuahangNongduoc.DAL.Infrastructure; // CHANGED: dùng DbClient thay cho DataService
 
 namespace CuahangNongduoc.DataLayer
+{
+    public class ChiTietPhieuNhapFactory
     {
-        public class ChiTietPhieuNhapFactory
+        private readonly DbClient _db = DbClient.Instance;   // NEW
+        private DataTable _table;                             // NEW: thay cho DataService m_Ds
+
+        /* ================== SCHEMA ================== */
+        public void LoadSchema()
         {
-            DataService m_Ds = new DataService();
+            // CHANGED: Lấy schema rỗng (ID_PHIEU_NHAP = '-1') nhưng dùng DbClient
+            const string sql = "SELECT * FROM CHI_TIET_PHIEU_NHAP WHERE ID_PHIEU_NHAP = '-1'";
+            _table = _db.ExecuteDataTable(sql, CommandType.Text);
+        }
 
-            public void LoadSchema()
-            {
-                SqlCommand cmd = new SqlCommand("SELECT * FROM CHI_TIET_PHIEU_NHAP WHERE ID_PHIEU_NHAP = '-1'");
-                m_Ds.Load(cmd);
-            }
+        private void EnsureSchema()                           // NEW
+        {
+            if (_table != null) return;
+            LoadSchema();
+        }
 
-            public DataTable LayChiTietPhieuNhap(String id)
-            {
-                SqlCommand cmd = new SqlCommand("SELECT * FROM CHI_TIET_PHIEU_NHAP WHERE ID_PHIEU_NHAP = @id");
-                cmd.Parameters.Add("id", SqlDbType.VarChar,50).Value = id;
-                m_Ds.Load(cmd);
-                return m_Ds;
-            }
+        /* ================== SELECT ================== */
+        public DataTable LayChiTietPhieuNhap(string id)
+        {
+            // CHANGED: dùng DbClient + tham số hóa
+            const string sql = "SELECT * FROM CHI_TIET_PHIEU_NHAP WHERE ID_PHIEU_NHAP = @id";
+            var dt = _db.ExecuteDataTable(sql, CommandType.Text,
+                _db.P("@id", SqlDbType.VarChar, id, 50));
+            _table = dt; // đồng bộ để NewRow/Add/Save dùng cùng schema
+            return dt;
+        }
 
-            public int XoaChiTietPhieuNhap(String id)
+        /* ================== DELETE ================== */
+        public int XoaChiTietPhieuNhap(string id)
+        {
+            // CHANGED: dùng DbClient
+            const string sql = "DELETE FROM CHI_TIET_PHIEU_NHAP WHERE ID_PHIEU_NHAP = @id";
+            return _db.ExecuteNonQuery(sql, CommandType.Text,
+                _db.P("@id", SqlDbType.VarChar, id, 50));
+        }
+
+        /* ================== DATATABLE PATTERN ================== */
+        public DataRow NewRow()
+        {
+            EnsureSchema();                                   // NEW
+            return _table.NewRow();
+        }
+
+        public void Add(DataRow row)
+        {
+            EnsureSchema();                                   // NEW
+            if (!ReferenceEquals(row.Table, _table))
             {
-                SqlCommand cmd = new SqlCommand("DELETE FROM CHI_TIET_PHIEU_NHAP WHERE ID_PHIEU_NHAP = @id");
-                cmd.Parameters.Add("id", SqlDbType.VarChar, 50).Value = id;
-                return m_Ds.ExecuteNoneQuery(cmd);
+                var clone = _table.NewRow();
+                foreach (DataColumn c in _table.Columns)
+                    clone[c.ColumnName] = row.Table.Columns.Contains(c.ColumnName)
+                        ? row[c.ColumnName] : DBNull.Value;
+                _table.Rows.Add(clone);
             }
-        
-        
-            public DataRow NewRow()
+            else
             {
-                return m_Ds.NewRow();
+                _table.Rows.Add(row);
             }
-            public void Add(DataRow row)
+        }
+
+        public bool Save()
+        {
+            // CHANGED: thay DataService.ExecuteNoneQuery() 
+            EnsureSchema();
+            using (var cn = _db.Open())
+            using (var cmd = _db.Cmd(cn, "SELECT * FROM CHI_TIET_PHIEU_NHAP", CommandType.Text))
+            using (var da = new SqlDataAdapter(cmd))
+            using (var cb = new SqlCommandBuilder(da))
             {
-                m_Ds.Rows.Add(row);
-            }
-            public bool Save()
-            {
-               return m_Ds.ExecuteNoneQuery() > 0;
+                da.MissingSchemaAction = MissingSchemaAction.AddWithKey; // NEW: để sinh CRUD
+                var n = da.Update(_table);
+                return n > 0;
             }
         }
     }
+}

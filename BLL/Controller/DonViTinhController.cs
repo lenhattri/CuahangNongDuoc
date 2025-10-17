@@ -1,61 +1,4 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Text;
-//using System.Data;
-//using CuahangNongduoc.BusinessObject;
-//using CuahangNongduoc.DataLayer;
-
-
-//namespace CuahangNongduoc.Controller
-//{
-//    public class DonViTinhController
-//    {
-//        DonViTinhFactory factory = new DonViTinhFactory();
-
-//        public void HienthiAutoComboBox(System.Windows.Forms.ComboBox cmb)
-//        {
-//            DataTable tbl = factory.DanhsachDVT();
-//            cmb.DataSource = tbl;
-//            cmb.DisplayMember = "TEN_DON_VI";
-//            cmb.ValueMember = "ID";
-//        }
-//        public System.Windows.Forms.DataGridViewComboBoxColumn HienthiDataGridViewComboBoxColumn()
-//        {
-//            System.Windows.Forms.DataGridViewComboBoxColumn cmb = new System.Windows.Forms.DataGridViewComboBoxColumn();
-//            DataTable tbl = factory.DanhsachDVT();
-//            cmb.DataSource = tbl;
-//            cmb.DisplayMember = "TEN_DON_VI";
-//            cmb.ValueMember = "ID";
-//            cmb.DataPropertyName = "ID_DON_VI_TINH";
-//            cmb.HeaderText = "Đơn vị tính";
-//            return cmb;
-//        }
-//        public void HienthiDataGridview(System.Windows.Forms.DataGridView dg, System.Windows.Forms.BindingNavigator bn)
-//        {
-//            System.Windows.Forms.BindingSource bs = new System.Windows.Forms.BindingSource();
-//            bs.DataSource = factory.DanhsachDVT();
-//            bn.BindingSource = bs;
-//            dg.DataSource = bs;
-
-//        }
-
-//        public DonViTinh LayDVT(int id)
-//        {
-//            DataTable tbl = factory.LayDVT(id);
-//            DonViTinh dvt = null;
-//            if (tbl.Rows.Count > 0)
-//            {
-//                dvt = new DonViTinh(Convert.ToInt32(tbl.Rows[0]["ID"]), Convert.ToString(tbl.Rows[0]["TEN_DON_VI"]));
-//            }
-//            return dvt;
-//        }
-
-//        public bool Save()
-//        {
-//            return factory.Save();
-//        }
-//    }
-//}
+﻿// BLL/Controller/DonViTinhController.cs
 using System;
 using System.Data;
 using System.Windows.Forms;
@@ -73,7 +16,7 @@ namespace CuahangNongduoc.Controller
         {
             var dt = _dal.DanhSachDVT();
             cmb.DataSource = dt;
-            cmb.DisplayMember = "TEN_DON_VI"; // giữ nguyên schema cũ
+            cmb.DisplayMember = "TEN";     // CHANGED: trước đây là "TEN_DON_VI", đổi về "TEN" để khớp DB/DAL
             cmb.ValueMember = "ID";
         }
 
@@ -82,7 +25,7 @@ namespace CuahangNongduoc.Controller
             var col = new DataGridViewComboBoxColumn
             {
                 DataSource = _dal.DanhSachDVT(),
-                DisplayMember = "TEN_DON_VI",
+                DisplayMember = "TEN",              // CHANGED: trước đây là "TEN_DON_VI", đổi về "TEN"
                 ValueMember = "ID",
                 DataPropertyName = "ID_DON_VI_TINH",
                 HeaderText = "Đơn vị tính"
@@ -96,6 +39,7 @@ namespace CuahangNongduoc.Controller
             var bs = new BindingSource { DataSource = _tableForEdit };
             if (bn != null) bn.BindingSource = bs;
             dg.DataSource = bs;
+            // (Tuỳ chọn) dg.AutoGenerateColumns = true; // nếu bạn không tự tạo cột trong Designer
         }
 
         public DonViTinh LayDVT(int id)
@@ -106,15 +50,14 @@ namespace CuahangNongduoc.Controller
             var r = tbl.Rows[0];
             return new DonViTinh(
                 Convert.ToInt32(r["ID"]),
-                Convert.ToString(r["TEN_DON_VI"])
+                Convert.ToString(r["TEN"])          // CHANGED: trước đây là "TEN_DON_VI", đổi về "TEN"
             );
         }
 
         public bool Save()
         {
-            if (_tableForEdit == null) return false;     // chưa gọi HienthiDataGridview
-            return _dal.Save(_tableForEdit);             // đẩy các Added/Modified/Deleted
+            if (_tableForEdit == null) return false; // chưa gọi HienthiDataGridview
+            return _dal.Save(_tableForEdit);         // đẩy các Added/Modified/Deleted
         }
     }
 }
-

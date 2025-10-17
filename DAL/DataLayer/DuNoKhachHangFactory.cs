@@ -1,96 +1,17 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Text;
-//using System.Data;
-//using System.Data.OleDb;
-
-//namespace CuahangNongduoc.DataLayer
-//{
-//    public class DuNoKhachHangFactory
-//    {
-//        DataService m_Ds = new DataService();
-
-//        public void LoadSchema()
-//        {
-//            OleDbCommand cmd = new OleDbCommand("SELECT * FROM DU_NO_KH WHERE ID_KHACH_HANG='-1'");
-//            m_Ds.Load(cmd);
-
-//        }
-
-//        public DataTable DanhsachDuNo(int thang, int nam)
-//        {
-//            OleDbCommand cmd = new OleDbCommand("SELECT * FROM DU_NO_KH WHERE THANG=@thang AND NAM=@nam");
-//            cmd.Parameters.Add("thang", OleDbType.Integer).Value = thang;
-//            cmd.Parameters.Add("nam", OleDbType.Integer).Value = nam;
-
-//            m_Ds.Load(cmd);
-
-//            return m_Ds;
-//        }
-
-//        public DataTable LayDuNoKhachHang(String kh, int thang, int nam)
-//        {
-//            OleDbCommand cmd = new OleDbCommand("SELECT * FROM DU_NO_KH WHERE ID_KHACH_HANG = @kh AND THANG=@thang AND NAM=@nam");
-//            cmd.Parameters.Add("kh", OleDbType.VarChar, 50).Value = kh;
-//            cmd.Parameters.Add("thang", OleDbType.Integer).Value = thang;
-//            cmd.Parameters.Add("nam", OleDbType.Integer).Value = nam;
-
-//            m_Ds.Load(cmd);
-
-//            return m_Ds;
-//        }
-
-//        public static long LayDuNo(String kh, int thang, int nam)
-//        {
-//            DataService ds = new DataService();
-//            OleDbCommand cmd = new OleDbCommand("SELECT CUOI_KY FROM DU_NO_KH WHERE ID_KHACH_HANG = @kh AND THANG=@thang AND NAM=@nam");
-//            cmd.Parameters.Add("kh", OleDbType.VarChar, 50).Value = kh;
-//            cmd.Parameters.Add("thang", OleDbType.Integer).Value = thang;
-//            cmd.Parameters.Add("nam", OleDbType.Integer).Value = nam;
-
-//            object obj = ds.ExecuteScalar(cmd);
-//            if (obj == null)
-//                return 0;
-//            else
-//                return Convert.ToInt64(obj);
-
-//        }
-
-//        public void Clear(int thang, int nam)
-//        {
-//            OleDbCommand cmd = new OleDbCommand("DELETE FROM DU_NO_KH WHERE THANG=@thang AND NAM=@nam");
-//            cmd.Parameters.Add("thang", OleDbType.Integer).Value = thang;
-//            cmd.Parameters.Add("nam", OleDbType.Integer).Value = nam;
-
-//            m_Ds.ExecuteNoneQuery(cmd);
-//        }
-
-//        public DataRow NewRow()
-//        {
-//            return m_Ds.NewRow();
-//        }
-//        public void Add(DataRow row)
-//        {
-//            m_Ds.Rows.Add(row);
-//        }
-//        public bool Save()
-//        {
-
-//            return m_Ds.ExecuteNoneQuery() > 0;
-//        }
-//    }
-//}
+﻿// DAL/DataLayer/DuNoKhachHangFactory.cs
 using System;
-using System.Configuration;
+using System.Configuration; // (giữ lại nếu nơi khác cần, nhưng không dùng trực tiếp nữa)
 using System.Data;
 using System.Data.SqlClient;
+using CuahangNongduoc.DAL.Infrastructure;   // CHANGED: dùng DbClient (singleton)
 
 namespace CuahangNongduoc.DataLayer
 {
     public class DuNoKhachHangDAL
     {
-        private readonly string _cs =
-            ConfigurationManager.ConnectionStrings["ConnStr"].ConnectionString;
+        // private readonly string _cs = ConfigurationManager.ConnectionStrings["ConnStr"].ConnectionString;
+        // CHANGED: bỏ chuỗi kết nối rải rác, dùng DbClient
+        private readonly DbClient _db = DbClient.Instance;   // CHANGED
 
         // DataTable trung tâm, tương tự m_Ds trong bản cũ
         private DataTable _table;
@@ -102,13 +23,13 @@ namespace CuahangNongduoc.DataLayer
 
         private SqlDataAdapter CreateAdapter(SqlConnection conn)
         {
-            var da = new SqlDataAdapter(SELECT_ALL, conn)
+            // CHANGED: dùng _db.Cmd để tạo SelectCommand (thay vì truyền string)
+            var da = new SqlDataAdapter
             {
-                // Lấy đủ schema/PK để SqlCommandBuilder sinh lệnh CRUD
-                MissingSchemaAction = MissingSchemaAction.AddWithKey
+                SelectCommand = _db.Cmd(conn, SELECT_ALL, CommandType.Text)  // CHANGED
             };
-            var cb = new SqlCommandBuilder(da);
-            // (cb sẽ tự gán da.InsertCommand/UpdateCommand/DeleteCommand)
+            da.MissingSchemaAction = MissingSchemaAction.AddWithKey;        // giữ nguyên
+            var cb = new SqlCommandBuilder(da);                             // giữ nguyên (sinh CRUD)
             return da;
         }
 
@@ -122,25 +43,26 @@ namespace CuahangNongduoc.DataLayer
 
         public void LoadSchema()
         {
-            // Tương đương: SELECT * WHERE '-1' để lấy schema rỗng
-            using (var conn = new SqlConnection(_cs))
-            using (var da = new SqlDataAdapter(SELECT_ALL + " WHERE 1=0", conn))
+            // Tương đương lấy schema rỗng; dùng DbClient để mở kết nối/command
+            using (var conn = _db.Open())                                                   // CHANGED
+            using (var cmd = _db.Cmd(conn, SELECT_ALL + " WHERE 1=0", CommandType.Text))   // CHANGED
+            using (var da = new SqlDataAdapter(cmd))                                      // CHANGED
             {
                 _table = new DataTable("DU_NO_KH");
-                da.Fill(_table); // fill schema (rỗng dữ liệu)
+                // Có thể dùng FillSchema hoặc Fill rỗng; FillSchema rõ nghĩa hơn
+                da.FillSchema(_table, SchemaType.Source);                                   // CHANGED
             }
         }
 
         public DataTable DanhsachDuNo(int thang, int nam)
         {
-            using (var conn = new SqlConnection(_cs))
-            using (var cmd = new SqlCommand(
-                SELECT_ALL + " WHERE THANG=@thang AND NAM=@nam", conn))
-            using (var da = new SqlDataAdapter(cmd))
+            using (var conn = _db.Open())                                                   // CHANGED
+            using (var cmd = _db.Cmd(conn, SELECT_ALL + " WHERE THANG=@thang AND NAM=@nam",
+                                       CommandType.Text, null, 30,
+                                       _db.P("@thang", SqlDbType.Int, thang),              // CHANGED
+                                       _db.P("@nam", SqlDbType.Int, nam)))               // CHANGED
+            using (var da = new SqlDataAdapter(cmd))                                      // CHANGED
             {
-                cmd.Parameters.Add("@thang", SqlDbType.Int).Value = thang;
-                cmd.Parameters.Add("@nam", SqlDbType.Int).Value = nam;
-
                 var dt = new DataTable("DU_NO_KH");
                 da.Fill(dt);
 
@@ -152,15 +74,15 @@ namespace CuahangNongduoc.DataLayer
 
         public DataTable LayDuNoKhachHang(string kh, int thang, int nam)
         {
-            using (var conn = new SqlConnection(_cs))
-            using (var cmd = new SqlCommand(
-                SELECT_ALL + " WHERE ID_KHACH_HANG=@kh AND THANG=@thang AND NAM=@nam", conn))
-            using (var da = new SqlDataAdapter(cmd))
+            using (var conn = _db.Open())                                                   // CHANGED
+            using (var cmd = _db.Cmd(conn,
+                    SELECT_ALL + " WHERE ID_KHACH_HANG=@kh AND THANG=@thang AND NAM=@nam",
+                    CommandType.Text, null, 30,
+                    _db.P("@kh", SqlDbType.NVarChar, kh, 50),                            // CHANGED: NVARCHAR để hỗ trợ Unicode
+                    _db.P("@thang", SqlDbType.Int, thang),
+                    _db.P("@nam", SqlDbType.Int, nam)))
+            using (var da = new SqlDataAdapter(cmd))                                      // CHANGED
             {
-                cmd.Parameters.Add("@kh", SqlDbType.VarChar, 50).Value = kh;
-                cmd.Parameters.Add("@thang", SqlDbType.Int).Value = thang;
-                cmd.Parameters.Add("@nam", SqlDbType.Int).Value = nam;
-
                 var dt = new DataTable("DU_NO_KH");
                 da.Fill(dt);
 
@@ -171,33 +93,24 @@ namespace CuahangNongduoc.DataLayer
 
         public static long LayDuNo(string kh, int thang, int nam)
         {
-            var cs = ConfigurationManager.ConnectionStrings["ConnStr"].ConnectionString;
-            using (var conn = new SqlConnection(cs))
-            using (var cmd = new SqlCommand(
-                "SELECT CUOI_KY FROM DU_NO_KH WHERE ID_KHACH_HANG=@kh AND THANG=@thang AND NAM=@nam", conn))
-            {
-                cmd.Parameters.Add("@kh", SqlDbType.VarChar, 50).Value = kh;
-                cmd.Parameters.Add("@thang", SqlDbType.Int).Value = thang;
-                cmd.Parameters.Add("@nam", SqlDbType.Int).Value = nam;
-
-                conn.Open();
-                object obj = cmd.ExecuteScalar();
-                return (obj == null || obj == DBNull.Value) ? 0L : Convert.ToInt64(obj);
-            }
+            // CHANGED: dùng DbClient thay vì tự mở SqlConnection/ConfigurationManager
+            var db = DbClient.Instance;                                                     // CHANGED
+            const string sql =
+                "SELECT CUOI_KY FROM DU_NO_KH WHERE ID_KHACH_HANG=@kh AND THANG=@thang AND NAM=@nam";
+            // ExecuteScalar<long> trả 0 khi null theo helper hiện tại
+            return db.ExecuteScalar<long>(sql, CommandType.Text,                            // CHANGED
+                db.P("@kh", SqlDbType.NVarChar, kh, 50),
+                db.P("@thang", SqlDbType.Int, thang),
+                db.P("@nam", SqlDbType.Int, nam));
         }
 
         public void Clear(int thang, int nam)
         {
-            using (var conn = new SqlConnection(_cs))
-            using (var cmd = new SqlCommand(
-                "DELETE FROM DU_NO_KH WHERE THANG=@thang AND NAM=@nam", conn))
-            {
-                cmd.Parameters.Add("@thang", SqlDbType.Int).Value = thang;
-                cmd.Parameters.Add("@nam", SqlDbType.Int).Value = nam;
-
-                conn.Open();
-                cmd.ExecuteNonQuery();
-            }
+            // CHANGED: dùng DbClient.ExecuteNonQuery
+            const string sql = "DELETE FROM DU_NO_KH WHERE THANG=@thang AND NAM=@nam";      // CHANGED
+            _db.ExecuteNonQuery(sql, CommandType.Text,
+                _db.P("@thang", SqlDbType.Int, thang),
+                _db.P("@nam", SqlDbType.Int, nam));
         }
 
         public DataRow NewRow()
@@ -215,7 +128,7 @@ namespace CuahangNongduoc.DataLayer
         public bool Save()
         {
             EnsureSchema();
-            using (var conn = new SqlConnection(_cs))
+            using (var conn = _db.Open())                                                   // CHANGED
             using (var da = CreateAdapter(conn))
             {
                 return da.Update(_table) > 0;
@@ -223,4 +136,3 @@ namespace CuahangNongduoc.DataLayer
         }
     }
 }
-
