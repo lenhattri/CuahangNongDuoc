@@ -102,10 +102,6 @@ namespace CuahangNongduoc.DataLayer
             return true;
         }
 
-
-
-
-
         public bool Insert(SanPham sp)
         {
             SqlCommand cmd = new SqlCommand(
