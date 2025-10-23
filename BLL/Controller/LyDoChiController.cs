@@ -40,10 +40,10 @@ namespace CuahangNongduoc.Controller
 
         }
         
-        public LyDoChi LayLyDoChi(long id)
+        public BusinessObject.LyDoChi LayLyDoChi(long id)
         {
             DataTable tbl = factory.LayLyDoChi(id);
-            LyDoChi lydo = new LyDoChi();
+            BusinessObject.LyDoChi lydo = new BusinessObject.LyDoChi();
             if (tbl.Rows.Count > 0)
             {
                 lydo.Id = Convert.ToInt64(tbl.Rows[0]["ID"]);

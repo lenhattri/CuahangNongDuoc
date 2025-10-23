@@ -42,13 +42,13 @@ namespace CuahangNongduoc.Controller
             // (Tuỳ chọn) dg.AutoGenerateColumns = true; // nếu bạn không tự tạo cột trong Designer
         }
 
-        public DonViTinh LayDVT(int id)
+        public BusinessObject.DonViTinh LayDVT(int id)
         {
             var tbl = _dal.LayDVT(id);
             if (tbl.Rows.Count == 0) return null;
 
             var r = tbl.Rows[0];
-            return new DonViTinh(
+            return new BusinessObject.DonViTinh(
                 Convert.ToInt32(r["ID"]),
                 Convert.ToString(r["TEN"])          // CHANGED: trước đây là "TEN_DON_VI", đổi về "TEN"
             );

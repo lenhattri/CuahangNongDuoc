@@ -127,8 +127,8 @@ namespace CuahangNongduoc.Controller
 
         public void HienthiAllComboBox(System.Windows.Forms.ComboBox cmb)
         {
-            IList<NhaCungCap> ds = this.LayDanhSachNCC();
-            ds.Add(new NhaCungCap("ALL", "Tất cả"));
+            IList<BusinessObject.NhaCungCap> ds = this.LayDanhSachNCC();
+            ds.Add(new BusinessObject.NhaCungCap("ALL", "Tất cả"));
             cmb.DataSource = ds;
             cmb.DisplayMember = "HoTen";
             cmb.ValueMember = "Id";
@@ -152,10 +152,10 @@ namespace CuahangNongduoc.Controller
             cmb.HeaderText = "Nhà cung cấp";
         }
 
-        public NhaCungCap LayNCC(string id)
+        public BusinessObject.NhaCungCap LayNCC(string id)
         {
             DataTable tbl = dal.LayNCC(id);
-            NhaCungCap ncc = new NhaCungCap();
+            BusinessObject.NhaCungCap ncc = new BusinessObject.NhaCungCap();
             if (tbl.Rows.Count > 0)
             {
                 ncc.Id = Convert.ToString(tbl.Rows[0]["ID"]);
@@ -166,14 +166,14 @@ namespace CuahangNongduoc.Controller
             return ncc;
         }
 
-        public IList<NhaCungCap> LayDanhSachNCC()
+        public IList<BusinessObject.NhaCungCap> LayDanhSachNCC()
         {
             DataTable tbl = dal.DanhsachNCC();
-            IList<NhaCungCap> ds = new List<NhaCungCap>();
+            IList<BusinessObject.NhaCungCap> ds = new List<BusinessObject.NhaCungCap>();
 
             foreach (DataRow row in tbl.Rows)
             {
-                NhaCungCap kh = new NhaCungCap();
+                BusinessObject.NhaCungCap kh = new BusinessObject.NhaCungCap();
                 kh.Id = Convert.ToString(row["ID"]);
                 kh.HoTen = Convert.ToString(row["HO_TEN"]);
                 kh.DienThoai = Convert.ToString(row["DIEN_THOAI"]);
@@ -193,12 +193,12 @@ namespace CuahangNongduoc.Controller
             dal.TimHoTen(hoten);
         }
 
-        public void Insert(NhaCungCap ncc)
+        public void Insert(BusinessObject.NhaCungCap ncc)
         {
             dal.Insert(ncc);
         }
 
-        public void Update(NhaCungCap ncc)
+        public void Update(BusinessObject.NhaCungCap ncc)
         {
             dal.Update(ncc);
         }

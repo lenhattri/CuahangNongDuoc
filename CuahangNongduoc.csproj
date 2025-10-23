@@ -138,80 +138,80 @@
     <Compile Include="Domain\Entities\NguoiDung.cs" />
     <Compile Include="DTO\NguoiDungDTO.cs" />
     <Compile Include="DTO\PhieuThanhToanReport.cs" />
-    <Compile Include="UI\HeThong\frmChiTietNguoiDung.cs">
+    <Compile Include="UI\HeThong\ChiTietNguoiDungForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\HeThong\frmChiTietNguoiDung.Designer.cs">
-      <DependentUpon>frmChiTietNguoiDung.cs</DependentUpon>
+    <Compile Include="UI\HeThong\ChiTietNguoiDungForm.Designer.cs">
+      <DependentUpon>ChiTietNguoiDungForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\HeThong\frmDangNhap.cs">
+    <Compile Include="UI\HeThong\DangNhapForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\HeThong\frmDangNhap.Designer.cs">
-      <DependentUpon>frmDangNhap.cs</DependentUpon>
+    <Compile Include="UI\HeThong\DangNhapForm.Designer.cs">
+      <DependentUpon>DangNhapForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\HeThong\frmNguoiDung.cs">
+    <Compile Include="UI\HeThong\NguoiDungForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\HeThong\frmNguoiDung.Designer.cs">
-      <DependentUpon>frmNguoiDung.cs</DependentUpon>
+    <Compile Include="UI\HeThong\NguoiDungForm.Designer.cs">
+      <DependentUpon>NguoiDungForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\In\frmInPhieuChi.cs">
+    <Compile Include="UI\In\InPhieuChiForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\In\frmInPhieuChi.Designer.cs">
-      <DependentUpon>frmInPhieuChi.cs</DependentUpon>
+    <Compile Include="UI\In\InPhieuChiForm.Designer.cs">
+      <DependentUpon>InPhieuChiForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\PhieuThuChi\frmPhieuChi.cs">
+    <Compile Include="UI\PhieuThuChi\PhieuChiForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\PhieuThuChi\frmPhieuChi.Designer.cs">
-      <DependentUpon>frmPhieuChi.cs</DependentUpon>
+    <Compile Include="UI\PhieuThuChi\PhieuChiForm.Designer.cs">
+      <DependentUpon>PhieuChiForm.cs</DependentUpon>
     </Compile>
     <Compile Include="DAL\DataLayer\LyDoChiFactory.cs" />
-    <Compile Include="UI\PhieuThuChi\frmLyDoChi.cs">
+    <Compile Include="UI\PhieuThuChi\LyDoChiForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\PhieuThuChi\frmLyDoChi.Designer.cs">
-      <DependentUpon>frmLyDoChi.cs</DependentUpon>
+    <Compile Include="UI\PhieuThuChi\LyDoChiForm.Designer.cs">
+      <DependentUpon>LyDoChiForm.cs</DependentUpon>
     </Compile>
     <Compile Include="DAL\DataLayer\NhaCungCapFactory.cs" />
     <Compile Include="DAL\DataLayer\DuNoKhachHangFactory.cs" />
     <Compile Include="DAL\DataLayer\PhieuThanhToanDAL.cs" />
-    <Compile Include="UI\BanHang\frmBanSi.cs">
+    <Compile Include="UI\BanHang\BanSiForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\BanHang\frmBanSi.Designer.cs">
-      <DependentUpon>frmBanSi.cs</DependentUpon>
+    <Compile Include="UI\BanHang\BanSiForm.Designer.cs">
+      <DependentUpon>BanSiForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\BanHang\frmDanhsachPhieuBanSi.cs">
+    <Compile Include="UI\BanHang\DanhsachPhieuBanSiForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\BanHang\frmDanhsachPhieuBanSi.Designer.cs">
-      <DependentUpon>frmDanhsachPhieuBanSi.cs</DependentUpon>
+    <Compile Include="UI\BanHang\DanhsachPhieuBanSiForm.Designer.cs">
+      <DependentUpon>DanhsachPhieuBanSiForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\BanHang\frmDanhsachPhieuBanLe.cs">
+    <Compile Include="UI\BanHang\DanhsachPhieuBanLeForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\BanHang\frmDanhsachPhieuBanLe.Designer.cs">
-      <DependentUpon>frmDanhsachPhieuBanLe.cs</DependentUpon>
+    <Compile Include="UI\BanHang\DanhsachPhieuBanLeForm.Designer.cs">
+      <DependentUpon>DanhsachPhieuBanLeForm.cs</DependentUpon>
     </Compile>
     <Compile Include="DAL\DataLayer\ChiTietPhieuBanFactory.cs" />
     <Compile Include="DAL\DataLayer\ChiTietPhieuNhapFactory.cs" />
     <Compile Include="DAL\DataLayer\PhieuNhapFactory.cs" />
     <Compile Include="DAL\DataLayer\MaSanPhanFactory.cs" />
     <Compile Include="DAL\DataLayer\PhieuBanFactory.cs" />
-    <Compile Include="UI\BanHang\frmBanLe.cs">
+    <Compile Include="UI\BanHang\BanLeForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\BanHang\frmBanLe.Designer.cs">
-      <DependentUpon>frmBanLe.cs</DependentUpon>
+    <Compile Include="UI\BanHang\BanLeForm.Designer.cs">
+      <DependentUpon>BanLeForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\BaoCaoThongKe\frmDaiLy.cs">
+    <Compile Include="UI\BaoCaoThongKe\DaiLyForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\BaoCaoThongKe\frmDaiLy.Designer.cs">
-      <DependentUpon>frmDaiLy.cs</DependentUpon>
+    <Compile Include="UI\BaoCaoThongKe\DaiLyForm.Designer.cs">
+      <DependentUpon>DaiLyForm.cs</DependentUpon>
     </Compile>
     <Compile Include="DAL\DataLayer\KhachHangFactory.cs" />
     <Compile Include="DAL\DataLayer\SanPhamFactory.cs" />
@@ -219,143 +219,143 @@
     <Compile Include="DAL\DataService.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="UI\NhapHang\frmDanhsachPhieuNhap.cs">
+    <Compile Include="UI\NhapHang\DanhsachPhieuNhapForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\NhapHang\frmDanhsachPhieuNhap.Designer.cs">
-      <DependentUpon>frmDanhsachPhieuNhap.cs</DependentUpon>
+    <Compile Include="UI\NhapHang\DanhsachPhieuNhapForm.Designer.cs">
+      <DependentUpon>DanhsachPhieuNhapForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\BaoCaoThongKe\frmDoanhThu.cs">
+    <Compile Include="UI\BaoCaoThongKe\DoanhThuForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\BaoCaoThongKe\frmDoanhThu.Designer.cs">
-      <DependentUpon>frmDoanhThu.cs</DependentUpon>
+    <Compile Include="UI\BaoCaoThongKe\DoanhThuForm.Designer.cs">
+      <DependentUpon>DoanhThuForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\DanhMuc\frmDonViTinh.cs">
+    <Compile Include="UI\DanhMuc\DonViTinhForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\DanhMuc\frmDonViTinh.Designer.cs">
-      <DependentUpon>frmDonViTinh.cs</DependentUpon>
+    <Compile Include="UI\DanhMuc\DonViTinhForm.Designer.cs">
+      <DependentUpon>DonViTinhForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\CongNo\frmDunoKhachhang.cs">
+    <Compile Include="UI\CongNo\DunoKhachhangForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\CongNo\frmDunoKhachhang.Designer.cs">
-      <DependentUpon>frmDunoKhachhang.cs</DependentUpon>
+    <Compile Include="UI\CongNo\DunoKhachhangForm.Designer.cs">
+      <DependentUpon>DunoKhachhangForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\In\frmInDunoKhachHang.cs">
+    <Compile Include="UI\In\InDunoKhachHangForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\In\frmInDunoKhachHang.Designer.cs">
-      <DependentUpon>frmInDunoKhachHang.cs</DependentUpon>
+    <Compile Include="UI\In\InDunoKhachHangForm.Designer.cs">
+      <DependentUpon>InDunoKhachHangForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\In\frmInPhieuBan.cs">
+    <Compile Include="UI\In\InPhieuBanForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\In\frmInPhieuBan.Designer.cs">
-      <DependentUpon>frmInPhieuBan.cs</DependentUpon>
+    <Compile Include="UI\In\InPhieuBanForm.Designer.cs">
+      <DependentUpon>InPhieuBanForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\In\frmInPhieuNhap.cs">
+    <Compile Include="UI\In\InPhieuNhapForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\In\frmInPhieuNhap.Designer.cs">
-      <DependentUpon>frmInPhieuNhap.cs</DependentUpon>
+    <Compile Include="UI\In\InPhieuNhapForm.Designer.cs">
+      <DependentUpon>InPhieuNhapForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\DanhMuc\frmKhachHang.cs">
+    <Compile Include="UI\DanhMuc\KhachHangForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\DanhMuc\frmKhachHang.Designer.cs">
-      <DependentUpon>frmKhachHang.cs</DependentUpon>
+    <Compile Include="UI\DanhMuc\KhachHangForm.Designer.cs">
+      <DependentUpon>KhachHangForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\HeThong\frmMain.cs">
+    <Compile Include="UI\HeThong\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\HeThong\frmMain.Designer.cs">
-      <DependentUpon>frmMain.cs</DependentUpon>
+    <Compile Include="UI\HeThong\MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\DanhMuc\frmNhaCungCap.cs">
+    <Compile Include="UI\DanhMuc\NhaCungCapForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\DanhMuc\frmNhaCungCap.Designer.cs">
-      <DependentUpon>frmNhaCungCap.cs</DependentUpon>
+    <Compile Include="UI\DanhMuc\NhaCungCapForm.Designer.cs">
+      <DependentUpon>NhaCungCapForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\NhapHang\frmNhapHang.cs">
+    <Compile Include="UI\NhapHang\NhapHangForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\NhapHang\frmNhapHang.Designer.cs">
-      <DependentUpon>frmNhapHang.cs</DependentUpon>
+    <Compile Include="UI\NhapHang\NhapHangForm.Designer.cs">
+      <DependentUpon>NhapHangForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\In\frmInPhieuThanhToan.cs">
+    <Compile Include="UI\In\InPhieuThanhToanForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\In\frmInPhieuThanhToan.Designer.cs">
-      <DependentUpon>frmInPhieuThanhToan.cs</DependentUpon>
+    <Compile Include="UI\In\InPhieuThanhToanForm.Designer.cs">
+      <DependentUpon>InPhieuThanhToanForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\DanhMuc\frmSanPham.cs">
+    <Compile Include="UI\DanhMuc\SanPhamForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\DanhMuc\frmSanPham.Designer.cs">
-      <DependentUpon>frmSanPham.cs</DependentUpon>
+    <Compile Include="UI\DanhMuc\SanPhamForm.Designer.cs">
+      <DependentUpon>SanPhamForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\DanhMuc\frmSanphamHethan.cs">
+    <Compile Include="UI\DanhMuc\SanphamHethanForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\DanhMuc\frmSanphamHethan.Designer.cs">
-      <DependentUpon>frmSanphamHethan.cs</DependentUpon>
+    <Compile Include="UI\DanhMuc\SanphamHethanForm.Designer.cs">
+      <DependentUpon>SanphamHethanForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\BaoCaoThongKe\frmSoLuongBan.cs">
+    <Compile Include="UI\BaoCaoThongKe\SoLuongBanForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\BaoCaoThongKe\frmSoLuongBan.Designer.cs">
-      <DependentUpon>frmSoLuongBan.cs</DependentUpon>
+    <Compile Include="UI\BaoCaoThongKe\SoLuongBanForm.Designer.cs">
+      <DependentUpon>SoLuongBanForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\BaoCaoThongKe\frmSoLuongTon.cs">
+    <Compile Include="UI\BaoCaoThongKe\SoLuongTonForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\BaoCaoThongKe\frmSoLuongTon.Designer.cs">
-      <DependentUpon>frmSoLuongTon.cs</DependentUpon>
+    <Compile Include="UI\BaoCaoThongKe\SoLuongTonForm.Designer.cs">
+      <DependentUpon>SoLuongTonForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\BanHang\frmThanhToan.cs">
+    <Compile Include="UI\BanHang\ThanhToanForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\BanHang\frmThanhToan.Designer.cs">
-      <DependentUpon>frmThanhToan.cs</DependentUpon>
+    <Compile Include="UI\BanHang\ThanhToanForm.Designer.cs">
+      <DependentUpon>ThanhToanForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\HeThong\frmThongtinCuahang.cs">
+    <Compile Include="UI\HeThong\ThongtinCuahangForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\HeThong\frmThongtinCuahang.Designer.cs">
-      <DependentUpon>frmThongtinCuahang.cs</DependentUpon>
+    <Compile Include="UI\HeThong\ThongtinCuahangForm.Designer.cs">
+      <DependentUpon>ThongtinCuahangForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\HeThong\frmThongtinLienhe.cs">
+    <Compile Include="UI\HeThong\ThongtinLienheForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\HeThong\frmThongtinLienhe.Designer.cs">
-      <DependentUpon>frmThongtinLienhe.cs</DependentUpon>
+    <Compile Include="UI\HeThong\ThongtinLienheForm.Designer.cs">
+      <DependentUpon>ThongtinLienheForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\TimKiem\frmTimPhieuBanLe.cs">
+    <Compile Include="UI\TimKiem\TimPhieuBanLeForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\TimKiem\frmTimPhieuBanLe.Designer.cs">
-      <DependentUpon>frmTimPhieuBanLe.cs</DependentUpon>
+    <Compile Include="UI\TimKiem\TimPhieuBanLeForm.Designer.cs">
+      <DependentUpon>TimPhieuBanLeForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\TimKiem\frmTimPhieuChi.cs">
+    <Compile Include="UI\TimKiem\TimPhieuChiForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\TimKiem\frmTimPhieuChi.Designer.cs">
-      <DependentUpon>frmTimPhieuChi.cs</DependentUpon>
+    <Compile Include="UI\TimKiem\TimPhieuChiForm.Designer.cs">
+      <DependentUpon>TimPhieuChiForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\TimKiem\frmTimPhieuNhap.cs">
+    <Compile Include="UI\TimKiem\TimPhieuNhapForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\TimKiem\frmTimPhieuNhap.Designer.cs">
-      <DependentUpon>frmTimPhieuNhap.cs</DependentUpon>
+    <Compile Include="UI\TimKiem\TimPhieuNhapForm.Designer.cs">
+      <DependentUpon>TimPhieuNhapForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\TimKiem\frmTimPhieuThu.cs">
+    <Compile Include="UI\TimKiem\TimPhieuThuForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\TimKiem\frmTimPhieuThu.Designer.cs">
-      <DependentUpon>frmTimPhieuThu.cs</DependentUpon>
+    <Compile Include="UI\TimKiem\TimPhieuThuForm.Designer.cs">
+      <DependentUpon>TimPhieuThuForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Utils\Functions\DataTableHelper.cs" />
     <Compile Include="Utils\Functions\LogHelper.cs" />
@@ -365,138 +365,138 @@
     <Compile Include="Utils\Functions\SafeExecutor.cs" />
     <Compile Include="Utils\Functions\SqlHelper.cs" />
     <Compile Include="Utils\Session.cs" />
-    <EmbeddedResource Include="UI\HeThong\frmChiTietNguoiDung.resx">
-      <DependentUpon>frmChiTietNguoiDung.cs</DependentUpon>
+    <EmbeddedResource Include="UI\HeThong\ChiTietNguoiDungForm.resx">
+      <DependentUpon>ChiTietNguoiDungForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\HeThong\frmDangNhap.resx">
-      <DependentUpon>frmDangNhap.cs</DependentUpon>
+    <EmbeddedResource Include="UI\HeThong\DangNhapForm.resx">
+      <DependentUpon>DangNhapForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\HeThong\frmNguoiDung.resx">
-      <DependentUpon>frmNguoiDung.cs</DependentUpon>
+    <EmbeddedResource Include="UI\HeThong\NguoiDungForm.resx">
+      <DependentUpon>NguoiDungForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\In\frmInPhieuChi.resx">
+    <EmbeddedResource Include="UI\In\InPhieuChiForm.resx">
       <SubType>Designer</SubType>
-      <DependentUpon>frmInPhieuChi.cs</DependentUpon>
+      <DependentUpon>InPhieuChiForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\PhieuThuChi\frmPhieuChi.resx">
-      <DependentUpon>frmPhieuChi.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UI\PhieuThuChi\frmLyDoChi.resx">
-      <DependentUpon>frmLyDoChi.cs</DependentUpon>
+    <EmbeddedResource Include="UI\PhieuThuChi\PhieuChiForm.resx">
+      <DependentUpon>PhieuChiForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\BanHang\frmBanSi.resx">
-      <DependentUpon>frmBanSi.cs</DependentUpon>
+    <EmbeddedResource Include="UI\PhieuThuChi\LyDoChiForm.resx">
+      <DependentUpon>LyDoChiForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\BanHang\frmDanhsachPhieuBanSi.resx">
-      <DependentUpon>frmDanhsachPhieuBanSi.cs</DependentUpon>
+    <EmbeddedResource Include="UI\BanHang\BanSiForm.resx">
+      <DependentUpon>BanSiForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\BanHang\frmDanhsachPhieuBanLe.resx">
-      <DependentUpon>frmDanhsachPhieuBanLe.cs</DependentUpon>
+    <EmbeddedResource Include="UI\BanHang\DanhsachPhieuBanSiForm.resx">
+      <DependentUpon>DanhsachPhieuBanSiForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\BanHang\frmBanLe.resx">
-      <DependentUpon>frmBanLe.cs</DependentUpon>
+    <EmbeddedResource Include="UI\BanHang\DanhsachPhieuBanLeForm.resx">
+      <DependentUpon>DanhsachPhieuBanLeForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\BaoCaoThongKe\frmDaiLy.resx">
-      <DependentUpon>frmDaiLy.cs</DependentUpon>
+    <EmbeddedResource Include="UI\BanHang\BanLeForm.resx">
+      <DependentUpon>BanLeForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\NhapHang\frmDanhsachPhieuNhap.resx">
+    <EmbeddedResource Include="UI\BaoCaoThongKe\DaiLyForm.resx">
+      <DependentUpon>DaiLyForm.cs</DependentUpon>
       <SubType>Designer</SubType>
-      <DependentUpon>frmDanhsachPhieuNhap.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\BaoCaoThongKe\frmDoanhThu.resx">
+    <EmbeddedResource Include="UI\NhapHang\DanhsachPhieuNhapForm.resx">
       <SubType>Designer</SubType>
-      <DependentUpon>frmDoanhThu.cs</DependentUpon>
+      <DependentUpon>DanhsachPhieuNhapForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\DanhMuc\frmDonViTinh.resx">
+    <EmbeddedResource Include="UI\BaoCaoThongKe\DoanhThuForm.resx">
       <SubType>Designer</SubType>
-      <DependentUpon>frmDonViTinh.cs</DependentUpon>
+      <DependentUpon>DoanhThuForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\CongNo\frmDunoKhachhang.resx">
+    <EmbeddedResource Include="UI\DanhMuc\DonViTinhForm.resx">
       <SubType>Designer</SubType>
-      <DependentUpon>frmDunoKhachhang.cs</DependentUpon>
+      <DependentUpon>DonViTinhForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\In\frmInDunoKhachHang.resx">
+    <EmbeddedResource Include="UI\CongNo\DunoKhachhangForm.resx">
       <SubType>Designer</SubType>
-      <DependentUpon>frmInDunoKhachHang.cs</DependentUpon>
+      <DependentUpon>DunoKhachhangForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\In\frmInPhieuBan.resx">
+    <EmbeddedResource Include="UI\In\InDunoKhachHangForm.resx">
       <SubType>Designer</SubType>
-      <DependentUpon>frmInPhieuBan.cs</DependentUpon>
+      <DependentUpon>InDunoKhachHangForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\In\frmInPhieuNhap.resx">
+    <EmbeddedResource Include="UI\In\InPhieuBanForm.resx">
       <SubType>Designer</SubType>
-      <DependentUpon>frmInPhieuNhap.cs</DependentUpon>
+      <DependentUpon>InPhieuBanForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\DanhMuc\frmKhachHang.resx">
+    <EmbeddedResource Include="UI\In\InPhieuNhapForm.resx">
       <SubType>Designer</SubType>
-      <DependentUpon>frmKhachHang.cs</DependentUpon>
+      <DependentUpon>InPhieuNhapForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\HeThong\frmMain.resx">
+    <EmbeddedResource Include="UI\DanhMuc\KhachHangForm.resx">
       <SubType>Designer</SubType>
-      <DependentUpon>frmMain.cs</DependentUpon>
+      <DependentUpon>KhachHangForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\DanhMuc\frmNhaCungCap.resx">
+    <EmbeddedResource Include="UI\HeThong\MainForm.resx">
       <SubType>Designer</SubType>
-      <DependentUpon>frmNhaCungCap.cs</DependentUpon>
+      <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\NhapHang\frmNhapHang.resx">
+    <EmbeddedResource Include="UI\DanhMuc\NhaCungCapForm.resx">
       <SubType>Designer</SubType>
-      <DependentUpon>frmNhapHang.cs</DependentUpon>
+      <DependentUpon>NhaCungCapForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\In\frmInPhieuThanhToan.resx">
+    <EmbeddedResource Include="UI\NhapHang\NhapHangForm.resx">
       <SubType>Designer</SubType>
-      <DependentUpon>frmInPhieuThanhToan.cs</DependentUpon>
+      <DependentUpon>NhapHangForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\DanhMuc\frmSanPham.resx">
+    <EmbeddedResource Include="UI\In\InPhieuThanhToanForm.resx">
       <SubType>Designer</SubType>
-      <DependentUpon>frmSanPham.cs</DependentUpon>
+      <DependentUpon>InPhieuThanhToanForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\DanhMuc\frmSanphamHethan.resx">
+    <EmbeddedResource Include="UI\DanhMuc\SanPhamForm.resx">
       <SubType>Designer</SubType>
-      <DependentUpon>frmSanphamHethan.cs</DependentUpon>
+      <DependentUpon>SanPhamForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\BaoCaoThongKe\frmSoLuongBan.resx">
+    <EmbeddedResource Include="UI\DanhMuc\SanphamHethanForm.resx">
       <SubType>Designer</SubType>
-      <DependentUpon>frmSoLuongBan.cs</DependentUpon>
+      <DependentUpon>SanphamHethanForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\BaoCaoThongKe\frmSoLuongTon.resx">
+    <EmbeddedResource Include="UI\BaoCaoThongKe\SoLuongBanForm.resx">
       <SubType>Designer</SubType>
-      <DependentUpon>frmSoLuongTon.cs</DependentUpon>
+      <DependentUpon>SoLuongBanForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\BanHang\frmThanhToan.resx">
+    <EmbeddedResource Include="UI\BaoCaoThongKe\SoLuongTonForm.resx">
       <SubType>Designer</SubType>
-      <DependentUpon>frmThanhToan.cs</DependentUpon>
+      <DependentUpon>SoLuongTonForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\HeThong\frmThongtinCuahang.resx">
+    <EmbeddedResource Include="UI\BanHang\ThanhToanForm.resx">
       <SubType>Designer</SubType>
-      <DependentUpon>frmThongtinCuahang.cs</DependentUpon>
+      <DependentUpon>ThanhToanForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\HeThong\frmThongtinLienhe.resx">
+    <EmbeddedResource Include="UI\HeThong\ThongtinCuahangForm.resx">
       <SubType>Designer</SubType>
-      <DependentUpon>frmThongtinLienhe.cs</DependentUpon>
+      <DependentUpon>ThongtinCuahangForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\TimKiem\frmTimPhieuBanLe.resx">
+    <EmbeddedResource Include="UI\HeThong\ThongtinLienheForm.resx">
       <SubType>Designer</SubType>
-      <DependentUpon>frmTimPhieuBanLe.cs</DependentUpon>
+      <DependentUpon>ThongtinLienheForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\TimKiem\frmTimPhieuChi.resx">
+    <EmbeddedResource Include="UI\TimKiem\TimPhieuBanLeForm.resx">
       <SubType>Designer</SubType>
-      <DependentUpon>frmTimPhieuChi.cs</DependentUpon>
+      <DependentUpon>TimPhieuBanLeForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\TimKiem\frmTimPhieuNhap.resx">
+    <EmbeddedResource Include="UI\TimKiem\TimPhieuChiForm.resx">
       <SubType>Designer</SubType>
-      <DependentUpon>frmTimPhieuNhap.cs</DependentUpon>
+      <DependentUpon>TimPhieuChiForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\TimKiem\frmTimPhieuThu.resx">
+    <EmbeddedResource Include="UI\TimKiem\TimPhieuNhapForm.resx">
       <SubType>Designer</SubType>
-      <DependentUpon>frmTimPhieuThu.cs</DependentUpon>
+      <DependentUpon>TimPhieuNhapForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\TimKiem\TimPhieuThuForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>TimPhieuThuForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

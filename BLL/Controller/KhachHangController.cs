@@ -226,10 +226,10 @@ namespace CuahangNongduoc.Controller
             factory.TimDiaChi(diachi, loai);
         }
 
-        public KhachHang LayKhachHang(string id)
+        public BusinessObject.KhachHang LayKhachHang(string id)
         {
             DataTable tbl = factory.LayKhachHang(id);
-            KhachHang kh = new KhachHang();
+            BusinessObject.KhachHang kh = new BusinessObject.KhachHang();
             if (tbl.Rows.Count > 0)
             {
                 var r = tbl.Rows[0];
@@ -242,13 +242,13 @@ namespace CuahangNongduoc.Controller
             return kh;
         }
 
-        public IList<KhachHang> LayDanhSachKhachHang()
+        public IList<BusinessObject.KhachHang> LayDanhSachKhachHang()
         {
             DataTable tbl = factory.DanhsachKhachHang();
-            IList<KhachHang> ds = new List<KhachHang>();
+            IList<BusinessObject.KhachHang> ds = new List<BusinessObject.KhachHang>();
             foreach (DataRow row in tbl.Rows)
             {
-                ds.Add(new KhachHang
+                ds.Add(new BusinessObject.KhachHang
                 {
                     Id = Convert.ToString(row["ID"]),
                     HoTen = Convert.ToString(row["HO_TEN"]),

@@ -91,10 +91,10 @@ namespace CuahangNongduoc.Controller
 
         }
     
-        public SanPham LaySanPham(String id)
+        public BusinessObject.SanPham LaySanPham(String id)
         {
             DataTable tbl = factory.LaySanPham(id);
-            SanPham sp = new SanPham();
+            BusinessObject.SanPham sp = new BusinessObject.SanPham();
             DonViTinhController ctrlDVT = new DonViTinhController();
             if (tbl.Rows.Count > 0)
             {
@@ -110,19 +110,19 @@ namespace CuahangNongduoc.Controller
 
         }
 
-        public static IList<SoLuongTon> LaySoLuongTon()
+        public static IList<BusinessObject.SoLuongTon> LaySoLuongTon()
         {
             SanPhamFactory f = new SanPhamFactory();
             DataTable tbl = f.LaySoLuongTon();
 
-            IList<SoLuongTon> ds = new List<SoLuongTon>();
+            IList<BusinessObject.SoLuongTon> ds = new List<BusinessObject.SoLuongTon>();
             
 
             DonViTinhController ctrlDVT = new DonViTinhController();
             foreach(DataRow row in tbl.Rows)
             {
-                SoLuongTon slt = new SoLuongTon();
-                SanPham sp = new SanPham();
+                BusinessObject.SoLuongTon slt = new BusinessObject.SoLuongTon();
+                BusinessObject.SanPham sp = new BusinessObject.SanPham();
                 sp.Id = Convert.ToString(row["ID"]);
                 sp.TenSanPham = Convert.ToString(row["TEN_SAN_PHAM"]);
                 sp.SoLuong = Convert.ToInt32(row["SO_LUONG"]);

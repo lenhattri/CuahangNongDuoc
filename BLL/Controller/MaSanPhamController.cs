@@ -25,15 +25,15 @@ namespace CuahangNongduoc.Controller
             return factory.Save();
         }
 
-        public SanPham LaySanPham(String idMaSanPham)
+        public BusinessObject.SanPham LaySanPham(String idMaSanPham)
         {
             MaSanPhanFactory f = new MaSanPhanFactory();
             DataTable tbl = f.LaySanPham(idMaSanPham);
-            SanPham sp = null;
+            BusinessObject.SanPham sp = null;
             DonViTinhController ctrlDVT = new DonViTinhController();
             if (tbl.Rows.Count > 0)
             {
-                sp =  new  SanPham();
+                sp =  new BusinessObject.SanPham();
                 sp.Id = Convert.ToString(tbl.Rows[0]["ID"]);
                 sp.TenSanPham = Convert.ToString(tbl.Rows[0]["TEN_SAN_PHAM"]);
                 sp.SoLuong = Convert.ToInt32(tbl.Rows[0]["SO_LUONG"]);

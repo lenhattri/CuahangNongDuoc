@@ -91,7 +91,7 @@ namespace CuahangNongduoc.DataLayer
 
         /* ==================== CRUD trực tiếp ==================== */
 
-        public bool Insert(SanPham sp)
+        public bool Insert(BusinessObject.SanPham sp)
         {
             const string sql = @"
                 INSERT INTO SAN_PHAM
@@ -109,7 +109,7 @@ namespace CuahangNongduoc.DataLayer
             ) > 0;
         }
 
-        public bool Update(SanPham sp)
+        public bool Update(BusinessObject.SanPham sp)
         {
             const string sql = @"
                 UPDATE SAN_PHAM
