@@ -26,11 +26,13 @@ namespace CuahangNongduoc
             // Chục
             switch (num.Substring(1, 1))
             {
-                case "0": if (num.Substring(2, 1) != "0" && num.Substring(0, 1) != "0")
+                case "0":
+                    if (num.Substring(2, 1) != "0" && num.Substring(0, 1) != "0")
                     {
                         chuc = "linh ";
                     }
-                    else { chuc = ""; }; break;
+                    else { chuc = ""; }
+                    ; break;
                 case "1": chuc = "mười "; break;
                 default:
                     chuc = No[Convert.ToByte(num.Substring(1, 1))] + " mươi "; break;
@@ -39,14 +41,16 @@ namespace CuahangNongduoc
             switch (num.Substring(2, 1))
             {
                 case "0": donvi = ""; break;
-                case "1": if ((num.Substring(1, 1) == "0") || (num.Substring(1, 1) == "1"))
+                case "1":
+                    if ((num.Substring(1, 1) == "0") || (num.Substring(1, 1) == "1"))
                     {
                         donvi = "một";
                     }
                     else
                     {
                         donvi = "mốt";
-                    }; break;
+                    }
+                    ; break;
                 case "5":
                     if (num.Substring(1, 1) != "0")
                     {
@@ -55,7 +59,8 @@ namespace CuahangNongduoc
                     else
                     {
                         donvi = "năm";
-                    }; break;
+                    }
+                    ; break;
                 default:
                     donvi = No[Convert.ToByte(num.Substring(2, 1))]; break;
             }

@@ -1,3 +1,5 @@
+using System;
+
 namespace CuahangNongduoc
 {
     partial class InPhieuBanForm
@@ -65,6 +67,11 @@ namespace CuahangNongduoc
             ((System.ComponentModel.ISupportInitialize)(this.PhieuBanBindingSource)).EndInit();
             this.ResumeLayout(false);
 
+        }
+
+        private void frmInPhieuBan_Load(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion

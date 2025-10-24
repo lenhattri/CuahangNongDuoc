@@ -1,43 +1,55 @@
+using CuahangNongduoc.BusinessObject;
+using CuahangNongduoc.Utils;
+// ?? thêm dòng này ?? nh?n ra NumberToVietnamese
+using Microsoft.Reporting.WinForms;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 
 namespace CuahangNongduoc
 {
     public partial class InPhieuBanForm : Form
     {
-        CuahangNongduoc.BusinessObject.PhieuBan m_PhieuBan;
-        public InPhieuBanForm(CuahangNongduoc.BusinessObject.PhieuBan ph)
+        private PhieuBan m_PhieuBan;
+
+        public InPhieuBanForm(PhieuBan ph)
         {
             InitializeComponent();
             reportViewer.LocalReport.ExecuteReportInCurrentAppDomain(System.Reflection.Assembly.GetExecutingAssembly().Evidence);
-            this.reportViewer.LocalReport.SubreportProcessing += new Microsoft.Reporting.WinForms.SubreportProcessingEventHandler(LocalReport_SubreportProcessing);
+            reportViewer.LocalReport.SubreportProcessing += LocalReport_SubreportProcessing;
             m_PhieuBan = ph;
         }
 
-        void LocalReport_SubreportProcessing(object sender, Microsoft.Reporting.WinForms.SubreportProcessingEventArgs e)
+        private void LocalReport_SubreportProcessing(object sender, SubreportProcessingEventArgs e)
         {
             e.DataSources.Clear();
-            e.DataSources.Add(new Microsoft.Reporting.WinForms.ReportDataSource("CuahangNongduoc_BusinessObject_ChiTietPhieuBan", m_PhieuBan.ChiTiet));
+            e.DataSources.Add(new ReportDataSource(
+                "CuahangNongduoc_BusinessObject_ChiTietPhieuBan",
+                m_PhieuBan.ChiTiet
+            ));
         }
 
-        private void frmInPhieuBan_Load(object sender, EventArgs e)
+        private void InPhieuBanForm_Load(object sender, EventArgs e)
         {
-            Num2Str num = new Num2Str();
-            IList<Microsoft.Reporting.WinForms.ReportParameter> param = new List<Microsoft.Reporting.WinForms.ReportParameter>();
-            CuahangNongduoc.BusinessObject.CuaHang ch = ThamSo.LayCuaHang();
-            param.Add(new Microsoft.Reporting.WinForms.ReportParameter("ten_cua_hang", ch.TenCuaHang));
-            param.Add(new Microsoft.Reporting.WinForms.ReportParameter("dia_chi", ch.DiaChi));
-            param.Add(new Microsoft.Reporting.WinForms.ReportParameter("dien_thoai", ch.DienThoai));
-            param.Add(new Microsoft.Reporting.WinForms.ReportParameter("bang_chu", num.NumberToString(m_PhieuBan.TongTien.ToString())));
+            // ? T?o ??i t??ng ??c s? thành ch?
+            var num = new Num2Str();
 
-            this.reportViewer.LocalReport.SetParameters(param);
-            this.PhieuBanBindingSource.DataSource = m_PhieuBan;
-            this.reportViewer.RefreshReport();
+            var param = new List<ReportParameter>();
+            CuaHang ch = ThamSo.LayCuaHang();
+
+            param.Add(new ReportParameter("ten_cua_hang", ch.TenCuaHang));
+            param.Add(new ReportParameter("dia_chi", ch.DiaChi));
+            param.Add(new ReportParameter("dien_thoai", ch.DienThoai));
+
+            // ? G?i ?úng hàm trong NumberToVietnamese
+            param.Add(new ReportParameter(
+                "bang_chu",
+                num.NumberToString(m_PhieuBan.TongTien.ToString())
+            ));
+
+            reportViewer.LocalReport.SetParameters(param);
+            PhieuBanBindingSource.DataSource = m_PhieuBan;
+            reportViewer.RefreshReport();
         }
     }
 }
