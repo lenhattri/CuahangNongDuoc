@@ -1,16 +1,15 @@
-<<<<<<< HEAD
+
 ﻿//using System;
 //using System.Collections.Generic;
 //using System.Text;
 //using System.Data;
 //using System.Data.OleDb;
 
-=======
 ﻿// DAL/DataLayer/LyDoChiFactory.cs
 using System.Data;
 using System.Data.SqlClient;
 using CuahangNongduoc.DAL.Infrastructure;
->>>>>>> 7d041c477994d2252376445e2ca609443d4b40dc
+
 
 //namespace CuahangNongduoc.DataLayer
 //{
@@ -49,7 +48,7 @@ namespace CuahangNongduoc.DataLayer
 {
     public class LyDoChiFactory
     {
-<<<<<<< HEAD
+
         private readonly string _connectionString = ConfigurationManager.ConnectionStrings["ConnStr"].ConnectionString;
 
         /// <summary>
@@ -67,7 +66,8 @@ namespace CuahangNongduoc.DataLayer
             }
 
             return dataTable;
-=======
+        }
+
         private readonly DbClient _db = DbClient.Instance;
         private DataTable _table;  // DataTable nội bộ cho pattern Save()
 
@@ -109,7 +109,7 @@ namespace CuahangNongduoc.DataLayer
                 _table = dt;
                 return dt;
             }
->>>>>>> 7d041c477994d2252376445e2ca609443d4b40dc
+
         }
 
         /// <summary>
@@ -119,7 +119,7 @@ namespace CuahangNongduoc.DataLayer
         /// <returns>A DataTable containing the matching record.</returns>
         public DataTable LayLyDoChi(long id)
         {
-<<<<<<< HEAD
+
             var dataTable = new DataTable();
             using (var connection = new SqlConnection(_connectionString))
             using (var command = new SqlCommand("SELECT * FROM LY_DO_CHI WHERE ID = @id", connection))
@@ -133,7 +133,7 @@ namespace CuahangNongduoc.DataLayer
             }
 
             return dataTable;
-=======
+
             const string sql = "SELECT ID, LY_DO FROM LY_DO_CHI WHERE ID = @id";
             using (var cn = _db.Open())
             using (var cmd = _db.Cmd(cn, sql, CommandType.Text, null, 30,
@@ -145,7 +145,7 @@ namespace CuahangNongduoc.DataLayer
                 _table = dt;
                 return dt;
             }
->>>>>>> 7d041c477994d2252376445e2ca609443d4b40dc
+
         }
 
         /// <summary>
@@ -154,7 +154,7 @@ namespace CuahangNongduoc.DataLayer
         /// <returns>A new DataRow with the schema of LY_DO_CHI table.</returns>
         public DataRow NewRow()
         {
-<<<<<<< HEAD
+
             var dataTable = new DataTable();
             using (var connection = new SqlConnection(_connectionString))
             using (var command = new SqlCommand("SELECT * FROM LY_DO_CHI WHERE 1=0", connection))
@@ -258,15 +258,16 @@ namespace CuahangNongduoc.DataLayer
                         throw; // cho BLL bắt và báo lỗi UI
                     }
                 }
-=======
-            EnsureSchema();
-            using (var cn = _db.Open())
-            using (var da = CreateAdapter(cn))
-            {
-                return da.Update(_table) > 0;
->>>>>>> 7d041c477994d2252376445e2ca609443d4b40dc
-            }
-        }
 
+                EnsureSchema();
+                using (var cn = _db.Open())
+                using (var da = CreateAdapter(cn))
+                {
+                    return da.Update(_table) > 0;
+
+                }
+            }
+
+        }
     }
 }

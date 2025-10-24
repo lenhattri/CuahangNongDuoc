@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 ﻿//using System;
 //using System.Collections.Generic;
 //using System.Text;
@@ -74,19 +74,18 @@ using System;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-=======
+
 ﻿// DAL/DataLayer/PhieuChiFactory.cs
 using System;
 using System.Data;
 using System.Data.SqlClient;
 using CuahangNongduoc.DAL.Infrastructure; 
->>>>>>> 7d041c477994d2252376445e2ca609443d4b40dc
 
 namespace CuahangNongduoc.DataLayer
 {
     public class PhieuChiFactory
     {
-<<<<<<< HEAD
+
         private readonly string _connectionString = ConfigurationManager.ConnectionStrings["ConnStr"].ConnectionString;
 
         /// <summary>
@@ -110,8 +109,9 @@ namespace CuahangNongduoc.DataLayer
                 }
             }
 
-            return dataTable;
-=======
+            return dataTable; 
+        }
+
         
         private readonly DbClient _db = DbClient.Instance;   // CHANGED
         private DataTable _table;                            // NEW: DataTable nội bộ cho pattern NewRow/Add/Save
@@ -162,7 +162,7 @@ namespace CuahangNongduoc.DataLayer
                 _db.P("@end", SqlDbType.DateTime, end));
             _table = dt; // đồng bộ cho NewRow/Add/Save
             return dt;
->>>>>>> 7d041c477994d2252376445e2ca609443d4b40dc
+
         }
 
         /// <summary>
@@ -171,7 +171,7 @@ namespace CuahangNongduoc.DataLayer
         /// <returns>A DataTable containing all records.</returns>
         public DataTable DanhsachPhieuChi()
         {
-<<<<<<< HEAD
+
             var dataTable = new DataTable();
             using (var connection = new SqlConnection(_connectionString))
             using (var command = new SqlCommand("SELECT * FROM PHIEU_CHI", connection))
@@ -282,10 +282,11 @@ namespace CuahangNongduoc.DataLayer
                 cmd.Parameters.Add("@GHI_CHU", SqlDbType.VarChar, 255).Value = row["GHI_CHU"] ?? (object)DBNull.Value;
                 cmd.Parameters.Add("@ID", SqlDbType.VarChar, 50).Value = row["ID"];
                 return cmd.ExecuteNonQuery();
-=======
-            var dt = _db.ExecuteDataTable(SELECT_ALL, CommandType.Text);   // CHANGED
-            _table = dt;
-            return dt;
+
+                var dt = _db.ExecuteDataTable(SELECT_ALL, CommandType.Text);   // CHANGED
+                _table = dt;
+                return dt;
+            }
         }
 
         public DataTable LayPhieuChi(string id)
@@ -335,7 +336,7 @@ namespace CuahangNongduoc.DataLayer
             using (var da = CreateAdapter(cn))
             {
                 return da.Update(_table) > 0;
->>>>>>> 7d041c477994d2252376445e2ca609443d4b40dc
+
             }
         }
 
