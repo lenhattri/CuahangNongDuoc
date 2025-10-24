@@ -11,7 +11,7 @@ namespace CuahangNongduoc.Controller
     
     public class PhieuThanhToanController
     {
-        PhieuThanhToanFactory factory = new PhieuThanhToanFactory();
+        PhieuThanhToanDAL factory = new PhieuThanhToanDAL();
 
 
         public DataRow NewRow()
@@ -66,8 +66,6 @@ namespace CuahangNongduoc.Controller
 
             txtGhichu.DataBindings.Clear();
             txtGhichu.DataBindings.Add("Text", bs, "GHI_CHU");
-
-
         }
         public void TimPhieuThanhToan(BindingNavigator bn, DataGridView dg, ComboBox cmb, TextBox txt, DateTimePicker dt, NumericUpDown numTongTien, TextBox txtGhichu,
             String idKH, DateTime dtNgayThu)
@@ -94,7 +92,5 @@ namespace CuahangNongduoc.Controller
             txtGhichu.DataBindings.Clear();
             txtGhichu.DataBindings.Add("Text", bs, "GHI_CHU");
         }
-
-        
     }
 }
