@@ -1030,7 +1030,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
         private System.Windows.Forms.ToolStripMenuItem mnuNguoiDung;
-        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.StatusStrip statusStrip1   ;
         private System.Windows.Forms.ToolStripStatusLabel toolstlb_StatusLogin;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
     }
