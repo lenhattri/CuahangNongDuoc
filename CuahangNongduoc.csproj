@@ -138,6 +138,7 @@
     <Compile Include="Domain\Entities\NguoiDung.cs" />
     <Compile Include="DTO\NguoiDungDTO.cs" />
     <Compile Include="DTO\PhieuThanhToanReport.cs" />
+    <Compile Include="DTO\SoLuongTonView.cs" />
     <Compile Include="UI\HeThong\frmChiTietNguoiDung.cs">
       <SubType>Form</SubType>
     </Compile>
