@@ -9,13 +9,19 @@
       </ConnectionProperties>
       <rd:DataSourceID>ddb16312-0ff4-41b5-bfa1-d1ad1e09e43f</rd:DataSourceID>
     </DataSource>
+    <DataSource Name="CuahangNongduocDTO">
+      <ConnectionProperties>
+        <DataProvider>System.Data.DataSet</DataProvider>
+        <ConnectString>/* Local Connection */</ConnectString>
+      </ConnectionProperties>
+      <rd:DataSourceID>b3fe1a76-e66d-4360-908f-f69df9373db3</rd:DataSourceID>
+    </DataSource>
   </DataSources>
   <DataSets>
-    <DataSet Name="CuahangNongduoc_BusinessObject_PhieuChi">
+    <DataSet Name="PhieuChi">
       <Query>
-        <DataSourceName>DummyDataSource</DataSourceName>
-        <CommandText />
-        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+        <DataSourceName>CuahangNongduocDTO</DataSourceName>
+        <CommandText>/* Local Query */</CommandText>
       </Query>
       <Fields>
         <Field Name="GhiChu">
@@ -24,11 +30,11 @@
         </Field>
         <Field Name="Id">
           <DataField>Id</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
+          <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
         <Field Name="LyDoChi">
           <DataField>LyDoChi</DataField>
-          <rd:TypeName>CuahangNongduoc.BusinessObject.LyDoChi</rd:TypeName>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="NgayChi">
           <DataField>NgayChi</DataField>
@@ -40,9 +46,9 @@
         </Field>
       </Fields>
       <rd:DataSetInfo>
-        <rd:DataSetName>CuahangNongduoc.BusinessObject</rd:DataSetName>
-        <rd:TableName>PhieuChi</rd:TableName>
-        <rd:ObjectDataSourceType>CuahangNongduoc.BusinessObject.PhieuChi, CuahangNongduoc, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</rd:ObjectDataSourceType>
+        <rd:DataSetName>CuahangNongduoc.DTO</rd:DataSetName>
+        <rd:TableName>PhieuChiReport</rd:TableName>
+        <rd:ObjectDataSourceType>CuahangNongduoc.DTO.PhieuChiReport, CuahangNongduoc, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</rd:ObjectDataSourceType>
       </rd:DataSetInfo>
     </DataSet>
   </DataSets>
@@ -316,7 +322,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>=Fields!LyDoChi.Value.LyDo</Value>
+                    <Value>=Fields!LyDoChi.Value</Value>
                     <Style>
                       <FontFamily>Times New Roman</FontFamily>
                     </Style>

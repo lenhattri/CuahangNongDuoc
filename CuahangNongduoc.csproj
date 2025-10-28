@@ -138,8 +138,10 @@
     <Compile Include="Domain\Entities\NguoiDung.cs" />
     <Compile Include="DTO\ChiTietPhieuBanReport.cs" />
     <Compile Include="DTO\ChiTietPhieuNhapReport.cs" />
+    <Compile Include="DTO\DuNoKhachHangReport.cs" />
     <Compile Include="DTO\NguoiDungDTO.cs" />
     <Compile Include="DTO\PhieuBanReport.cs" />
+    <Compile Include="DTO\PhieuChiReport.cs" />
     <Compile Include="DTO\PhieuNhapReport.cs" />
     <Compile Include="DTO\PhieuThanhToanReport.cs" />
     <Compile Include="DTO\SoLuongTonView.cs" />
@@ -530,7 +532,10 @@
     <None Include="Properties\DataSources\CuahangNongduoc.BusinessObject.PhieuThanhToanReport.datasource" />
     <None Include="Properties\DataSources\CuahangNongduoc.DTO.ChiTietPhieuBanReport.datasource" />
     <None Include="Properties\DataSources\CuahangNongduoc.DTO.ChiTietPhieuNhapReport.datasource" />
+    <None Include="Properties\DataSources\CuahangNongduoc.DTO.DuNoKhachHangReport.datasource" />
+    <None Include="Properties\DataSources\CuahangNongduoc.DTO.NguoiDungDTO.datasource" />
     <None Include="Properties\DataSources\CuahangNongduoc.DTO.PhieuBanReport.datasource" />
+    <None Include="Properties\DataSources\CuahangNongduoc.DTO.PhieuChiReport.datasource" />
     <None Include="Properties\DataSources\CuahangNongduoc.DTO.PhieuNhapReport.datasource" />
     <None Include="Properties\DataSources\frmInPhieuThanhToan.datasource" />
     <None Include="Properties\Settings.settings">
