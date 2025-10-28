@@ -1,71 +1,120 @@
+﻿// DAL/DataLayer/PhieuChiFactory.cs
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Data;
-using System.Data.OleDb;
+using System.Data.SqlClient;
+using CuahangNongduoc.DAL.Infrastructure; 
 
 namespace CuahangNongduoc.DataLayer
 {
     public class PhieuChiFactory
     {
-        DataService m_Ds = new DataService();
+        
+        private readonly DbClient _db = DbClient.Instance;   // CHANGED
+        private DataTable _table;                            // NEW: DataTable nội bộ cho pattern NewRow/Add/Save
 
+        private const string SELECT_ALL = "SELECT * FROM PHIEU_CHI"; // giữ nguyên SELECT * để CommandBuilder sinh CRUD
+
+        /* ===================== Helpers ===================== */
+
+        private void EnsureSchema() // NEW
+        {
+            if (_table != null) return;
+            using (var cn = _db.Open())
+            using (var cmd = _db.Cmd(cn, SELECT_ALL + " WHERE 1=0", CommandType.Text))
+            using (var da = new SqlDataAdapter(cmd))
+            {
+                _table = new DataTable("PHIEU_CHI");
+                da.FillSchema(_table, SchemaType.Source); // CHANGED: lấy schema rỗng rõ ràng
+            }
+        }
+
+        private SqlDataAdapter CreateAdapter(SqlConnection cn) // NEW: phục vụ Save()
+        {
+            var da = new SqlDataAdapter
+            {
+                SelectCommand = _db.Cmd(cn, SELECT_ALL, CommandType.Text)
+            };
+            da.MissingSchemaAction = MissingSchemaAction.AddWithKey;
+            _ = new SqlCommandBuilder(da); // auto sinh Insert/Update/Delete
+            return da;
+        }
+
+        /* ===================== SELECTs ===================== */
+
+        // Tìm theo lý do + NGAY_CHI (dùng range [@start,@end) để sargable)
         public DataTable TimPhieuChi(int lydo, DateTime ngay)
         {
-            OleDbCommand cmd = new OleDbCommand("SELECT * FROM PHIEU_CHI WHERE ID_LY_DO_CHI = @lydo AND NGAY_CHI = @ngay");
-            cmd.Parameters.Add("lydo", OleDbType.Integer).Value = lydo;
-            cmd.Parameters.Add("ngay", OleDbType.Date).Value = ngay;
+            var start = ngay.Date;              // NEW
+            var end = start.AddDays(1);       // NEW
 
-            m_Ds.Load(cmd);
+            const string sql = @"
+                SELECT * FROM PHIEU_CHI
+                WHERE ID_LY_DO_CHI = @lydo
+                  AND NGAY_CHI >= @start AND NGAY_CHI < @end";            // CHANGED
 
-            return m_Ds;
+            var dt = _db.ExecuteDataTable(sql, CommandType.Text,
+                _db.P("@lydo", SqlDbType.Int, lydo),                // CHANGED: đúng kiểu Int
+                _db.P("@start", SqlDbType.DateTime, start),
+                _db.P("@end", SqlDbType.DateTime, end));
+            _table = dt; // đồng bộ cho NewRow/Add/Save
+            return dt;
         }
 
         public DataTable DanhsachPhieuChi()
         {
-            OleDbCommand cmd = new OleDbCommand("SELECT * FROM PHIEU_CHI ");
-            m_Ds.Load(cmd);
-
-            return m_Ds;
+            var dt = _db.ExecuteDataTable(SELECT_ALL, CommandType.Text);   // CHANGED
+            _table = dt;
+            return dt;
         }
-      
-        public DataTable LayPhieuChi(String id)
+
+        public DataTable LayPhieuChi(string id)
         {
-            OleDbCommand cmd = new OleDbCommand("SELECT * FROM PHIEU_CHI WHERE ID = @id");
-            cmd.Parameters.Add("id", OleDbType.VarChar,50).Value = id;
-            m_Ds.Load(cmd);
-            return m_Ds;
+            const string sql = "SELECT * FROM PHIEU_CHI WHERE ID = @id";
+            var dt = _db.ExecuteDataTable(sql, CommandType.Text,
+                _db.P("@id", SqlDbType.NVarChar, id, 50));                 // CHANGED: tham số hoá, Unicode-safe
+            _table = dt;
+            return dt;
         }
 
-
-        public static long LayTongTien(String lydo, int thang, int nam)
+        public static long LayTongTien(string lydo, int thang, int nam)
         {
-            DataService ds = new DataService();
-            OleDbCommand cmd = new OleDbCommand("SELECT SUM(TONG_TIEN) FROM PHIEU_CHI WHERE ID_LY_DO_CHI = @lydo AND MONTH(NGAY_CHI)=@thang AND YEAR(NGAY_CHI)= @nam");
-            cmd.Parameters.Add("lydo", OleDbType.VarChar, 50).Value = lydo;
-            cmd.Parameters.Add("thang", OleDbType.Integer).Value = thang;
-            cmd.Parameters.Add("nam", OleDbType.Integer).Value = nam;
+            var db = DbClient.Instance;                                     // CHANGED
+            const string sql = @"
+                SELECT SUM(TONG_TIEN)
+                FROM PHIEU_CHI
+                WHERE ID_LY_DO_CHI = @lydo
+                  AND MONTH(NGAY_CHI) = @thang
+                  AND YEAR(NGAY_CHI)  = @nam";
 
-            object obj = ds.ExecuteScalar(cmd);
-            
-            if (obj == null)
-                return 0;
-            else
-                return Convert.ToInt64(obj);
+            // Nếu ID_LY_DO_CHI là INT trong DB, có thể đổi sang SqlDbType.Int và Convert.ToInt32(lydo)
+            var obj = db.ExecuteScalar<object>(sql, CommandType.Text,
+                db.P("@lydo", SqlDbType.NVarChar, lydo, 50),              // CHANGED: giữ nguyên kiểu chuỗi 
+                db.P("@thang", SqlDbType.Int, thang),
+                db.P("@nam", SqlDbType.Int, nam));
+            return (obj == null || obj == DBNull.Value) ? 0L : Convert.ToInt64(obj);
         }
-        
+
         public DataRow NewRow()
         {
-            return m_Ds.NewRow();
+            EnsureSchema(); // CHANGED
+            return _table.NewRow();
         }
+
         public void Add(DataRow row)
         {
-            m_Ds.Rows.Add(row);
+            EnsureSchema(); // CHANGED
+            _table.Rows.Add(row);
         }
-       public bool Save()
+
+        public bool Save()
         {
-           
-            return m_Ds.ExecuteNoneQuery() > 0;
+            // thay m_Ds.ExecuteNoneQuery()
+            EnsureSchema();
+            using (var cn = _db.Open())
+            using (var da = CreateAdapter(cn))
+            {
+                return da.Update(_table) > 0;
+            }
         }
     }
 }

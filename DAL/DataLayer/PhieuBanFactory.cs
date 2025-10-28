@@ -1,98 +1,169 @@
+﻿// DAL/DataLayer/PhieuBanFactory.cs
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Data;
-using System.Data.OleDb;
+using System.Data.SqlClient;
+using CuahangNongduoc.DAL.Infrastructure;             // CHANGED: dùng DbClient (singleton)
 
 namespace CuahangNongduoc.DataLayer
 {
     public class PhieuBanFactory
     {
-        DataService m_Ds = new DataService();
+        // DataService m_Ds = new DataService();
+        private readonly DbClient _db = DbClient.Instance; // CHANGED: bỏ DataService, dùng DbClient
+        private DataTable _table;                          // NEW: giữ DataTable đang bind để Save()
 
-        public DataTable TimPhieuBan(String idKh, DateTime dt)
+        private const string SELECT_BASE =
+            "SELECT ID, ID_KHACH_HANG, NGAY_BAN, TONG_TIEN, DA_TRA, CON_NO FROM PHIEU_BAN";
+
+        /* ===================== Helpers ===================== */
+
+        private void EnsureSchema()                       // NEW: bảo đảm _table có schema
         {
-            OleDbCommand cmd = new OleDbCommand("SELECT * FROM PHIEU_BAN WHERE NGAY_BAN = @ngay AND ID_KHACH_HANG=@kh");
-            cmd.Parameters.Add("ngay", OleDbType.Date).Value = dt;
-            cmd.Parameters.Add("kh", OleDbType.VarChar).Value = idKh;
+            if (_table != null) return;
+            _table = new DataTable("PHIEU_BAN");
+            using (var cn = _db.Open())
+            using (var cmd = _db.Cmd(cn, SELECT_BASE + " WHERE 1=0", CommandType.Text))
+            using (var da = new SqlDataAdapter(cmd))
+            {
+                da.FillSchema(_table, SchemaType.Source);
+            }
+        }
 
-            m_Ds.Load(cmd);
+        private SqlDataAdapter CreateAdapter(SqlConnection cn) // NEW: adapter + commandBuilder cho Save()
+        {
+            var da = new SqlDataAdapter
+            {
+                SelectCommand = _db.Cmd(cn, SELECT_BASE, CommandType.Text)
+            };
+            da.MissingSchemaAction = MissingSchemaAction.AddWithKey;
+            _ = new SqlCommandBuilder(da); // tự sinh Insert/Update/Delete
+            return da;
+        }
 
-            return m_Ds;
+        /* ===================== Queries ===================== */
+
+        public DataTable TimPhieuBan(string idKh, DateTime dt)
+        {
+            // (Giữ semantics cũ: so sánh bằng ngày—nếu cột là datetime có time, cân nhắc CAST khi cần)
+            using (var cn = _db.Open()) // CHANGED
+            using (var cmd = _db.Cmd(cn,
+                   "SELECT * FROM PHIEU_BAN WHERE NGAY_BAN = @ngay AND ID_KHACH_HANG = @kh",
+                   CommandType.Text, null, 30,
+                   _db.P("@ngay", SqlDbType.Date, dt.Date),                // CHANGED
+                   _db.P("@kh", SqlDbType.NVarChar, idKh, 50)))           // CHANGED
+            using (var da = new SqlDataAdapter(cmd))                         // CHANGED
+            {
+                var dtRes = new DataTable("PHIEU_BAN");
+                da.Fill(dtRes);
+                _table = dtRes; // NEW: đồng bộ cho NewRow/Add/Save nếu cần
+                return dtRes;
+            }
         }
 
         public DataTable DanhsachPhieuBanLe()
         {
-            OleDbCommand cmd = new OleDbCommand("SELECT PB.* FROM PHIEU_BAN PB INNER JOIN KHACH_HANG KH ON PB.ID_KHACH_HANG=KH.ID WHERE KH.LOAI_KH=FALSE");
-            m_Ds.Load(cmd);
-
-            return m_Ds;
+            const string sql =
+                "SELECT PB.* FROM PHIEU_BAN PB INNER JOIN KHACH_HANG KH ON PB.ID_KHACH_HANG = KH.ID WHERE KH.LOAI_KH = 0";
+            using (var cn = _db.Open())                                      // CHANGED
+            using (var cmd = _db.Cmd(cn, sql, CommandType.Text))             // CHANGED
+            using (var da = new SqlDataAdapter(cmd))                         // CHANGED
+            {
+                var dtRes = new DataTable("PHIEU_BAN");
+                da.Fill(dtRes);
+                _table = dtRes; // NEW
+                return dtRes;
+            }
         }
+
         public DataTable DanhsachPhieuBanSi()
         {
-            OleDbCommand cmd = new OleDbCommand("SELECT PB.* FROM PHIEU_BAN PB INNER JOIN KHACH_HANG KH ON PB.ID_KHACH_HANG=KH.ID WHERE KH.LOAI_KH=TRUE");
-            m_Ds.Load(cmd);
-
-            return m_Ds;
+            const string sql =
+                "SELECT PB.* FROM PHIEU_BAN PB INNER JOIN KHACH_HANG KH ON PB.ID_KHACH_HANG = KH.ID WHERE KH.LOAI_KH = 1";
+            using (var cn = _db.Open())                                      // CHANGED
+            using (var cmd = _db.Cmd(cn, sql, CommandType.Text))             // CHANGED
+            using (var da = new SqlDataAdapter(cmd))                         // CHANGED
+            {
+                var dtRes = new DataTable("PHIEU_BAN");
+                da.Fill(dtRes);
+                _table = dtRes; // NEW
+                return dtRes;
+            }
         }
 
-
-        public DataTable LayPhieuBan(String id)
+        public DataTable LayPhieuBan(string id)
         {
-            OleDbCommand cmd = new OleDbCommand("SELECT * FROM PHIEU_BAN WHERE ID = @id");
-            cmd.Parameters.Add("id", OleDbType.VarChar,50).Value = id;
-            m_Ds.Load(cmd);
-            return m_Ds;
+            using (var cn = _db.Open())                                      // CHANGED
+            using (var cmd = _db.Cmd(cn,
+                   "SELECT * FROM PHIEU_BAN WHERE ID = @id",
+                   CommandType.Text, null, 30,
+                   _db.P("@id", SqlDbType.NVarChar, id, 50)))                // CHANGED
+            using (var da = new SqlDataAdapter(cmd))                         // CHANGED
+            {
+                var dtRes = new DataTable("PHIEU_BAN");
+                da.Fill(dtRes);
+                _table = dtRes; // NEW
+                return dtRes;
+            }
         }
 
-
-        public DataTable LayChiTietPhieuBan(String idPhieuBan)
+        public DataTable LayChiTietPhieuBan(string idPhieuBan)
         {
-            OleDbCommand cmd = new OleDbCommand("SELECT * FROM CHI_TIET_PHIEU_BAN WHERE ID_PHIEU_BAN = @id");
-            cmd.Parameters.Add("id", OleDbType.VarChar,50).Value = idPhieuBan;
-            m_Ds.Load(cmd);
-            return m_Ds;
+            using (var cn = _db.Open())                                      // CHANGED
+            using (var cmd = _db.Cmd(cn,
+                   "SELECT * FROM CHI_TIET_PHIEU_BAN WHERE ID_PHIEU_BAN = @id",
+                   CommandType.Text, null, 30,
+                   _db.P("@id", SqlDbType.NVarChar, idPhieuBan, 50)))        // CHANGED
+            using (var da = new SqlDataAdapter(cmd))                         // CHANGED
+            {
+                var dtRes = new DataTable("CHI_TIET_PHIEU_BAN");
+                da.Fill(dtRes);
+                return dtRes; // (Không buộc _table vì Save() chỉ áp dụng cho PHIEU_BAN)
+            }
         }
 
-        public static long LayConNo(String kh, int thang, int nam)
+        public static long LayConNo(string kh, int thang, int nam)
         {
-            DataService ds = new DataService();
-            OleDbCommand cmd = new OleDbCommand("SELECT SUM(CON_NO) FROM PHIEU_BAN WHERE ID_KHACH_HANG = @kh AND MONTH(NGAY_BAN)=@thang AND YEAR(NGAY_BAN)= @nam");
-            cmd.Parameters.Add("kh", OleDbType.VarChar, 50).Value = kh;
-            cmd.Parameters.Add("thang", OleDbType.Integer).Value = thang;
-            cmd.Parameters.Add("nam", OleDbType.Integer).Value = nam;
-
-            object obj = ds.ExecuteScalar(cmd);
-            if (obj == null)
-                return 0;
-            else
-                return Convert.ToInt64(obj);
+            // CHANGED: bỏ DataService, dùng DbClient + tham số đúng kiểu
+            var db = DbClient.Instance;
+            const string sql = @"
+                SELECT SUM(CON_NO) FROM PHIEU_BAN
+                WHERE ID_KHACH_HANG = @kh AND MONTH(NGAY_BAN) = @thang AND YEAR(NGAY_BAN) = @nam";
+            var val = db.ExecuteScalar<object>(sql, CommandType.Text,        // lấy object rồi tự xử lý null
+                db.P("@kh", SqlDbType.NVarChar, kh, 50),
+                db.P("@thang", SqlDbType.Int, thang),
+                db.P("@nam", SqlDbType.Int, nam));
+            return (val == null || val == DBNull.Value) ? 0L : Convert.ToInt64(val);
         }
 
         public static int LaySoPhieu()
         {
-            DataService ds = new DataService();
-            OleDbCommand cmd = new OleDbCommand("SELECT COUNT(*) FROM PHIEU_BAN");
-            
-            object obj = ds.ExecuteScalar(cmd);
-            if (obj == null)
-                return 0;
-            else
-                return Convert.ToInt32(obj);
+            var db = DbClient.Instance;                                      // CHANGED
+            const string sql = "SELECT COUNT(*) FROM PHIEU_BAN";
+            return db.ExecuteScalar<int>(sql, CommandType.Text);             // CHANGED
         }
-        
+
+        /* ===================== DataTable pattern (giữ API cũ) ===================== */
+
         public DataRow NewRow()
         {
-            return m_Ds.NewRow();
+            EnsureSchema(); // NEW
+            return _table.NewRow();
         }
+
         public void Add(DataRow row)
         {
-            m_Ds.Rows.Add(row);
+            EnsureSchema(); // NEW
+            _table.Rows.Add(row);
         }
-       public bool Save()
+
+        public bool Save()
         {
-           
-            return m_Ds.ExecuteNoneQuery() > 0;
+            EnsureSchema(); // NEW
+            using (var cn = _db.Open())
+            using (var da = CreateAdapter(cn))
+            {
+                return da.Update(_table) > 0; // CHANGED: thay cho m_Ds.ExecuteNoneQuery()
+            }
         }
     }
 }

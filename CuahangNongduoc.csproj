@@ -136,8 +136,13 @@
     <Compile Include="BLL\Controller\DonViTinhController.cs" />
     <Compile Include="DAL\DataLayer\PhieuChiFactory.cs" />
     <Compile Include="Domain\Entities\NguoiDung.cs" />
+    <Compile Include="DTO\ChiTietPhieuBanReport.cs" />
+    <Compile Include="DTO\ChiTietPhieuNhapReport.cs" />
     <Compile Include="DTO\NguoiDungDTO.cs" />
+    <Compile Include="DTO\PhieuBanReport.cs" />
+    <Compile Include="DTO\PhieuNhapReport.cs" />
     <Compile Include="DTO\PhieuThanhToanReport.cs" />
+    <Compile Include="DTO\SoLuongTonView.cs" />
     <Compile Include="UI\HeThong\frmChiTietNguoiDung.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -523,6 +528,10 @@
     <None Include="packages.config" />
     <None Include="Properties\DataSources\CuahangNongduoc.BusinessObject.PhieuThanhToan.datasource" />
     <None Include="Properties\DataSources\CuahangNongduoc.BusinessObject.PhieuThanhToanReport.datasource" />
+    <None Include="Properties\DataSources\CuahangNongduoc.DTO.ChiTietPhieuBanReport.datasource" />
+    <None Include="Properties\DataSources\CuahangNongduoc.DTO.ChiTietPhieuNhapReport.datasource" />
+    <None Include="Properties\DataSources\CuahangNongduoc.DTO.PhieuBanReport.datasource" />
+    <None Include="Properties\DataSources\CuahangNongduoc.DTO.PhieuNhapReport.datasource" />
     <None Include="Properties\DataSources\frmInPhieuThanhToan.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

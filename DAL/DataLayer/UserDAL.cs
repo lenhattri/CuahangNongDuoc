@@ -1,340 +1,294 @@
-﻿using CuahangNongduoc.Domain.Entities;
-using CuahangNongduoc.Utils.Functions;
+﻿// DAL/DataLayer/UserDAL.cs
 using System;
-using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Windows.Forms;
+using CuahangNongduoc.DAL.Infrastructure;                 // CHANGED: dùng DbClient
+using BCrypt.Net;                                        // CHANGED: BCrypt.Net-Next (nuget)
 
 namespace CuahangNongduoc.DAL.DataLayer
 {
     public class UserDAL
     {
-        private DataTable _dataTable;
-        private static readonly string _cs = ConfigurationManager.ConnectionStrings["ConnStr"].ConnectionString;
-        public DataTable LayDanhSachNguoiDung()
-        {
-            return SafeExecutor.Execute(() =>
-            {
-                const string query = @"
-            SELECT 
-                NV.ID,
-                NV.HO_TEN,
-                NV.DIA_CHI,
-                NV.DIEN_THOAI,
-                ND.TEN_DANG_NHAP,
-                ND.MAT_KHAU,
-                ND.QUYEN
-            FROM NHAN_VIEN NV
-            JOIN NGUOI_DUNG ND ON NV.ID = ND.ID";
+        private readonly DbClient _db = DbClient.Instance; // CHANGED: thay vì ConfigurationManager + SqlConnection
+        private DataTable _dataTable;                      // giữ bảng đang bind/sửa
 
-                _dataTable = DataTableHelper.GetDataTable(query);
-                LogHelper.LogInfo($"Đã lấy danh sách người dùng mở rộng: {_dataTable.Rows.Count}");
-                return _dataTable;
-            }, nameof(LayDanhSachNguoiDung));
+          // NEW: schema DataTable hợp nhất 2 bảng để NewRow/Add/Save giữ được cột
+        private void EnsureSchema()
+        {
+            if (_dataTable != null) return;
+            _dataTable = new DataTable("USERS_VIEW");
+            _dataTable.Columns.Add("ID", typeof(long));
+            _dataTable.Columns.Add("HO_TEN", typeof(string));
+            _dataTable.Columns.Add("DIA_CHI", typeof(string));
+            _dataTable.Columns.Add("DIEN_THOAI", typeof(string));
+            _dataTable.Columns.Add("TEN_DANG_NHAP", typeof(string));
+            _dataTable.Columns.Add("MAT_KHAU", typeof(string));
+            _dataTable.Columns.Add("QUYEN", typeof(string));
         }
 
+        /* ========================= SELECTs ========================= */
+
+        public DataTable LayDanhSachNguoiDung()
+        {
+            const string sql = @"
+                SELECT  NV.ID,
+                        NV.HO_TEN,
+                        NV.DIA_CHI,
+                        NV.DIEN_THOAI,
+                        ND.TEN_DANG_NHAP,
+                        ND.MAT_KHAU,
+                        ND.QUYEN
+                FROM NHAN_VIEN NV
+                JOIN NGUOI_DUNG ND ON NV.ID = ND.ID";
+            var dt = _db.ExecuteDataTable(sql, CommandType.Text);          // CHANGED
+            _dataTable = dt;                                               // đồng bộ để NewRow/Add/Save dùng chung
+            return dt;
+        }
 
         public DataRow LayNguoiDungTheoId(string id)
         {
-            return SafeExecutor.Execute(() =>
-            {
-                const string query = "SELECT ID, TEN_DANG_NHAP, QUYEN FROM NGUOI_DUNG WHERE ID = @id";
-                var parameters = new[]
-                {
-                    new SqlParameter("@id", SqlDbType.VarChar) { Value = id }
-                };
-                var dt = DataTableHelper.GetDataTable(query, parameters);
-                return dt.Rows.Count > 0 ? dt.Rows[0] : null;
-            }, nameof(LayNguoiDungTheoId));
+            const string sql = @"SELECT ID, TEN_DANG_NHAP, QUYEN FROM NGUOI_DUNG WHERE ID = @id";
+            var dt = _db.ExecuteDataTable(sql, CommandType.Text,
+                _db.P("@id", SqlDbType.BigInt, Convert.ToInt64(id)));      // CHANGED: ID kiểu long
+            return dt.Rows.Count > 0 ? dt.Rows[0] : null;
         }
 
         public DataRow LayNguoiDungTheoTenDangNhap(string tenDangNhap)
         {
-            return SafeExecutor.Execute(() =>
-            {
-                const string query = "SELECT NHAN_VIEN.ID, HO_TEN, DIA_CHI, DIEN_THOAI, TEN_DANG_NHAP, MAT_KHAU, QUYEN FROM NGUOI_DUNG JOIN NHAN_VIEN ON NGUOI_DUNG.ID = NHAN_VIEN.ID WHERE TEN_DANG_NHAP = @tenDangNhap";
-                var parameters = new[]
-                {
-                    new SqlParameter("@tenDangNhap", SqlDbType.VarChar) { Value = tenDangNhap }
-                };
-                var dt = DataTableHelper.GetDataTable(query, parameters);
-                return dt.Rows.Count > 0 ? dt.Rows[0] : null;
-            }, nameof(LayNguoiDungTheoTenDangNhap));
+            const string sql = @"
+                SELECT  NV.ID, NV.HO_TEN, NV.DIA_CHI, NV.DIEN_THOAI,
+                        ND.TEN_DANG_NHAP, ND.MAT_KHAU, ND.QUYEN
+                FROM NGUOI_DUNG ND
+                JOIN NHAN_VIEN NV ON ND.ID = NV.ID
+                WHERE ND.TEN_DANG_NHAP = @user";
+            var dt = _db.ExecuteDataTable(sql, CommandType.Text,
+                _db.P("@user", SqlDbType.NVarChar, tenDangNhap, 100));     // CHANGED: NVARCHAR và chiều dài rõ ràng
+            return dt.Rows.Count > 0 ? dt.Rows[0] : null;
         }
+
+        /* ========================= DataTable pattern ========================= */
 
         public DataRow NewRow()
         {
-            return SafeExecutor.Execute(() =>
-            {
-                if (_dataTable == null)
-                    _dataTable = LayDanhSachNguoiDung();
-                return _dataTable.NewRow();
-
-            }, nameof(NewRow));
+            EnsureSchema();                                                // CHANGED
+            return _dataTable.NewRow();
         }
 
         public void Add(DataRow row)
         {
-            SafeExecutor.Execute(() =>
+            EnsureSchema();                                                // CHANGED
+            if (!ReferenceEquals(row.Table, _dataTable))
             {
-                if (_dataTable == null)
-                    _dataTable = LayDanhSachNguoiDung();
+                var clone = _dataTable.NewRow();
+                foreach (DataColumn c in _dataTable.Columns)
+                    clone[c.ColumnName] = row.Table.Columns.Contains(c.ColumnName) ? row[c.ColumnName] : DBNull.Value;
+                _dataTable.Rows.Add(clone);
+            }
+            else
+            {
                 _dataTable.Rows.Add(row);
-            }, nameof(Add));
+            }
         }
+
+        /* ========================= SAVE (insert batch) ========================= */
 
         public bool Save()
         {
-            bool success = false;
+            EnsureSchema();
+            if (_dataTable.Rows.Count == 0) return false;
 
-            SafeExecutor.Execute(() =>
+            return _db.InTx((cn, tx) =>
             {
-                if (_dataTable == null || _dataTable.Rows.Count == 0)
-                    throw new InvalidOperationException("Không có dữ liệu để lưu.");
+                int affected = 0;
 
-                using (var conn = new SqlConnection(_cs))
+                foreach (DataRow row in _dataTable.Rows)
                 {
-                    conn.Open();
-                    using (var tran = conn.BeginTransaction())
+                    if (row.RowState != DataRowState.Added &&
+                        row.RowState != DataRowState.Modified) continue;
+
+                    // 1) Insert/Update NHAN_VIEN
+                    long idNhanVien;
+
+                    if (row.RowState == DataRowState.Added || row.IsNull("ID") || Convert.ToInt64(row["ID"]) <= 0)
                     {
-                        try
+                        // INSERT NV -> lấy ID
+                        const string sqlNvIns = @"
+                            INSERT INTO NHAN_VIEN (HO_TEN, DIA_CHI, DIEN_THOAI)
+                            OUTPUT INSERTED.ID
+                            VALUES (@HOTEN, @DIACHI, @DT)";
+                        using (var cmd = _db.Cmd(cn, sqlNvIns, CommandType.Text, tx, 30,
+                            _db.P("@HOTEN", SqlDbType.NVarChar, row["HO_TEN"], 200),
+                            _db.P("@DIACHI", SqlDbType.NVarChar, row["DIA_CHI"], 255),
+                            _db.P("@DT", SqlDbType.NVarChar, row["DIEN_THOAI"], 50)))
                         {
-                            // ✅ BẮT ĐẦU VÒNG LẶP QUA TẤT CẢ CÁC DÒNG
-                            foreach (DataRow row in _dataTable.Rows)
-                            {
-                                // Chỉ xử lý những dòng mới được thêm vào
-                                if (row.RowState != DataRowState.Added && row.RowState != DataRowState.Modified)
-                                    continue; // Bỏ qua dòng này và chuyển đến dòng tiếp theo
-
-                                // 1️⃣ Chuẩn bị DataTable NHAN_VIEN
-                                var tableNV = new DataTable("NHAN_VIEN");
-                                // Cấu hình cột ID để mô phỏng khóa chính tự tăng
-                                var idColumn = new DataColumn("ID", typeof(long))
-                                {
-                                    AutoIncrement = true,       // Tự động tăng
-                                    AutoIncrementSeed = -1,     // Bắt đầu từ số âm (để phân biệt với ID từ DB)
-                                    AutoIncrementStep = -1,
-                                    AllowDBNull = false,        // Không cho phép null
-                                    Unique = true               // Là duy nhất
-                                };
-                                tableNV.Columns.Add(idColumn);
-                                tableNV.PrimaryKey = new DataColumn[] { idColumn };
-
-                                tableNV.Columns.Add("HO_TEN", typeof(string));
-                                tableNV.Columns.Add("DIA_CHI", typeof(string));
-                                tableNV.Columns.Add("DIEN_THOAI", typeof(string));
-
-                                var newRowNV = tableNV.NewRow();
-                                newRowNV["HO_TEN"] = row["HO_TEN"];
-                                newRowNV["DIA_CHI"] = row["DIA_CHI"];
-                                newRowNV["DIEN_THOAI"] = row["DIEN_THOAI"];
-                                tableNV.Rows.Add(newRowNV);
-
-                                // 🧩 Lưu và lấy ID nhân viên
-                                long idNhanVien = DataTableHelper.SaveAndGetId(tableNV, conn, tran);
-
-                                // Nếu không lấy được ID, có lỗi xảy ra, dừng lại
-                                if (idNhanVien == -1)
-                                {
-                                    throw new Exception("Không thể lấy được ID của nhân viên vừa tạo.");
-                                }
-
-                                // 2️⃣ Chuẩn bị DataTable NGUOI_DUNG
-                                var tableND = new DataTable("NGUOI_DUNG");
-                                tableND.Columns.Add("TEN_DANG_NHAP", typeof(string));
-                                tableND.Columns.Add("MAT_KHAU", typeof(string));
-                                tableND.Columns.Add("QUYEN", typeof(string));
-                                tableND.Columns.Add("ID", typeof(long));
-
-                                var newRowND = tableND.NewRow();
-                                newRowND["TEN_DANG_NHAP"] = row["TEN_DANG_NHAP"];
-                                newRowND["MAT_KHAU"] = row["MAT_KHAU"];
-                                newRowND["QUYEN"] = row["QUYEN"];
-                                newRowND["ID"] = idNhanVien;
-                                tableND.Rows.Add(newRowND);
-
-                                row["ID"] = idNhanVien; // Cập nhật ID vào DataRow gốc
-
-                                // 🧩 Lưu NGUOI_DUNG
-                                DataTableHelper.Save(tableND, conn, tran);
-                            } // ✅ KẾT THÚC VÒNG LẶP
-
-                            tran.Commit(); // Chỉ commit khi tất cả các dòng đã được xử lý thành công
-                            _dataTable.AcceptChanges();
-                            success = true;
+                            var obj = cmd.ExecuteScalar();
+                            idNhanVien = (obj == null || obj == DBNull.Value) ? 0L : Convert.ToInt64(obj);
+                            row["ID"] = idNhanVien;                         // cập nhật lại vào DataRow
                         }
-                        catch
+
+                        // 2) Insert NGUOI_DUNG
+                        const string sqlNdIns = @"
+                            INSERT INTO NGUOI_DUNG (ID, TEN_DANG_NHAP, MAT_KHAU, QUYEN)
+                            VALUES (@ID, @USER, @PASS, @ROLE)";
+                        // Hash mật khẩu trước khi lưu
+                        var hashed = BCrypt.Net.BCrypt.HashPassword(Convert.ToString(row["MAT_KHAU"]));
+                        using (var cmd = _db.Cmd(cn, sqlNdIns, CommandType.Text, tx, 30,
+                            _db.P("@ID", SqlDbType.BigInt, idNhanVien),
+                            _db.P("@USER", SqlDbType.NVarChar, row["TEN_DANG_NHAP"], 100),
+                            _db.P("@PASS", SqlDbType.NVarChar, hashed, 200),
+                            _db.P("@ROLE", SqlDbType.NVarChar, row["QUYEN"], 50)))
                         {
-                            tran.Rollback(); // Nếu có bất kỳ lỗi nào, hủy bỏ toàn bộ giao dịch
-                            throw; // Ném lại lỗi để SafeExecutor xử lý
+                            affected += cmd.ExecuteNonQuery();
+                        }
+                    }
+                    else if (row.RowState == DataRowState.Modified)
+                    {
+                        idNhanVien = Convert.ToInt64(row["ID"]);
+
+                        // UPDATE NHAN_VIEN
+                        const string sqlNvUpd = @"
+                            UPDATE NHAN_VIEN
+                               SET HO_TEN=@HOTEN, DIA_CHI=@DIACHI, DIEN_THOAI=@DT
+                             WHERE ID=@ID";
+                        using (var cmd = _db.Cmd(cn, sqlNvUpd, CommandType.Text, tx, 30,
+                            _db.P("@HOTEN", SqlDbType.NVarChar, row["HO_TEN"], 200),
+                            _db.P("@DIACHI", SqlDbType.NVarChar, row["DIA_CHI"], 255),
+                            _db.P("@DT", SqlDbType.NVarChar, row["DIEN_THOAI"], 50),
+                            _db.P("@ID", SqlDbType.BigInt, idNhanVien)))
+                        {
+                            cmd.ExecuteNonQuery();
+                        }
+
+                        // Kiểm tra mật khẩu có đổi không
+                        var orig = row["MAT_KHAU", DataRowVersion.Original];
+                        var curr = row["MAT_KHAU", DataRowVersion.Current];
+                        bool passChanged = !Equals(orig, curr);
+
+                        string sqlNdUpd = passChanged
+                            ? @"UPDATE NGUOI_DUNG
+                                   SET TEN_DANG_NHAP=@USER, MAT_KHAU=@PASS, QUYEN=@ROLE
+                                 WHERE ID=@ID"
+                            : @"UPDATE NGUOI_DUNG
+                                   SET TEN_DANG_NHAP=@USER, QUYEN=@ROLE
+                                 WHERE ID=@ID";
+
+                        using (var cmd = _db.Cmd(cn, sqlNdUpd, CommandType.Text, tx, 30,
+                            _db.P("@USER", SqlDbType.NVarChar, row["TEN_DANG_NHAP"], 100),
+                            _db.P("@ROLE", SqlDbType.NVarChar, row["QUYEN"], 50),
+                            _db.P("@ID", SqlDbType.BigInt, idNhanVien),
+                            // @PASS chỉ thêm khi đổi mật khẩu
+                            passChanged
+                                ? _db.P("@PASS", SqlDbType.NVarChar, BCrypt.Net.BCrypt.HashPassword(Convert.ToString(curr)), 200)
+                                : _db.P("@PASS", SqlDbType.NVarChar, DBNull.Value, 200)))
+                        {
+                            if (!passChanged)
+                                cmd.Parameters.RemoveAt("@PASS"); // bỏ param thừa nếu không dùng
+                            affected += cmd.ExecuteNonQuery();
                         }
                     }
                 }
-            }, nameof(Save));
 
-            return success;
+                _dataTable.AcceptChanges();
+                return affected;
+            }) > 0;
         }
 
+        /* ========================= UPDATE (by ID) ========================= */
+        // Nếu bạn vẫn muốn API Update riêng (song song Save), mình refactor theo DbClient:
         public void Update(long id)
         {
-            SafeExecutor.Execute(() =>
+            // Tìm dòng Modified trong _dataTable để cập nhật
+            EnsureSchema();
+            DataRow rowToUpdate = null;
+            foreach (DataRow r in _dataTable.Rows)
             {
-                if (_dataTable == null || _dataTable.Rows.Count == 0)
-                    throw new InvalidOperationException("Không có dữ liệu để cập nhật.");
-
-                using (var conn = new SqlConnection(_cs))
+                if (r.RowState == DataRowState.Modified && Convert.ToInt64(r["ID"]) == id)
                 {
-                    conn.Open();
-                    using (var tran = conn.BeginTransaction())
-                    {
-                        try
-                        {
-                            // Tìm dòng cần cập nhật
-                            DataRow rowToUpdate = null;
-                            foreach (DataRow row in _dataTable.Rows)
-                            {
-                                if (row.RowState == DataRowState.Modified && Convert.ToInt64(row["ID"]) == id)
-                                {
-                                    rowToUpdate = row;
-                                    break;
-                                }
-                            }
-
-                            if (rowToUpdate == null)
-                                throw new Exception($"Không tìm thấy người dùng với ID = {id} để cập nhật.");
-
-                            // Cập nhật NHAN_VIEN (không thay đổi)
-                            var updateNVQuery = @"
-                        UPDATE NHAN_VIEN
-                        SET HO_TEN = @hoTen,
-                            DIA_CHI = @diaChi,
-                            DIEN_THOAI = @dienThoai
-                        WHERE ID = @id";
-                            using (var cmdNV = new SqlCommand(updateNVQuery, conn, tran))
-                            {
-                                cmdNV.Parameters.AddWithValue("@hoTen", rowToUpdate["HO_TEN"]);
-                                cmdNV.Parameters.AddWithValue("@diaChi", rowToUpdate["DIA_CHI"]);
-                                cmdNV.Parameters.AddWithValue("@dienThoai", rowToUpdate["DIEN_THOAI"]);
-                                cmdNV.Parameters.AddWithValue("@id", id);
-                                cmdNV.ExecuteNonQuery();
-                            }
-
-
-                            // Kiểm tra xem mật khẩu có thực sự thay đổi không
-                            var originalPassword = rowToUpdate["MAT_KHAU", DataRowVersion.Original];
-                            var currentPassword = rowToUpdate["MAT_KHAU", DataRowVersion.Current];
-                            bool passwordChanged = !object.Equals(originalPassword, currentPassword);
-
-                            string updateNDQuery;
-                            string hashedPassword = null;
-
-                            if (passwordChanged)
-                            {
-                                // Nếu mật khẩu đã thay đổi, tạo query có cập nhật MAT_KHAU
-                                updateNDQuery = @"
-                                UPDATE NGUOI_DUNG
-                                SET TEN_DANG_NHAP = @tenDangNhap,
-                                    MAT_KHAU = @matKhau,
-                                    QUYEN = @quyen
-                                WHERE ID = @id";
-                                // Băm mật khẩu mới
-                                hashedPassword = BCrypt.Net.BCrypt.HashPassword(Convert.ToString(currentPassword));
-                            }
-                            else
-                            {
-                                // Nếu không, tạo query không cập nhật MAT_KHAU
-                                updateNDQuery = @"
-                                UPDATE NGUOI_DUNG
-                                SET TEN_DANG_NHAP = @tenDangNhap,
-                                    QUYEN = @quyen
-                                WHERE ID = @id";
-                            }
-
-                            using (var cmdND = new SqlCommand(updateNDQuery, conn, tran))
-                            {
-                                cmdND.Parameters.AddWithValue("@tenDangNhap", rowToUpdate["TEN_DANG_NHAP"]);
-                                cmdND.Parameters.AddWithValue("@quyen", rowToUpdate["QUYEN"]);
-                                // Lưu ý: Sửa lỗi chính tả từ "@id " thành "@id"
-                                cmdND.Parameters.AddWithValue("@id", id);
-
-                                // Chỉ thêm parameter @matKhau nếu mật khẩu thay đổi
-                                if (passwordChanged)
-                                {
-                                    cmdND.Parameters.AddWithValue("@matKhau", hashedPassword);
-                                }
-                                cmdND.ExecuteNonQuery();
-                            }
-
-                            tran.Commit();
-                            _dataTable.AcceptChanges();
-                            LogHelper.LogInfo($"Cập nhật người dùng thành công với ID = {id}");
-                        }
-                        catch
-                        {
-                            tran.Rollback();
-                            throw;
-                        }
-                    }
+                    rowToUpdate = r;
+                    break;
                 }
-            }, nameof(Update));
+            }
+            if (rowToUpdate == null)
+                throw new InvalidOperationException($"Không tìm thấy người dùng với ID = {id} để cập nhật.");
+
+            _db.InTx((cn, tx) =>
+            {
+                // NV
+                const string sqlNv = @"
+                    UPDATE NHAN_VIEN
+                       SET HO_TEN=@HOTEN, DIA_CHI=@DIACHI, DIEN_THOAI=@DT
+                     WHERE ID=@ID";
+                using (var cmd = _db.Cmd(cn, sqlNv, CommandType.Text, tx, 30,
+                    _db.P("@HOTEN", SqlDbType.NVarChar, rowToUpdate["HO_TEN"], 200),
+                    _db.P("@DIACHI", SqlDbType.NVarChar, rowToUpdate["DIA_CHI"], 255),
+                    _db.P("@DT", SqlDbType.NVarChar, rowToUpdate["DIEN_THOAI"], 50),
+                    _db.P("@ID", SqlDbType.BigInt, id)))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+
+                // ND
+                var orig = rowToUpdate["MAT_KHAU", DataRowVersion.Original];
+                var curr = rowToUpdate["MAT_KHAU", DataRowVersion.Current];
+                bool passChanged = !Equals(orig, curr);
+
+                string sqlNd = passChanged
+                    ? @"UPDATE NGUOI_DUNG SET TEN_DANG_NHAP=@USER, MAT_KHAU=@PASS, QUYEN=@ROLE WHERE ID=@ID"
+                    : @"UPDATE NGUOI_DUNG SET TEN_DANG_NHAP=@USER, QUYEN=@ROLE WHERE ID=@ID";
+
+                using (var cmd = _db.Cmd(cn, sqlNd, CommandType.Text, tx, 30,
+                    _db.P("@USER", SqlDbType.NVarChar, rowToUpdate["TEN_DANG_NHAP"], 100),
+                    _db.P("@ROLE", SqlDbType.NVarChar, rowToUpdate["QUYEN"], 50),
+                    _db.P("@ID", SqlDbType.BigInt, id),
+                    passChanged
+                        ? _db.P("@PASS", SqlDbType.NVarChar, BCrypt.Net.BCrypt.HashPassword(Convert.ToString(curr)), 200)
+                        : _db.P("@PASS", SqlDbType.NVarChar, DBNull.Value, 200)))
+                {
+                    if (!passChanged) cmd.Parameters.RemoveAt("@PASS");
+                    cmd.ExecuteNonQuery();
+                }
+
+                _dataTable.AcceptChanges();
+                return 2; // 2 lệnh update
+            });
         }
+
+        /* ========================= DELETE ========================= */
 
         public void Delete(long id)
         {
-            SafeExecutor.Execute(() =>
+            _db.InTx((cn, tx) =>
             {
-                using (var conn = new SqlConnection(_cs))
+                // Xóa từ NGUOI_DUNG trước (FK)
+                using (var cmd = _db.Cmd(cn, "DELETE FROM NGUOI_DUNG WHERE ID=@ID", CommandType.Text, tx, 30,
+                    _db.P("@ID", SqlDbType.BigInt, id)))
                 {
-                    conn.Open();
-                    using (var tran = conn.BeginTransaction())
+                    cmd.ExecuteNonQuery();
+                }
+
+                // Sau đó xóa NHAN_VIEN
+                using (var cmd = _db.Cmd(cn, "DELETE FROM NHAN_VIEN WHERE ID=@ID", CommandType.Text, tx, 30,
+                    _db.P("@ID", SqlDbType.BigInt, id)))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+
+                // Cập nhật DataTable nội bộ nếu có
+                if (_dataTable != null)
+                {
+                    DataRow toRemove = null;
+                    foreach (DataRow r in _dataTable.Rows)
+                        if (!r.IsNull("ID") && Convert.ToInt64(r["ID"]) == id) { toRemove = r; break; }
+                    if (toRemove != null)
                     {
-                        try
-                        {
-                            // Xóa từ NGUOI_DUNG trước
-                            var deleteNDQuery = "DELETE FROM NGUOI_DUNG WHERE ID = @id";
-                            using (var cmdND = new SqlCommand(deleteNDQuery, conn, tran))
-                            {
-                                cmdND.Parameters.AddWithValue("@id", id);
-                                cmdND.ExecuteNonQuery();
-                            }
-                            // Xóa từ NHAN_VIEN sau
-                            var deleteNVQuery = "DELETE FROM NHAN_VIEN WHERE ID = @id";
-                            using (var cmdNV = new SqlCommand(deleteNVQuery, conn, tran))
-                            {
-                                cmdNV.Parameters.AddWithValue("@id", id);
-                                cmdNV.ExecuteNonQuery();
-                            }
-                            tran.Commit();
-                            // Cập nhật lại DataTable nội bộ
-                            if (_dataTable != null)
-                            {
-                                DataRow rowToDelete = null;
-                                foreach (DataRow row in _dataTable.Rows)
-                                {
-                                    if (Convert.ToInt64(row["ID"]) == id)
-                                    {
-                                        rowToDelete = row;
-                                        break;
-                                    }
-                                }
-                                if (rowToDelete != null)
-                                {
-                                    _dataTable.Rows.Remove(rowToDelete);
-                                    _dataTable.AcceptChanges();
-                                }
-                            }
-                            LogHelper.LogInfo($"Xóa người dùng thành công với ID = {id}");
-                        }
-                        catch
-                        {
-                            tran.Rollback();
-                            throw;
-                        }
+                        _dataTable.Rows.Remove(toRemove);
+                        _dataTable.AcceptChanges();
                     }
                 }
-            }, nameof(Delete));
+
+                return 2;
+            });
         }
     }
 }

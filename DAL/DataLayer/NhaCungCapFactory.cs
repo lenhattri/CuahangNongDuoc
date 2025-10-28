@@ -1,173 +1,81 @@
-//using System;
-//using System.Collections.Generic;
-//using System.Text;
-//using System.Data;
-//using System.Data.OleDb;
-
-//namespace CuahangNongduoc.DataLayer
-//{
-//    public class NhaCungCapFactory
-//    {
-//        DataService m_Ds = new DataService();
-
-//        public DataTable DanhsachNCC()
-//        {
-//            OleDbCommand cmd = new OleDbCommand("SELECT * FROM NHA_CUNG_CAP");
-//            m_Ds.Load(cmd);
-
-//            return m_Ds;
-//        }
-//        public DataTable TimDiaChi(String diachi)
-//        {
-//            OleDbCommand cmd = new OleDbCommand("SELECT * FROM NHA_CUNG_CAP WHERE DIA_CHI LIKE '%' + @diachi + '%' ");
-//            cmd.Parameters.Add("diachi", OleDbType.VarChar).Value = diachi;
-//            m_Ds.Load(cmd);
-
-//            return m_Ds;
-//        }
-//        public DataTable TimHoTen(String hoten)
-//        {
-//            OleDbCommand cmd = new OleDbCommand("SELECT * FROM NHA_CUNG_CAP WHERE HO_TEN LIKE '%' + @hoten + '%' ");
-//            cmd.Parameters.Add("hoten", OleDbType.VarChar).Value = hoten;
-//            m_Ds.Load(cmd);
-
-//            return m_Ds;
-//        }
-
-//        public DataTable LayNCC(String id)
-//        {
-//            OleDbCommand cmd = new OleDbCommand("SELECT * FROM NHA_CUNG_CAP WHERE ID = @id");
-//            cmd.Parameters.Add("id", OleDbType.VarChar,50).Value = id;
-//            m_Ds.Load(cmd);
-//            return m_Ds;
-//        }
-
-//        public DataRow NewRow()
-//        {
-//            return m_Ds.NewRow();
-//        }
-//        public void Add(DataRow row)
-//        {
-//            m_Ds.Rows.Add(row);
-//        }
-//        public bool Save()
-//        {
-//            return m_Ds.ExecuteNoneQuery() > 0;
-//        }
-//    }
-//}
-
-
-using System;
-using System.Collections.Generic;
+﻿// DAL/DataLayer/NhaCungCapFactory.cs
 using System.Data;
 using System.Data.SqlClient;
-using CuahangNongduoc.BusinessObject;
+using CuahangNongduoc.DAL.Infrastructure;
 
 namespace CuahangNongduoc.DataLayer
 {
     public class NhaCungCapDAL
     {
-        private string connectionString = "Server=.;Database=cuahangnongduoc;Trusted_Connection=True;Encrypt=False";
+        private readonly DbClient _db = DbClient.Instance;            
+        private const string TABLE = "[dbo].[NHA_CUNG_CAP]";          
 
-        // L?y to�n b? danh s�ch NCC
+        // Lấy toàn bộ danh sách NCC
         public DataTable DanhsachNCC()
         {
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                string sql = "SELECT ID, HO_TEN, DIEN_THOAI, DIA_CHI FROM NhaCungCap";
-                SqlDataAdapter da = new SqlDataAdapter(sql, conn);
-                DataTable dt = new DataTable();
-                da.Fill(dt);
-                return dt;
-            }
+            string sql = $"SELECT ID, HO_TEN, DIEN_THOAI, DIA_CHI FROM {TABLE}"; // CHANGED
+            return _db.ExecuteDataTable(sql, CommandType.Text);
         }
 
-        // L?y NCC theo ID
+        // Lấy NCC theo ID
         public DataTable LayNCC(string id)
         {
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                string sql = "SELECT ID, HO_TEN, DIEN_THOAI, DIA_CHI FROM NhaCungCap WHERE ID = @Id";
-                SqlDataAdapter da = new SqlDataAdapter(sql, conn);
-                da.SelectCommand.Parameters.AddWithValue("@Id", id);
-                DataTable dt = new DataTable();
-                da.Fill(dt);
-                return dt;
-            }
+            string sql = $"SELECT ID, HO_TEN, DIEN_THOAI, DIA_CHI FROM {TABLE} WHERE ID = @Id"; // CHANGED
+            return _db.ExecuteDataTable(sql, CommandType.Text,
+                _db.P("@Id", SqlDbType.NVarChar, id, 50));                                       // CHANGED
         }
 
-        // T�m theo ??a ch?
+        // Tìm theo địa chỉ (LIKE)
         public DataTable TimDiaChi(string diachi)
         {
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                string sql = "SELECT ID, HO_TEN, DIEN_THOAI, DIA_CHI FROM NhaCungCap WHERE DIA_CHI LIKE @DiaChi";
-                SqlDataAdapter da = new SqlDataAdapter(sql, conn);
-                da.SelectCommand.Parameters.AddWithValue("@DiaChi", "%" + diachi + "%");
-                DataTable dt = new DataTable();
-                da.Fill(dt);
-                return dt;
-            }
+            string sql = $"SELECT ID, HO_TEN, DIEN_THOAI, DIA_CHI FROM {TABLE} WHERE DIA_CHI LIKE @DiaChi"; // CHANGED
+            var pattern = $"%{diachi ?? string.Empty}%";                                                     // NEW
+            return _db.ExecuteDataTable(sql, CommandType.Text,
+                _db.P("@DiaChi", SqlDbType.NVarChar, pattern, 255));                                        // CHANGED
         }
 
-        // T�m theo h? t�n
+        // Tìm theo họ tên (LIKE)
         public DataTable TimHoTen(string hoten)
         {
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                string sql = "SELECT ID, HO_TEN, DIEN_THOAI, DIA_CHI FROM NhaCungCap WHERE HO_TEN LIKE @HoTen";
-                SqlDataAdapter da = new SqlDataAdapter(sql, conn);
-                da.SelectCommand.Parameters.AddWithValue("@HoTen", "%" + hoten + "%");
-                DataTable dt = new DataTable();
-                da.Fill(dt);
-                return dt;
-            }
+            string sql = $"SELECT ID, HO_TEN, DIEN_THOAI, DIA_CHI FROM {TABLE} WHERE HO_TEN LIKE @HoTen"; // CHANGED
+            var pattern = $"%{hoten ?? string.Empty}%";                                                   // NEW
+            return _db.ExecuteDataTable(sql, CommandType.Text,
+                _db.P("@HoTen", SqlDbType.NVarChar, pattern, 200));                                      // CHANGED
         }
 
-        // Th�m m?i
-        public void Insert(NhaCungCap ncc)
+        // Thêm mới
+        public int Insert(BusinessObject.NhaCungCap ncc)
         {
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                string sql = "INSERT INTO NhaCungCap(ID, HO_TEN, DIEN_THOAI, DIA_CHI) VALUES(@Id, @HoTen, @DienThoai, @DiaChi)";
-                SqlCommand cmd = new SqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@Id", ncc.Id);
-                cmd.Parameters.AddWithValue("@HoTen", ncc.HoTen);
-                cmd.Parameters.AddWithValue("@DienThoai", ncc.DienThoai);
-                cmd.Parameters.AddWithValue("@DiaChi", ncc.DiaChi);
-                conn.Open();
-                cmd.ExecuteNonQuery();
-            }
+            string sql = $@"
+                INSERT INTO {TABLE}(ID, HO_TEN, DIEN_THOAI, DIA_CHI)     -- CHANGED
+                VALUES (@Id, @HoTen, @DienThoai, @DiaChi)";
+            return _db.ExecuteNonQuery(sql, CommandType.Text,             // CHANGED
+                _db.P("@Id", SqlDbType.NVarChar, ncc.Id, 50),
+                _db.P("@HoTen", SqlDbType.NVarChar, ncc.HoTen, 200),
+                _db.P("@DienThoai", SqlDbType.NVarChar, ncc.DienThoai, 50),
+                _db.P("@DiaChi", SqlDbType.NVarChar, ncc.DiaChi, 255));
         }
 
-        // C?p nh?t
-        public void Update(NhaCungCap ncc)
+        // Cập nhật
+        public int Update(BusinessObject.NhaCungCap ncc)
         {
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                string sql = "UPDATE NhaCungCap SET HO_TEN=@HoTen, DIEN_THOAI=@DienThoai, DIA_CHI=@DiaChi WHERE ID=@Id";
-                SqlCommand cmd = new SqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@Id", ncc.Id);
-                cmd.Parameters.AddWithValue("@HoTen", ncc.HoTen);
-                cmd.Parameters.AddWithValue("@DienThoai", ncc.DienThoai);
-                cmd.Parameters.AddWithValue("@DiaChi", ncc.DiaChi);
-                conn.Open();
-                cmd.ExecuteNonQuery();
-            }
+            string sql = $@"
+                UPDATE {TABLE}                                         -- CHANGED
+                   SET HO_TEN=@HoTen, DIEN_THOAI=@DienThoai, DIA_CHI=@DiaChi
+                 WHERE ID=@Id";
+            return _db.ExecuteNonQuery(sql, CommandType.Text,           // CHANGED
+                _db.P("@HoTen", SqlDbType.NVarChar, ncc.HoTen, 200),
+                _db.P("@DienThoai", SqlDbType.NVarChar, ncc.DienThoai, 50),
+                _db.P("@DiaChi", SqlDbType.NVarChar, ncc.DiaChi, 255),
+                _db.P("@Id", SqlDbType.NVarChar, ncc.Id, 50));
         }
 
-        // X�a
-        public void Delete(string id)
+        // Xóa
+        public int Delete(string id)
         {
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                string sql = "DELETE FROM NhaCungCap WHERE ID=@Id";
-                SqlCommand cmd = new SqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@Id", id);
-                conn.Open();
-                cmd.ExecuteNonQuery();
-            }
+            string sql = $"DELETE FROM {TABLE} WHERE ID=@Id";           // CHANGED
+            return _db.ExecuteNonQuery(sql, CommandType.Text,
+                _db.P("@Id", SqlDbType.NVarChar, id, 50));
         }
     }
 }

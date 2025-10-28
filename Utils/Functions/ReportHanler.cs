@@ -17,6 +17,7 @@ namespace CuahangNongduoc.Utils.Functions
 
         public static void LoadReport(
             ReportViewer reportViewer,
+
             IEnumerable dataSource,
             string reportName,
             string datasetName,

@@ -2,8 +2,10 @@
 using System.Data;
 using System.Data.SqlClient;
 using CuahangNongduoc.DAL.Infrastructure;
+//DAL/DataLayer/PhieuNhapFactory.cs
 namespace CuahangNongduoc.DataLayer
 {
+
     public class PhieuNhapFactory
     {
         private readonly DbClient _db = DbClient.Instance;
@@ -128,5 +130,6 @@ namespace CuahangNongduoc.DataLayer
         }
 
     }
-    }
-    
+}
+
+

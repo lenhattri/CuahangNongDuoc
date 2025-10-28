@@ -1,7 +1,11 @@
+using CuahangNongduoc.BusinessObject;
+using CuahangNongduoc.DTO;
+using CuahangNongduoc.Utils.Functions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.SqlClient;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
@@ -11,18 +15,32 @@ namespace CuahangNongduoc
     public partial class frmInPhieuBan : Form
     {
         CuahangNongduoc.BusinessObject.PhieuBan m_PhieuBan;
+        
         public frmInPhieuBan(CuahangNongduoc.BusinessObject.PhieuBan ph)
         {
             InitializeComponent();
-            reportViewer.LocalReport.ExecuteReportInCurrentAppDomain(System.Reflection.Assembly.GetExecutingAssembly().Evidence);
-            this.reportViewer.LocalReport.SubreportProcessing += new Microsoft.Reporting.WinForms.SubreportProcessingEventHandler(LocalReport_SubreportProcessing);
             m_PhieuBan = ph;
+            this.reportViewer.LocalReport.SubreportProcessing += new Microsoft.Reporting.WinForms.SubreportProcessingEventHandler(LocalReport_SubreportProcessing);
         }
 
         void LocalReport_SubreportProcessing(object sender, Microsoft.Reporting.WinForms.SubreportProcessingEventArgs e)
         {
             e.DataSources.Clear();
-            e.DataSources.Add(new Microsoft.Reporting.WinForms.ReportDataSource("CuahangNongduoc_BusinessObject_ChiTietPhieuBan", m_PhieuBan.ChiTiet));
+            IList<ChiTietPhieuBanReport> chiTietPhieuBanReports = new List<ChiTietPhieuBanReport>();
+        
+            foreach (var item in m_PhieuBan.ChiTiet)
+            {
+                string tenSP = item.MaSanPham.SanPham.TenSanPham;
+                ChiTietPhieuBanReport ct = new ChiTietPhieuBanReport
+                {
+                    TenSanPham = tenSP,
+                    DonGia = item.DonGia,
+                    SoLuong = item.SoLuong,
+                    ThanhTien = item.ThanhTien
+                };
+                chiTietPhieuBanReports.Add(ct);
+            }
+            e.DataSources.Add(new Microsoft.Reporting.WinForms.ReportDataSource("ChiTietPhieuBan", chiTietPhieuBanReports));
         }
 
         private void frmInPhieuBan_Load(object sender, EventArgs e)
@@ -35,9 +53,25 @@ namespace CuahangNongduoc
             param.Add(new Microsoft.Reporting.WinForms.ReportParameter("dien_thoai", ch.DienThoai));
             param.Add(new Microsoft.Reporting.WinForms.ReportParameter("bang_chu", num.NumberToString(m_PhieuBan.TongTien.ToString())));
 
-            this.reportViewer.LocalReport.SetParameters(param);
-            this.PhieuBanBindingSource.DataSource = m_PhieuBan;
-            this.reportViewer.RefreshReport();
+            PhieuBanReport phieuBanReport = new PhieuBanReport
+            {
+                Id = m_PhieuBan.Id,
+                NgayBan = m_PhieuBan.NgayBan,
+                TongTien = m_PhieuBan.TongTien,
+                DaTra = m_PhieuBan.DaTra,
+                ConNo = m_PhieuBan.ConNo,
+                TenKhachHang = m_PhieuBan.KhachHang?.HoTen,
+                DiaChi = m_PhieuBan.KhachHang?.DiaChi,
+                DienThoai = m_PhieuBan.KhachHang?.DienThoai
+            };
+
+            ReportHanler.LoadReport(
+                this.reportViewer,
+                new List<CuahangNongduoc.DTO.PhieuBanReport> { phieuBanReport },
+                "rptPhieuBan.rdlc",
+                "PhieuBan",
+                param
+            );
         }
     }
 }

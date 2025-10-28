@@ -1,3 +1,4 @@
+using CuahangNongduoc.Utils.Functions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,14 +17,13 @@ namespace CuahangNongduoc
             m_PhieuNhap = ph;
             InitializeComponent();
 
-            reportViewer.LocalReport.ExecuteReportInCurrentAppDomain(System.Reflection.Assembly.GetExecutingAssembly().Evidence);
             this.reportViewer.LocalReport.SubreportProcessing += new Microsoft.Reporting.WinForms.SubreportProcessingEventHandler(LocalReport_SubreportProcessing);
         }
 
         void LocalReport_SubreportProcessing(object sender, Microsoft.Reporting.WinForms.SubreportProcessingEventArgs e)
         {
             e.DataSources.Clear();
-            e.DataSources.Add(new Microsoft.Reporting.WinForms.ReportDataSource("CuahangNongduoc_BusinessObject_MaSanPham", m_PhieuNhap.ChiTiet));
+            e.DataSources.Add(new Microsoft.Reporting.WinForms.ReportDataSource("ChiTietPhieuNhap", m_PhieuNhap.ChiTiet));
         }
 
         private void frmInPhieuNhap_Load(object sender, EventArgs e)
@@ -37,9 +37,13 @@ namespace CuahangNongduoc
 
             param.Add(new Microsoft.Reporting.WinForms.ReportParameter("bang_chu", num.NumberToString(m_PhieuNhap.TongTien.ToString())));
 
-            this.reportViewer.LocalReport.SetParameters(param);
-            this.PhieuNhapBindingSource.DataSource = m_PhieuNhap;
-            this.reportViewer.RefreshReport();
+            ReportHanler.LoadReport(
+                this.reportViewer,
+                new List<CuahangNongduoc.BusinessObject.PhieuNhap>() { m_PhieuNhap },
+                "rptPhieuNhap.rdlc",
+                "PhieuNhap", 
+                param
+            );
         }
     }
 }
