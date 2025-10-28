@@ -12,23 +12,51 @@ namespace CuahangNongduoc.Controller
         private readonly DonViTinhDAL _dal = new DonViTinhDAL();
         private DataTable _tableForEdit; // bảng đang bind để Save()
 
+        // Pick the first available column name from candidates; fall back to a string column or the first column.
+        private static string PickColumn(DataTable dt, params string[] candidates)
+        {
+            if (dt == null) return null;
+            foreach (var c in candidates)
+            {
+                if (!string.IsNullOrEmpty(c) && dt.Columns.Contains(c))
+                    return c;
+            }
+
+            foreach (DataColumn col in dt.Columns)
+            {
+                if (col.DataType == typeof(string))
+                    return col.ColumnName;
+            }
+
+            return dt.Columns.Count > 0 ? dt.Columns[0].ColumnName : null;
+        }
+
         public void HienthiAutoComboBox(ComboBox cmb)
         {
             var dt = _dal.DanhSachDVT();
+            if (dt == null) return;
+
             cmb.DataSource = dt;
-            cmb.DisplayMember = "TEN";     // CHANGED: trước đây là "TEN_DON_VI", đổi về "TEN" để khớp DB/DAL
-            cmb.ValueMember = "ID";
+            cmb.DisplayMember = PickColumn(dt, "TEN", "TEN_DON_VI", "TEN_DON_VI_T", "NAME");
+            cmb.ValueMember = dt.Columns.Contains("ID") ? "ID" : PickColumn(dt, "Id", "id");
+            cmb.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+            cmb.AutoCompleteSource = AutoCompleteSource.ListItems;
         }
 
         public DataGridViewComboBoxColumn HienthiDataGridViewComboBoxColumn()
         {
+            var dt = _dal.DanhSachDVT();
+            var display = PickColumn(dt, "TEN", "TEN_DON_VI", "TEN_DON_VI_T", "NAME");
+            var value = dt != null && dt.Columns.Contains("ID") ? "ID" : PickColumn(dt, "Id", "id");
+
             var col = new DataGridViewComboBoxColumn
             {
-                DataSource = _dal.DanhSachDVT(),
-                DisplayMember = "TEN",              // CHANGED: trước đây là "TEN_DON_VI", đổi về "TEN"
-                ValueMember = "ID",
+                DataSource = dt,
+                DisplayMember = display,
+                ValueMember = value,
                 DataPropertyName = "ID_DON_VI_TINH",
-                HeaderText = "Đơn vị tính"
+                HeaderText = "Đơn vị tính",
+                AutoComplete = true
             };
             return col;
         }
@@ -45,12 +73,13 @@ namespace CuahangNongduoc.Controller
         public DonViTinh LayDVT(int id)
         {
             var tbl = _dal.LayDVT(id);
-            if (tbl.Rows.Count == 0) return null;
+            if (tbl == null || tbl.Rows.Count == 0) return null;
 
             var r = tbl.Rows[0];
+            var nameCol = PickColumn(tbl, "TEN_DON_VI", "TEN", "TEN_DON_VI_T", "NAME");
             return new DonViTinh(
                 Convert.ToInt32(r["ID"]),
-                Convert.ToString(r["TEN"])          // CHANGED: trước đây là "TEN_DON_VI", đổi về "TEN"
+                Convert.ToString(r[nameCol])
             );
         }
 
