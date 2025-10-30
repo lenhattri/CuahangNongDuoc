@@ -604,6 +604,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="CuahangNongduoc.ico" />
+    <Content Include="images\background.jpg" />
     <Content Include="lib\cuahang.dll" />
     <Content Include="lib\Microsoft.ReportViewer.Common.dll" />
     <Content Include="lib\Microsoft.ReportViewer.WinForms.dll" />
