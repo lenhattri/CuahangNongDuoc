@@ -20,11 +20,6 @@ namespace CuahangNongduoc.UI.HeThong
             InitializeComponent();
         }
 
-        private void frmDangNhap_Load(object sender, EventArgs e)
-        {
-
-        }
-
         private void btnDangNhap_Click(object sender, EventArgs e)
         {
             if(userController.KiemTraDangNhap(txtTenDangNhap.Text, txtMatKhau.Text))
@@ -38,5 +33,38 @@ namespace CuahangNongduoc.UI.HeThong
                 MessageBox.Show("Tên đăng nhập hoặc mật khẩu không đúng!", "Lỗi đăng nhập", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void lblLinkThoat_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            DialogResult result = MessageBox.Show(
+                "Bạn có chắc chắn muốn thoát chương trình không?",
+                "Xác nhận thoát",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question
+            );
+
+            if (result == DialogResult.Yes)
+            {
+                Application.Exit();
+            }
+        }
+
+        private void chkNhoMatKhau_CheckedChanged(object sender, EventArgs e)
+        {
+            // Nếu checkbox được tick thì hiện mật khẩu (bỏ dấu chấm)
+            if (chkNhoMatKhau.Checked)
+            {
+                txtMatKhau.PasswordChar = '\0'; // '\0' = không ẩn ký tự
+            }
+            else
+            {
+                txtMatKhau.PasswordChar = '•'; // hoặc '*'
+            }
+        }
+
+        //private void pictureBox2_Click(object sender, EventArgs e)
+        //{
+
+        //}
     }
 }

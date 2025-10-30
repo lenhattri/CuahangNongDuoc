@@ -608,6 +608,9 @@
     <Content Include="lib\Microsoft.ReportViewer.Common.dll" />
     <Content Include="lib\Microsoft.ReportViewer.WinForms.dll" />
     <Content Include="lib\XPExplorerBar.dll" />
+    <None Include="Resources\password.png" />
+    <None Include="Resources\username.png" />
+    <None Include="Resources\HeroImages.jpg" />
     <None Include="Resources\user.png" />
     <None Include="Resources\sell.png" />
     <None Include="Resources\menufunction.png" />
