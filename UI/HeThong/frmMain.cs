@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using CuahangNongduoc.Domain.Entities;
 using CuahangNongduoc.UI.HeThong;
 using CuahangNongduoc.Utils;
 using Microsoft.Win32;
@@ -17,8 +18,8 @@ namespace CuahangNongduoc
         {
             InitializeComponent();
         }
-        frmDonViTinh DonViTinh = null;
 
+        frmDonViTinh DonViTinh = null;
         private void mnuDonViTinh_Click(object sender, EventArgs e)
         {
             if (DonViTinh == null || DonViTinh.IsDisposed)
@@ -60,6 +61,16 @@ namespace CuahangNongduoc
             //    MessageBox.Show("Không thể kết nối dữ liệu!", "Cua hang Nong duoc", MessageBoxButtons.OK, MessageBoxIcon.Error);
             //    this.Close();
             //}
+
+            ChuaDangNhap();
+
+            frmDangNhap frmDangNhap = new frmDangNhap();
+            //DangNhap.MdiParent = this;
+            if (frmDangNhap.ShowDialog() == DialogResult.OK)
+            {
+                PhanQuyen();
+            }
+
 
             DataService.OpenConnection();
             
@@ -308,7 +319,7 @@ namespace CuahangNongduoc
                 //DangNhap.MdiParent = this;
                 if( DangNhap.ShowDialog() == DialogResult.OK )
                 {
-                    toolstlb_StatusLogin.Text = "Người dùng: " + Session.CurrentUser.HoTen + " - Quyền: " + Session.CurrentUser.Quyen;
+                    PhanQuyen();
                 }
             }
             else
@@ -318,6 +329,7 @@ namespace CuahangNongduoc
         private void mnuDangXuat_Click(object sender, EventArgs e)
         {
             Session.CurrentUser = null;
+            ChuaDangNhap();
         }
 
         frmNguoiDung NguoiDung = null;
@@ -331,6 +343,52 @@ namespace CuahangNongduoc
             }
             else
                 NguoiDung.Activate();
+        }
+
+        private void ChuaDangNhap()
+        {
+            mnuDangNhap.Enabled = true;
+            mnuBanHang.Enabled = false;
+            mnuDangXuat.Enabled = false;
+            mnuBaocao.Enabled = false;
+            toolStrip.Enabled = false;
+            taskPane.Enabled = false;
+            mnuQuanLy.Enabled = false;
+            mnuNghiepVu.Enabled = false;
+        }
+
+        private void QuyenAdmin()
+        {
+            mnuDangNhap.Enabled = false;
+            mnuBanHang.Enabled = true;
+            mnuDangXuat.Enabled = true;
+            mnuBaocao.Enabled = true;
+            toolStrip.Enabled = true;
+            taskPane.Enabled = true;
+            mnuQuanLy.Enabled = true;
+            mnuNghiepVu.Enabled = true;
+        }
+
+        private void QuyenNhanVien()
+        {
+            mnuDangNhap.Enabled = false;
+            mnuBanHang.Enabled = true;
+            toolStrip.Enabled = true;
+            taskPane.Enabled = true;
+            mnuDangXuat.Enabled = true;
+        }
+
+        private void PhanQuyen()
+        {
+            if (Session.CurrentUser.Quyen == "Admin")
+            {
+                QuyenAdmin();
+            }
+            else if (Session.CurrentUser.Quyen == "NhanVien")
+            {
+                QuyenNhanVien();
+            }
+            toolstlb_StatusLogin.Text = "Người dùng: " + Session.CurrentUser.HoTen + " - Quyền: " + Session.CurrentUser.Quyen;
         }
     }
 }

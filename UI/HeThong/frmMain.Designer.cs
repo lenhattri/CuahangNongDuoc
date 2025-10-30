@@ -127,7 +127,7 @@
             this.mnuTrogiup});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
-            this.menuStrip.Size = new System.Drawing.Size(1061, 28);
+            this.menuStrip.Size = new System.Drawing.Size(1061, 30);
             this.menuStrip.TabIndex = 1;
             this.menuStrip.Text = "menuStrip1";
             // 
@@ -139,7 +139,7 @@
             this.toolStripSeparator8,
             this.mnuThoat});
             this.mnuHeThong.Name = "mnuHeThong";
-            this.mnuHeThong.Size = new System.Drawing.Size(85, 24);
+            this.mnuHeThong.Size = new System.Drawing.Size(85, 26);
             this.mnuHeThong.Text = "Hệ thống";
             // 
             // mnuDangNhap
@@ -175,7 +175,7 @@
             this.mnuThanhCongCu,
             this.mnuThanhChucNang});
             this.mnuHienThi.Name = "mnuHienThi";
-            this.mnuHienThi.Size = new System.Drawing.Size(75, 24);
+            this.mnuHienThi.Size = new System.Drawing.Size(75, 26);
             this.mnuHienThi.Text = "Hiển thị";
             // 
             // mnuThanhCongCu
@@ -207,7 +207,7 @@
             this.toolStripSeparator9,
             this.mnuNguoiDung});
             this.mnuQuanLy.Name = "mnuQuanLy";
-            this.mnuQuanLy.Size = new System.Drawing.Size(73, 24);
+            this.mnuQuanLy.Size = new System.Drawing.Size(73, 26);
             this.mnuQuanLy.Text = "Quản lý";
             // 
             // mnuLyDoChi
@@ -285,7 +285,7 @@
             this.toolStripSeparator1,
             this.mnuTonghopDuno});
             this.mnuNghiepVu.Name = "mnuNghiepVu";
-            this.mnuNghiepVu.Size = new System.Drawing.Size(91, 24);
+            this.mnuNghiepVu.Size = new System.Drawing.Size(91, 26);
             this.mnuNghiepVu.Text = "Nghiệp vụ";
             // 
             // mnuNhapHang
@@ -358,7 +358,7 @@
             this.toolStripSeparator5,
             this.mnuSanphamHethan});
             this.mnuBaocao.Name = "mnuBaocao";
-            this.mnuBaocao.Size = new System.Drawing.Size(77, 24);
+            this.mnuBaocao.Size = new System.Drawing.Size(77, 26);
             this.mnuBaocao.Text = "Báo cáo";
             // 
             // mnuBaocaoSoluongton
@@ -395,7 +395,7 @@
             this.mnuTuychinh.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuTuychinhThongtin});
             this.mnuTuychinh.Name = "mnuTuychinh";
-            this.mnuTuychinh.Size = new System.Drawing.Size(85, 24);
+            this.mnuTuychinh.Size = new System.Drawing.Size(85, 26);
             this.mnuTuychinh.Text = "Tùy chỉnh";
             // 
             // mnuTuychinhThongtin
@@ -412,7 +412,7 @@
             this.mnuTrogiupHuongdan,
             this.mnuTrogiupLienhe});
             this.mnuTrogiup.Name = "mnuTrogiup";
-            this.mnuTrogiup.Size = new System.Drawing.Size(78, 24);
+            this.mnuTrogiup.Size = new System.Drawing.Size(78, 26);
             this.mnuTrogiup.Text = "Trợ giúp";
             // 
             // mnuTrogiupHuongdan
@@ -537,7 +537,7 @@
             this.toolThanhtoan,
             this.toolStripSeparator4,
             this.toolTonKho});
-            this.toolStrip.Location = new System.Drawing.Point(0, 28);
+            this.toolStrip.Location = new System.Drawing.Point(0, 30);
             this.toolStrip.Name = "toolStrip";
             this.toolStrip.Size = new System.Drawing.Size(1061, 51);
             this.toolStrip.TabIndex = 2;
@@ -596,10 +596,10 @@
             this.expando1,
             this.expando2,
             this.expando3});
-            this.taskPane.Location = new System.Drawing.Point(0, 79);
+            this.taskPane.Location = new System.Drawing.Point(0, 81);
             this.taskPane.Margin = new System.Windows.Forms.Padding(4);
             this.taskPane.Name = "taskPane";
-            this.taskPane.Size = new System.Drawing.Size(257, 630);
+            this.taskPane.Size = new System.Drawing.Size(257, 628);
             this.taskPane.TabIndex = 11;
             this.taskPane.Text = "taskPane1";
             this.taskPane.Visible = false;
