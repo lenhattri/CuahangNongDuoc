@@ -1,3 +1,5 @@
+using CuahangNongduoc.DTO;
+using CuahangNongduoc.Utils.Functions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -28,9 +30,26 @@ namespace CuahangNongduoc
 
             param.Add(new Microsoft.Reporting.WinForms.ReportParameter("bang_chu", num.NumberToString(m_DuNo.CuoiKy.ToString())));
 
-            this.reportViewer.LocalReport.SetParameters(param);
-            this.DuNoKhachHangBindingSource.DataSource = m_DuNo;
-            this.reportViewer.RefreshReport();
+            DuNoKhachHangReport duNoKhachHangReport = new DuNoKhachHangReport
+            {
+                TenKhachHang = m_DuNo.KhachHang.HoTen,
+                DiaChi = m_DuNo.KhachHang.DiaChi,
+                DienThoai = m_DuNo.KhachHang.DienThoai,
+                DauKy = m_DuNo.DauKy,
+                PhatSinh = m_DuNo.PhatSinh,
+                DaTra = m_DuNo.DaTra,
+                CuoiKy = m_DuNo.CuoiKy,
+                Thang = m_DuNo.Thang,
+                Nam = m_DuNo.Nam
+            };
+
+            ReportHanler.LoadReport(
+                this.reportViewer,
+                new List<DuNoKhachHangReport> { duNoKhachHangReport },
+                "rptDuNoKhachHang.rdlc",
+                "DuNoKhachHang",
+                param
+            );
         }
     }
 }
