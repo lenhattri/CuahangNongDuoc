@@ -364,6 +364,7 @@
     <Compile Include="UI\TimKiem\frmTimPhieuThu.Designer.cs">
       <DependentUpon>frmTimPhieuThu.cs</DependentUpon>
     </Compile>
+    <Compile Include="Utils\AppTheme.cs" />
     <Compile Include="Utils\Functions\DataTableHelper.cs" />
     <Compile Include="Utils\Functions\LogHelper.cs" />
     <Compile Include="Utils\Functions\Num2Str.cs" />

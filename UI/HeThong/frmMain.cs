@@ -38,7 +38,7 @@ namespace CuahangNongduoc
                             client.BackgroundImage = Image.FromFile(imagePath);
 
                             // 💡 FIX QUAN TRỌNG: Stretch = căng toàn khung, không bị lặp
-                            client.BackgroundImageLayout = ImageLayout.None;
+                            client.BackgroundImageLayout = ImageLayout.Center;
 
                             // 🎨 Màu nền phụ nhẹ nếu ảnh nhỏ hơn form
                             client.BackColor = Color.FromArgb(235, 255, 235);
