@@ -1,11 +1,12 @@
-﻿using System;
+﻿using CuahangNongduoc.Controller;
+using CuahangNongduoc.Utils;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using CuahangNongduoc.Controller;
 
 namespace CuahangNongduoc
 {
@@ -25,6 +26,7 @@ namespace CuahangNongduoc
             ctrl.HienthiPhieuThanhToan(bindingNavigator, dataGridView, cmbKhachHang, txtMaPhieu, dtNgayThanhToan, numTongTien, txtGhiChu);
             bindingNavigator.BindingSource.AddingNew += new AddingNewEventHandler(BindingSource_AddingNew);
             dataGridView.AllowUserToAddRows = false;
+            AppTheme.ApplyTheme(this);
         }
 
         void BindingSource_AddingNew(object sender, AddingNewEventArgs e)
