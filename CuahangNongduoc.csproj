@@ -604,10 +604,27 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="CuahangNongduoc.ico" />
+    <Content Include="images\background.jpg" />
     <Content Include="lib\cuahang.dll" />
     <Content Include="lib\Microsoft.ReportViewer.Common.dll" />
     <Content Include="lib\Microsoft.ReportViewer.WinForms.dll" />
     <Content Include="lib\XPExplorerBar.dll" />
+    <None Include="Resources\password.png" />
+    <None Include="Resources\username.png" />
+    <None Include="Resources\HeroImages.jpg" />
+    <None Include="Resources\user.png" />
+    <None Include="Resources\sell.png" />
+    <None Include="Resources\menufunction.png" />
+    <None Include="Resources\menutool.png" />
+    <None Include="Resources\logout.png" />
+    <None Include="Resources\login.png" />
+    <None Include="Resources\help1.png" />
+    <None Include="Resources\custom.png" />
+    <None Include="Resources\report.png" />
+    <None Include="Resources\profession.png" />
+    <None Include="Resources\Manage.png" />
+    <None Include="Resources\display.png" />
+    <None Include="Resources\system.png" />
     <None Include="Resources\LyDoChi.png" />
     <None Include="Resources\DonViTinh.png" />
     <None Include="Resources\PhieuChi.png" />
