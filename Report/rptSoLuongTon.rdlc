@@ -19,36 +19,51 @@
   <BottomMargin>2.5cm</BottomMargin>
   <rd:ReportID>44f3685c-dee4-48d3-b046-784b74622095</rd:ReportID>
   <PageWidth>21cm</PageWidth>
-  <DataSets>
-    <DataSet Name="CuahangNongduoc_BusinessObject_SoLuongTon">
-      <Fields>
-        <Field Name="SanPham">
-          <DataField>SanPham</DataField>
-          <rd:TypeName>CuahangNongduoc.BusinessObject.SanPham</rd:TypeName>
-        </Field>
-        <Field Name="SoLuong">
-          <DataField>SoLuong</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-      </Fields>
-      <Query>
-        <DataSourceName>DummyDataSource</DataSourceName>
-        <CommandText />
-        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
-      </Query>
-      <rd:DataSetInfo>
-        <rd:DataSetName>CuahangNongduoc.BusinessObject</rd:DataSetName>
-        <rd:TableName>SoLuongTon</rd:TableName>
-        <rd:ObjectDataSourceType>CuahangNongduoc.BusinessObject.SoLuongTon, CuahangNongduoc, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</rd:ObjectDataSourceType>
-      </rd:DataSetInfo>
-    </DataSet>
-  </DataSets>
+	<DataSets>
+		<DataSet Name="SoLuongTonView">
+			<Fields>
+				<Field Name="MaSP">
+					<DataField>MaSP</DataField>
+					<rd:TypeName>System.String</rd:TypeName>
+				</Field>
+				<Field Name="TenSanPham">
+					<DataField>TenSanPham</DataField>
+					<rd:TypeName>System.String</rd:TypeName>
+				</Field>
+				<Field Name="DonGiaNhap">
+					<DataField>DonGiaNhap</DataField>
+					<rd:TypeName>System.Int64</rd:TypeName>
+				</Field>
+				<Field Name="GiaBanLe">
+					<DataField>GiaBanLe</DataField>
+					<rd:TypeName>System.Int64</rd:TypeName>
+				</Field>
+				<Field Name="GiaBanSi">
+					<DataField>GiaBanSi</DataField>
+					<rd:TypeName>System.Int64</rd:TypeName>
+				</Field>
+				<Field Name="DonViTinh">
+					<DataField>DonViTinh</DataField>
+					<rd:TypeName>System.String</rd:TypeName>
+				</Field>
+				<Field Name="SoLuong">
+					<DataField>SoLuong</DataField>
+					<rd:TypeName>System.Int32</rd:TypeName>
+				</Field>
+			</Fields>
+			<Query>
+				<DataSourceName>DummyDataSource</DataSourceName>
+				<CommandText />
+				<rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+			</Query>
+		</DataSet>
+	</DataSets>
   <Width>17.02645cm</Width>
   <Body>
     <ColumnSpacing>1cm</ColumnSpacing>
     <ReportItems>
       <Table Name="table1">
-        <DataSetName>CuahangNongduoc_BusinessObject_SoLuongTon</DataSetName>
+		  <DataSetName>SoLuongTonView</DataSetName>
         <Details>
           <TableRows>
             <TableRow>
@@ -88,7 +103,7 @@
                       </Style>
                       <ZIndex>6</ZIndex>
                       <CanGrow>true</CanGrow>
-                      <Value>=Fields!SanPham.Value.Id</Value>
+						<Value>=Fields!MaSP.Value</Value>
                     </Textbox>
                   </ReportItems>
                 </TableCell>
@@ -107,7 +122,7 @@
                       </Style>
                       <ZIndex>5</ZIndex>
                       <CanGrow>true</CanGrow>
-                      <Value>=Fields!SanPham.Value.TenSanPham</Value>
+						<Value>=Fields!TenSanPham.Value</Value>
                     </Textbox>
                   </ReportItems>
                 </TableCell>
@@ -127,7 +142,7 @@
                       </Style>
                       <ZIndex>4</ZIndex>
                       <CanGrow>true</CanGrow>
-                      <Value>=Fields!SanPham.Value.DonGiaNhap</Value>
+						<Value>=Fields!DonGiaNhap.Value</Value>
                     </Textbox>
                   </ReportItems>
                 </TableCell>
@@ -147,7 +162,7 @@
                       </Style>
                       <ZIndex>3</ZIndex>
                       <CanGrow>true</CanGrow>
-                      <Value>=Fields!SanPham.Value.GiaBanLe</Value>
+						<Value>=Fields!GiaBanLe.Value</Value>
                     </Textbox>
                   </ReportItems>
                 </TableCell>
@@ -167,7 +182,7 @@
                       </Style>
                       <ZIndex>2</ZIndex>
                       <CanGrow>true</CanGrow>
-                      <Value>=Fields!SanPham.Value.GiaBanSi</Value>
+						<Value>=Fields!GiaBanSi.Value</Value>
                     </Textbox>
                   </ReportItems>
                 </TableCell>
@@ -186,7 +201,7 @@
                       </Style>
                       <ZIndex>1</ZIndex>
                       <CanGrow>true</CanGrow>
-                      <Value>=Fields!SanPham.Value.DonViTinh.Ten</Value>
+						<Value>=Fields!DonViTinh.Value</Value>
                     </Textbox>
                   </ReportItems>
                 </TableCell>
