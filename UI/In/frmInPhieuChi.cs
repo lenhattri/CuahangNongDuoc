@@ -1,3 +1,5 @@
+using CuahangNongduoc.DTO;
+using CuahangNongduoc.Utils.Functions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -28,9 +30,23 @@ namespace CuahangNongduoc
 
             param.Add(new Microsoft.Reporting.WinForms.ReportParameter("bang_chu", num.NumberToString(m_PhieuChi.TongTien.ToString())));
 
-            this.reportViewer.LocalReport.SetParameters(param);
-            this.PhieuChiBindingSource.DataSource = m_PhieuChi;
-            this.reportViewer.RefreshReport();
+            PhieuChiReport phieuChiReport = new PhieuChiReport
+            {
+                Id = m_PhieuChi.Id,
+                NgayChi = m_PhieuChi.NgayChi,
+                TongTien = m_PhieuChi.TongTien,
+                LyDoChi = m_PhieuChi.LyDoChi.LyDo,
+                GhiChu = m_PhieuChi.GhiChu
+            };
+
+            ReportHanler.LoadReport(
+                this.reportViewer,
+                new List<PhieuChiReport> { phieuChiReport },
+                "rptPhieuChi.rdlc",
+                "PhieuChi",
+                param
+            );
+
         }
     }
 }

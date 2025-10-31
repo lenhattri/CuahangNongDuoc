@@ -85,15 +85,15 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
+    <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Memory.4.5.5\lib\net461\System.Memory.dll</HintPath>
     </Reference>
     <Reference Include="System.Numerics" />
     <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
     </Reference>
-    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>packages\System.Runtime.CompilerServices.Unsafe.4.5.3\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Runtime.CompilerServices.Unsafe.6.1.2\lib\net462\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Services" />
@@ -137,7 +137,13 @@
     <Compile Include="BLL\Controller\DonViTinhController.cs" />
     <Compile Include="DAL\DataLayer\PhieuChiFactory.cs" />
     <Compile Include="Domain\Entities\NguoiDung.cs" />
+    <Compile Include="DTO\ChiTietPhieuBanReport.cs" />
+    <Compile Include="DTO\ChiTietPhieuNhapReport.cs" />
+    <Compile Include="DTO\DuNoKhachHangReport.cs" />
     <Compile Include="DTO\NguoiDungDTO.cs" />
+    <Compile Include="DTO\PhieuBanReport.cs" />
+    <Compile Include="DTO\PhieuChiReport.cs" />
+    <Compile Include="DTO\PhieuNhapReport.cs" />
     <Compile Include="DTO\PhieuThanhToanReport.cs" />
     <Compile Include="DTO\SoLuongTonView.cs" />
     <Compile Include="UI\HeThong\frmCauHinh.cs">
@@ -365,6 +371,7 @@
     <Compile Include="UI\TimKiem\frmTimPhieuThu.Designer.cs">
       <DependentUpon>frmTimPhieuThu.cs</DependentUpon>
     </Compile>
+    <Compile Include="Utils\AppTheme.cs" />
     <Compile Include="Utils\Functions\DataTableHelper.cs" />
     <Compile Include="Utils\Functions\LogHelper.cs" />
     <Compile Include="Utils\Functions\Num2Str.cs" />
@@ -376,6 +383,7 @@
     <EmbeddedResource Include="UI\HeThong\frmCauHinh.resx">
       <DependentUpon>frmCauHinh.cs</DependentUpon>
     </EmbeddedResource>
+    <Compile Include="Authenticatin\Session.cs" />
     <EmbeddedResource Include="UI\HeThong\frmChiTietNguoiDung.resx">
       <DependentUpon>frmChiTietNguoiDung.cs</DependentUpon>
     </EmbeddedResource>
@@ -534,6 +542,13 @@
     <None Include="packages.config" />
     <None Include="Properties\DataSources\CuahangNongduoc.BusinessObject.PhieuThanhToan.datasource" />
     <None Include="Properties\DataSources\CuahangNongduoc.BusinessObject.PhieuThanhToanReport.datasource" />
+    <None Include="Properties\DataSources\CuahangNongduoc.DTO.ChiTietPhieuBanReport.datasource" />
+    <None Include="Properties\DataSources\CuahangNongduoc.DTO.ChiTietPhieuNhapReport.datasource" />
+    <None Include="Properties\DataSources\CuahangNongduoc.DTO.DuNoKhachHangReport.datasource" />
+    <None Include="Properties\DataSources\CuahangNongduoc.DTO.NguoiDungDTO.datasource" />
+    <None Include="Properties\DataSources\CuahangNongduoc.DTO.PhieuBanReport.datasource" />
+    <None Include="Properties\DataSources\CuahangNongduoc.DTO.PhieuChiReport.datasource" />
+    <None Include="Properties\DataSources\CuahangNongduoc.DTO.PhieuNhapReport.datasource" />
     <None Include="Properties\DataSources\frmInPhieuThanhToan.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -601,10 +616,27 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="CuahangNongduoc.ico" />
+    <Content Include="images\background.jpg" />
     <Content Include="lib\cuahang.dll" />
     <Content Include="lib\Microsoft.ReportViewer.Common.dll" />
     <Content Include="lib\Microsoft.ReportViewer.WinForms.dll" />
     <Content Include="lib\XPExplorerBar.dll" />
+    <None Include="Resources\password.png" />
+    <None Include="Resources\username.png" />
+    <None Include="Resources\HeroImages.jpg" />
+    <None Include="Resources\user.png" />
+    <None Include="Resources\sell.png" />
+    <None Include="Resources\menufunction.png" />
+    <None Include="Resources\menutool.png" />
+    <None Include="Resources\logout.png" />
+    <None Include="Resources\login.png" />
+    <None Include="Resources\help1.png" />
+    <None Include="Resources\custom.png" />
+    <None Include="Resources\report.png" />
+    <None Include="Resources\profession.png" />
+    <None Include="Resources\Manage.png" />
+    <None Include="Resources\display.png" />
+    <None Include="Resources\system.png" />
     <None Include="Resources\LyDoChi.png" />
     <None Include="Resources\DonViTinh.png" />
     <None Include="Resources\PhieuChi.png" />
