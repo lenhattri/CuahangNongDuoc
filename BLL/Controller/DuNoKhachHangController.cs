@@ -110,7 +110,7 @@ namespace CuahangNongduoc.Controller
 
                 long dauky = DuNoKhachHangDAL.LayDuNo(kh, thangTruoc, namTruoc);
                 long phatsinh = PhieuBanFactory.LayConNo(kh, thang, nam);          // Factory cũ
-                long datra = PhieuThanhToanFactory.LayTongTien(kh, thang, nam); // Factory cũ
+                long datra = PhieuThanhToanDAL.LayTongTien(kh, thang, nam); // Factory cũ
                 long cuoiky = dauky + phatsinh - datra;
 
                 DataRow r = _duNoDal.NewRow();

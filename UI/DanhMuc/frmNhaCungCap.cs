@@ -50,7 +50,6 @@ namespace CuahangNongduoc
         private void toolLuu_Click(object sender, EventArgs e)
         {
             bindingNavigatorPositionItem.Focus();
-            ctrl.Save();
         }
 
         private void toolThoat_Click(object sender, EventArgs e)

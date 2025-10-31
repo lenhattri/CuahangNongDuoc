@@ -1,4 +1,6 @@
-﻿// Path: DataLayer/DonViTinhDAL.cs
+
+﻿// DAL/DataLayer/DonViTinhDAL.cs
+ 
 using System;
 using System.Data;
 using System.Data.SqlClient;
@@ -13,47 +15,42 @@ namespace CuahangNongduoc.DataLayer
         // SELECT ID, TEN, GHI_CHU FROM DON_VI_TINH
         public DataTable DanhSachDVT()
         {
-            const string sql = @"SELECT ID, TEN, GHI_CHU FROM DON_VI_TINH ORDER BY ID DESC";
-            return _db.ExecuteDataTable(sql, CommandType.Text);
+
+            const string sql = "SELECT * FROM DON_VI_TINH";
+            return _db.ExecuteDataTable(sql, CommandType.Text); // CHANGED
         }
 
         // SELECT ... WHERE ID = @id
         public DataTable LayDVT(int id)
         {
-            const string sql = @"SELECT ID, TEN, GHI_CHU FROM DON_VI_TINH WHERE ID = @ID";
-            return _db.ExecuteDataTable(sql, CommandType.Text,
-                _db.P("@ID", SqlDbType.Int, id));
+ 
+            const string sql = "SELECT * FROM DON_VI_TINH WHERE ID = @id";
+            return _db.ExecuteDataTable(sql, CommandType.Text,       // CHANGED
+                _db.P("@id", SqlDbType.Int, id));
         }
 
-        /* ============ CRUD ============ */
-
-        // Trả về số dòng ảnh hưởng (hoặc dùng ExecuteScalar<int> để lấy ID mới)
+        /* ==== CRUD nhanh (tuỳ dùng) ==== */
         public int Insert(string ten, string ghiChu = null)
         {
-            const string sql = @"INSERT INTO DON_VI_TINH(TEN, GHI_CHU)
-                                 VALUES(@TEN, @GHI_CHU)";
-            return _db.ExecuteNonQuery(sql, CommandType.Text,
-                _db.P("@TEN", SqlDbType.NVarChar, ten, 100),
-                _db.P("@GHI_CHU", SqlDbType.NVarChar, (object)ghiChu ?? DBNull.Value, 255));
-        }
-
-        // Nếu muốn trả về ID mới tạo:
-        public int InsertReturnId(string ten, string ghiChu = null)
-        {
-            const string sql = @"INSERT INTO DON_VI_TINH(TEN, GHI_CHU)
-                                 VALUES(@TEN, @GHI_CHU);
-                                 SELECT CAST(SCOPE_IDENTITY() AS INT);";
-            return _db.ExecuteScalar<int>(sql, CommandType.Text,
+            const string sql = @"
+                INSERT INTO DON_VI_TINH (TEN, GHI_CHU)
+                VALUES (@TEN, @GHI_CHU)";
+            return _db.ExecuteNonQuery(sql, CommandType.Text,        // CHANGED
+ 
                 _db.P("@TEN", SqlDbType.NVarChar, ten, 100),
                 _db.P("@GHI_CHU", SqlDbType.NVarChar, (object)ghiChu ?? DBNull.Value, 255));
         }
 
         public int Update(int id, string ten, string ghiChu = null)
         {
-            const string sql = @"UPDATE DON_VI_TINH
-                                 SET TEN = @TEN, GHI_CHU = @GHI_CHU
-                                 WHERE ID = @ID";
-            return _db.ExecuteNonQuery(sql, CommandType.Text,
+
+            const string sql = @"
+                UPDATE DON_VI_TINH
+                   SET TEN = @TEN,
+                       GHI_CHU = @GHI_CHU
+                 WHERE ID = @ID";
+            return _db.ExecuteNonQuery(sql, CommandType.Text,        // CHANGED
+ 
                 _db.P("@TEN", SqlDbType.NVarChar, ten, 100),
                 _db.P("@GHI_CHU", SqlDbType.NVarChar, (object)ghiChu ?? DBNull.Value, 255),
                 _db.P("@ID", SqlDbType.Int, id));
@@ -85,6 +82,7 @@ namespace CuahangNongduoc.DataLayer
 
                     return da.Update(table) > 0;
                 }
+
             }
         }
     }
