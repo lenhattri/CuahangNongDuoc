@@ -50,9 +50,17 @@ namespace CuahangNongduoc
         {
             if (MessageBox.Show("Bạn chắc chắn xóa phiếu chi này không?", "Phieu Chi", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                bindingNavigator.BindingSource.RemoveCurrent();
-                ctrl.Save();
+                if (bindingNavigator.BindingSource.Count > 0 && bindingNavigator.BindingSource.Current != null)
+                {
+                    bindingNavigator.BindingSource.RemoveCurrent();
+                    ctrl.Save();
+                }
+                else
+                {
+                    MessageBox.Show("Không có phiếu chi để xóa.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
+            
         }
 
         private void toolSave_Click(object sender, EventArgs e)

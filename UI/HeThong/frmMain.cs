@@ -386,6 +386,19 @@ namespace CuahangNongduoc
             else
                 NguoiDung.Activate();
         }
+        frmCauHinh CauHinh = null;
+        private void mnuTuyChinhCauHinh_Click(object sender, EventArgs e)
+        {
+            if( CauHinh != null || CauHinh.IsDisposed)
+            {
+                CauHinh = new frmCauHinh();
+                CauHinh.MdiParent = this;
+                CauHinh.Show();
+            }
+            else
+            {
+                CauHinh.Activate();
+            }
 
         private void ChuaDangNhap()
         {

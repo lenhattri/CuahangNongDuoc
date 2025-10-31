@@ -28,7 +28,16 @@ namespace CuahangNongduoc
         {
             if (MessageBox.Show("Bạn có chắc chắn xóa không?", "Ly Do Chi", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                bindingNavigator.BindingSource.RemoveCurrent();
+                if (bindingNavigator.BindingSource.Count > 0)
+                {
+                    bindingNavigator.BindingSource.RemoveCurrent();
+                    ctrl.Save();
+                }
+                else
+                {
+                    MessageBox.Show("Không có dữ liệu để xóa.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                
             }
         }
 

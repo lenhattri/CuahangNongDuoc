@@ -103,6 +103,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BLL\Controller\UserController.cs" />
+    <Compile Include="BLL\Helpers\CauHinhCuaHang.cs" />
     <Compile Include="DAL\DataLayer\UserDAL.cs" />
     <Compile Include="DAL\Infrastructure\DbClient.cs" />
     <Compile Include="BLL\Controller\ChiTietPhieuNhapController.cs" />
@@ -145,6 +146,12 @@
     <Compile Include="DTO\PhieuNhapReport.cs" />
     <Compile Include="DTO\PhieuThanhToanReport.cs" />
     <Compile Include="DTO\SoLuongTonView.cs" />
+    <Compile Include="UI\HeThong\frmCauHinh.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\HeThong\frmCauHinh.Designer.cs">
+      <DependentUpon>frmCauHinh.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\HeThong\frmChiTietNguoiDung.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -372,6 +379,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\Functions\SafeExecutor.cs" />
     <Compile Include="Utils\Functions\SqlHelper.cs" />
+    <Compile Include="Utils\Session.cs" />
+    <EmbeddedResource Include="UI\HeThong\frmCauHinh.resx">
+      <DependentUpon>frmCauHinh.cs</DependentUpon>
+    </EmbeddedResource>
     <Compile Include="Authenticatin\Session.cs" />
     <EmbeddedResource Include="UI\HeThong\frmChiTietNguoiDung.resx">
       <DependentUpon>frmChiTietNguoiDung.cs</DependentUpon>

@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using CuahangNongduoc.Controller;
 using CuahangNongduoc.BusinessObject;
+using CuahangNongduoc.BLL.Helpers;
 
 namespace CuahangNongduoc
 {
@@ -84,6 +85,18 @@ namespace CuahangNongduoc
                 cmbMaSanPham.SelectedIndexChanged -= new EventHandler(cmbMaSanPham_SelectedIndexChanged);
                 ctrlMSP.HienThiAutoComboBox(cmbSanPham.SelectedValue.ToString(), cmbMaSanPham);
                 cmbMaSanPham.SelectedIndexChanged += new EventHandler(cmbMaSanPham_SelectedIndexChanged);
+                decimal giaXuat = 0;
+
+                if (CauHinhCuaHang.PhuongThucTinhGiaHienTai == CauHinhCuaHang.PhuongThucTinhGia.BQGQ)
+                {
+                    giaXuat = ctrlChiTiet.TinhGiaBinhQuanGiaQuyen(cmbSanPham.SelectedValue.ToString());
+                }
+                else
+                {
+                    giaXuat = ctrlChiTiet.TinhGiaFIFO(cmbSanPham.SelectedValue.ToString());
+
+                }
+                txtGiaBQGQ.Text = giaXuat.ToString("#,###0");
             }
         }
 
@@ -95,9 +108,6 @@ namespace CuahangNongduoc
             txtGiaNhap.Text = masp.GiaNhap.ToString("#,###0");
             txtGiaBanSi.Text = masp.SanPham.GiaBanSi.ToString("#,###0");
             txtGiaBanLe.Text = masp.SanPham.GiaBanLe.ToString("#,###0");
-            txtGiaBQGQ.Text = masp.SanPham.DonGiaNhap.ToString("#,###0");
-
-
         }
 
         private void btnAdd_Click(object sender, EventArgs e)

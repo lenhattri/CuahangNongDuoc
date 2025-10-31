@@ -130,7 +130,7 @@ namespace CuahangNongduoc.Controller
         {
             return _buffer.NewRow();
         }
-
+        
         public void Add(DataRow row)
         {
             // Đảm bảo row thuộc schema _buffer
@@ -179,6 +179,16 @@ namespace CuahangNongduoc.Controller
         }
 
         /* ===================== HELPERS ===================== */
+        // Tính giá bình quân gia quyền của sản phẩm
+        public decimal TinhGiaBinhQuanGiaQuyen(string idSanPham)
+        {
+            return _dal.TinhGiaBinhQuanGiaQuyen(idSanPham);
+        }
+        public decimal TinhGiaFIFO(string idSanPham)
+        {
+            return _dal.TinhGiaFIFO(idSanPham);
+        }
+
         private static DataTable CreateBufferSchema()
         {
             // Tạo schema tối thiểu cần để Insert + cập nhật kho
