@@ -94,23 +94,23 @@ namespace CuahangNongduoc.DataLayer
         /// <param name="lydo">The ID of the reason for payment.</param>
         /// <param name="ngay">The payment date.</param>
         /// <returns>A DataTable containing the matching records.</returns>
-        public DataTable TimPhieuChi(int lydo, DateTime ngay)
-        {
-            var dataTable = new DataTable();
-            using (var connection = new SqlConnection(_connectionString))
-            using (var command = new SqlCommand("SELECT * FROM PHIEU_CHI WHERE ID_LY_DO_CHI = @lydo AND NGAY_CHI = @ngay", connection))
-            {
-                command.Parameters.Add(new SqlParameter("@lydo", SqlDbType.Int) { Value = lydo });
-                command.Parameters.Add(new SqlParameter("@ngay", SqlDbType.Date) { Value = ngay });
+        //public DataTable TimPhieuChi(int lydo, DateTime ngay)
+        //{
+        //    var dataTable = new DataTable();
+        //    using (var connection = new SqlConnection(_connectionString))
+        //    using (var command = new SqlCommand("SELECT * FROM PHIEU_CHI WHERE ID_LY_DO_CHI = @lydo AND NGAY_CHI = @ngay", connection))
+        //    {
+        //        command.Parameters.Add(new SqlParameter("@lydo", SqlDbType.Int) { Value = lydo });
+        //        command.Parameters.Add(new SqlParameter("@ngay", SqlDbType.Date) { Value = ngay });
 
-                using (var adapter = new SqlDataAdapter(command))
-                {
-                    adapter.Fill(dataTable);
-                }
-            }
+        //        using (var adapter = new SqlDataAdapter(command))
+        //        {
+        //            adapter.Fill(dataTable);
+        //        }
+        //    }
 
-            return dataTable; 
-        }
+        //    return dataTable; 
+        //}
 
         
         private readonly DbClient _db = DbClient.Instance;   // CHANGED
@@ -188,21 +188,21 @@ namespace CuahangNongduoc.DataLayer
         /// </summary>
         /// <param name="id">The ID of the payment voucher.</param>
         /// <returns>A DataTable containing the matching record.</returns>
-        public DataTable LayPhieuChi(string id)
-        {
-            var dataTable = new DataTable();
-            using (var connection = new SqlConnection(_connectionString))
-            using (var command = new SqlCommand("SELECT * FROM PHIEU_CHI WHERE ID = @id", connection))
-            {
-                using (var adapter = new SqlDataAdapter(command))
-                {
-                    command.Parameters.Add("@id", SqlDbType.VarChar, 50).Value = id;
-                    adapter.Fill(dataTable);
-                }
-            }
+        //public DataTable LayPhieuChi(string id)
+        //{
+        //    var dataTable = new DataTable();
+        //    using (var connection = new SqlConnection(_connectionString))
+        //    using (var command = new SqlCommand("SELECT * FROM PHIEU_CHI WHERE ID = @id", connection))
+        //    {
+        //        using (var adapter = new SqlDataAdapter(command))
+        //        {
+        //            command.Parameters.Add("@id", SqlDbType.VarChar, 50).Value = id;
+        //            adapter.Fill(dataTable);
+        //        }
+        //    }
 
-            return dataTable;
-        }
+        //    return dataTable;
+        //}
 
         /// <summary>
         /// Calculates the total amount for a given reason, month, and year.
@@ -211,39 +211,39 @@ namespace CuahangNongduoc.DataLayer
         /// <param name="thang">The month (1-12).</param>
         /// <param name="nam">The year.</param>
         /// <returns>The total amount as long.</returns>
-        public static long LayTongTien(string lydo, int thang, int nam)
-        {
-            string connectionString = ConfigurationManager.ConnectionStrings["ConnStr"].ConnectionString;
-            using (var connection = new SqlConnection(connectionString))
-            using (var command = new SqlCommand("SELECT SUM(TONG_TIEN) FROM PHIEU_CHI WHERE ID_LY_DO_CHI = @lydo AND MONTH(NGAY_CHI)=@thang AND YEAR(NGAY_CHI)= @nam", connection))
-            {
-                command.Parameters.Add("@lydo", SqlDbType.VarChar, 50).Value = lydo;
-                command.Parameters.Add("@thang", SqlDbType.Int).Value = thang;
-                command.Parameters.Add("@nam", SqlDbType.Int).Value = nam ;
+        //public static long LayTongTien(string lydo, int thang, int nam)
+        //{
+        //    string connectionString = ConfigurationManager.ConnectionStrings["ConnStr"].ConnectionString;
+        //    using (var connection = new SqlConnection(connectionString))
+        //    using (var command = new SqlCommand("SELECT SUM(TONG_TIEN) FROM PHIEU_CHI WHERE ID_LY_DO_CHI = @lydo AND MONTH(NGAY_CHI)=@thang AND YEAR(NGAY_CHI)= @nam", connection))
+        //    {
+        //        command.Parameters.Add("@lydo", SqlDbType.VarChar, 50).Value = lydo;
+        //        command.Parameters.Add("@thang", SqlDbType.Int).Value = thang;
+        //        command.Parameters.Add("@nam", SqlDbType.Int).Value = nam ;
 
-                connection.Open();
-                var result = command.ExecuteScalar();
+        //        connection.Open();
+        //        var result = command.ExecuteScalar();
 
-                return result == null || result == DBNull.Value ? 0L : Convert.ToInt64(result);
-            }
-        }
+        //        return result == null || result == DBNull.Value ? 0L : Convert.ToInt64(result);
+        //    }
+        //}
 
         /// <summary>
         /// Creates a new DataRow for a payment voucher.
         /// </summary>
         /// <returns>A new DataRow with the schema of PHIEU_CHI table.</returns>
-        public DataRow NewRow()
-        {
-            var dataTable = new DataTable();
-            using (var connection = new SqlConnection(_connectionString))
-            using (var command = new SqlCommand("SELECT * FROM PHIEU_CHI WHERE 1=0", connection))
-            using (var adapter = new SqlDataAdapter(command))
-            {
-                adapter.FillSchema(dataTable, SchemaType.Source);
-            }
+        //public DataRow NewRow()
+        //{
+        //    var dataTable = new DataTable();
+        //    using (var connection = new SqlConnection(_connectionString))
+        //    using (var command = new SqlCommand("SELECT * FROM PHIEU_CHI WHERE 1=0", connection))
+        //    using (var adapter = new SqlDataAdapter(command))
+        //    {
+        //        adapter.FillSchema(dataTable, SchemaType.Source);
+        //    }
 
-            return dataTable.NewRow();
-        }
+        //    return dataTable.NewRow();
+        //}
 
         /* ===================== INSERT/UPDATE/DELETE ===================== */
         // Gợi ý: dùng theo kiểu “row-based” cho nhanh; nếu team muốn DTO, mình viết thêm class DTO.
@@ -283,9 +283,9 @@ namespace CuahangNongduoc.DataLayer
                 cmd.Parameters.Add("@ID", SqlDbType.VarChar, 50).Value = row["ID"];
                 return cmd.ExecuteNonQuery();
 
-                var dt = _db.ExecuteDataTable(SELECT_ALL, CommandType.Text);   // CHANGED
-                _table = dt;
-                return dt;
+            //    var dt = _db.ExecuteDataTable(SELECT_ALL, CommandType.Text);   // CHANGED
+            //_table = dt;
+            //return dt;
             }
         }
 
