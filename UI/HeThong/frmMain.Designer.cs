@@ -189,7 +189,7 @@
             this.mnuThanhCongCu.CheckState = System.Windows.Forms.CheckState.Checked;
             this.mnuThanhCongCu.Image = global::CuahangNongduoc.Properties.Resources.menutool;
             this.mnuThanhCongCu.Name = "mnuThanhCongCu";
-            this.mnuThanhCongCu.Size = new System.Drawing.Size(167, 22);
+            this.mnuThanhCongCu.Size = new System.Drawing.Size(184, 26);
             this.mnuThanhCongCu.Text = "Thanh công cụ";
             this.mnuThanhCongCu.Click += new System.EventHandler(this.mnuThanhCongCu_Click);
             // 
@@ -197,7 +197,7 @@
             // 
             this.mnuThanhChucNang.Image = global::CuahangNongduoc.Properties.Resources.menufunction;
             this.mnuThanhChucNang.Name = "mnuThanhChucNang";
-            this.mnuThanhChucNang.Size = new System.Drawing.Size(167, 22);
+            this.mnuThanhChucNang.Size = new System.Drawing.Size(184, 26);
             this.mnuThanhChucNang.Text = "Thanh chức năng";
             this.mnuThanhChucNang.Click += new System.EventHandler(this.mnuThanhChucNang_Click);
             // 
