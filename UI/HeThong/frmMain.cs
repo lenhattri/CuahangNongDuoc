@@ -389,7 +389,7 @@ namespace CuahangNongduoc
         frmCauHinh CauHinh = null;
         private void mnuTuyChinhCauHinh_Click(object sender, EventArgs e)
         {
-            if( CauHinh != null || CauHinh.IsDisposed)
+            if (CauHinh != null || CauHinh.IsDisposed)
             {
                 CauHinh = new frmCauHinh();
                 CauHinh.MdiParent = this;
@@ -399,7 +399,7 @@ namespace CuahangNongduoc
             {
                 CauHinh.Activate();
             }
-
+        }
         private void ChuaDangNhap()
         {
             mnuDangNhap.Enabled = true;

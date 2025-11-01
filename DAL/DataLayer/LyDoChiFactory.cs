@@ -55,18 +55,18 @@ namespace CuahangNongduoc.DataLayer
         /// Retrieves all reasons for expenditure.
         /// </summary>
         /// <returns>A DataTable containing all records.</returns>
-        public DataTable DanhsachLyDo()
-        {
-            var dataTable = new DataTable();
-            using (var connection = new SqlConnection(_connectionString))
-            using (var command = new SqlCommand("SELECT * FROM LY_DO_CHI", connection))
-            using (var adapter = new SqlDataAdapter(command))
-            {
-                adapter.Fill(dataTable);
-            }
+        //public DataTable DanhsachLyDo()
+        //{
+        //    var dataTable = new DataTable();
+        //    using (var connection = new SqlConnection(_connectionString))
+        //    using (var command = new SqlCommand("SELECT * FROM LY_DO_CHI", connection))
+        //    using (var adapter = new SqlDataAdapter(command))
+        //    {
+        //        adapter.Fill(dataTable);
+        //    }
 
-            return dataTable;
-        }
+        //    return dataTable;
+        //}
 
         private readonly DbClient _db = DbClient.Instance;
         private DataTable _table;  // DataTable nội bộ cho pattern Save()

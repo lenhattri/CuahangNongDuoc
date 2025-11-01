@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -49,6 +49,27 @@ namespace CuahangNongduoc.BusinessObject
         {
             get { return m_ConNo; }
             set { m_ConNo = value; }
+        }
+        //Thêm phí vận chuyển 
+        private long m_ChiPhiVanChuyen;
+        public long ChiPhiVanChuyen
+        {
+            get { return m_ChiPhiVanChuyen; }
+            set { m_ChiPhiVanChuyen = value; }
+        }
+        //Thêm phí dịch vụ
+        private long m_PhiDichVu;
+        public long PhiDichVu
+        {
+            get { return m_PhiDichVu; }
+            set { m_PhiDichVu = value; }
+        }
+        //Thêm giảm giá
+        private long m_GiamGia;
+        public long GiamGia
+        {
+            get { return m_GiamGia; }
+            set { m_GiamGia = value; }
         }
 
         private IList<ChiTietPhieuBan> m_ChiTiet;

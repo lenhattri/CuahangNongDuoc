@@ -104,6 +104,9 @@ namespace CuahangNongduoc.Controller
                 ph.TongTien = Convert.ToInt64(tbl.Rows[0]["TONG_TIEN"]);
                 ph.DaTra = Convert.ToInt64(tbl.Rows[0]["DA_TRA"]);
                 ph.ConNo = Convert.ToInt64(tbl.Rows[0]["CON_NO"]);
+                ph.ChiPhiVanChuyen = Convert.ToInt64(tbl.Rows[0]["CHI_PHI_VAN_CHUYEN"]);
+                ph.PhiDichVu = Convert.ToInt64(tbl.Rows[0]["PHI_DICH_VU"]);
+                ph.GiamGia = Convert.ToInt64(tbl.Rows[0]["GIAM_GIA"]);
                 KhachHangController ctrlKH = new KhachHangController();
                 ph.KhachHang = ctrlKH.LayKhachHang(Convert.ToString(tbl.Rows[0]["ID_KHACH_HANG"]));
                 ChiTietPhieuBanController ctrl = new ChiTietPhieuBanController();

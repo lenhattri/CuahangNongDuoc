@@ -13,7 +13,7 @@ namespace CuahangNongduoc.DataLayer
         private DataTable _table;                          // NEW: giữ DataTable đang bind để Save()
 
         private const string SELECT_BASE =
-            "SELECT ID, ID_KHACH_HANG, NGAY_BAN, TONG_TIEN, DA_TRA, CON_NO FROM PHIEU_BAN";
+            "SELECT ID, ID_KHACH_HANG, NGAY_BAN, TONG_TIEN, DA_TRA, CON_NO, CHI_PHI_VAN_CHUYEN, PHI_DICH_VU, GIAM_GIA FROM PHIEU_BAN";
 
         /* ===================== Helpers ===================== */
 
