@@ -9,10 +9,8 @@ namespace CuahangNongduoc.Controller
 {
     public class ChiTietPhieuBanController
     {
-        // DAL ADO.NET (SqlClient) đã viết ở bước trước
         private readonly ChiTietPhieuBanDAL _dal = new ChiTietPhieuBanDAL();
 
-        // Bộ đệm hàng Added để Save() một lượt (thay cho DataService cũ)
         private readonly DataTable _buffer;
 
         public ChiTietPhieuBanController()
@@ -20,7 +18,7 @@ namespace CuahangNongduoc.Controller
             _buffer = CreateBufferSchema();
         }
 
-        /* ===================== BINDING HIỂN THỊ ===================== */
+        //BINDING HIỂN THỊ 
         public void HienThiChiTiet(DataGridView dgv, string idPhieuBan)
         {
             var bs = new BindingSource
@@ -30,7 +28,6 @@ namespace CuahangNongduoc.Controller
             dgv.DataSource = bs;
         }
 
-        /* ===================== API GIỮ NGUYÊN CHO UI ===================== */
         public DataRow NewRow()
         {
             return _buffer.NewRow();

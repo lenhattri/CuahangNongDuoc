@@ -10,8 +10,7 @@ namespace CuahangNongduoc.DataLayer
     public class SanPhamFactory
     {
         private readonly DbClient _db = DbClient.Instance;  // CHANGED:
-        private DataTable _table;                           // NEW: DataTable nội bộ cho pattern NewRow/Add/Save
-
+        private DataTable _table;                           // NEW
         private const string SELECT_ALL = "SELECT * FROM SAN_PHAM";
 
         /* ==================== Helpers ==================== */
@@ -39,29 +38,29 @@ namespace CuahangNongduoc.DataLayer
             return da;
         }
 
-        /* ==================== SELECTs ==================== */
+       //select 
 
         public DataTable DanhsachSanPham()
         {
-            var dt = _db.ExecuteDataTable(SELECT_ALL, CommandType.Text);   // CHANGED
-            _table = dt;                                                   // đồng bộ để Save() hoạt động
+            var dt = _db.ExecuteDataTable(SELECT_ALL, CommandType.Text);    
+            _table = dt;                                                    
             return dt;
         }
 
-        public DataTable TimMaSanPham(string id)
-        {
-            const string sql = "SELECT * FROM SAN_PHAM WHERE ID LIKE @id"; // CHANGED: LIKE @param
+        public DataTable TimMaSanPham(string id) // không trả kết quả UI
+        {   
+            const string sql = "SELECT * FROM SAN_PHAM WHERE ID LIKE @id"; 
             var dt = _db.ExecuteDataTable(sql, CommandType.Text,
                 _db.P("@id", SqlDbType.NVarChar, $"%{id ?? string.Empty}%", 50));
             _table = dt;
-            return dt;
+            return dt; 
         }
 
-        public DataTable TimTenSanPham(string ten)
+        public DataTable TimTenSanPham(string ten) //khong trả kết quả UI
         {
-            const string sql = "SELECT * FROM SAN_PHAM WHERE TEN_SAN_PHAM LIKE @ten"; // CHANGED
+            const string sql = "SELECT * FROM SAN_PHAM WHERE TEN_SAN_PHAM LIKE @ten"; 
             var dt = _db.ExecuteDataTable(sql, CommandType.Text,
-                _db.P("@ten", SqlDbType.NVarChar, $"%{ten ?? string.Empty}%", 200));
+                _db.P("@ten", SqlDbType.NVarChar, $"%{ten ?? string.Empty}%", 50));
             _table = dt;
             return dt;
         }
@@ -85,7 +84,7 @@ namespace CuahangNongduoc.DataLayer
                 GROUP BY SP.ID, SP.TEN_SAN_PHAM, SP.DON_GIA_NHAP, SP.GIA_BAN_SI, SP.GIA_BAN_LE,
                          SP.ID_DON_VI_TINH, SP.SO_LUONG";
             var dt = _db.ExecuteDataTable(sql, CommandType.Text);           // CHANGED
-            // Không buộc _table ở đây vì Save() áp dụng cho SAN_PHAM gốc
+   
             return dt;
         }
 
@@ -97,15 +96,15 @@ namespace CuahangNongduoc.DataLayer
                 INSERT INTO SAN_PHAM
                 (ID, TEN_SAN_PHAM, ID_DON_VI_TINH, SO_LUONG, DON_GIA_NHAP, GIA_BAN_SI, GIA_BAN_LE)
                 VALUES(@id, @ten, @id_dvt, @soluong, @gianhap, @giabansi, @giabanle)";
-            // Giữ kiểu long như code hiện tại (nếu DB là DECIMAL nên cân nhắc decimal về lâu dài)
+         
             return _db.ExecuteNonQuery(sql, CommandType.Text,
                 _db.P("@id", SqlDbType.NVarChar, sp.Id, 50),
-                _db.P("@ten", SqlDbType.NVarChar, sp.TenSanPham, 200),
+                _db.P("@ten", SqlDbType.NVarChar, sp.TenSanPham, 50),
                 _db.P("@id_dvt", SqlDbType.Int, sp.DonViTinh.Id),
                 _db.P("@soluong", SqlDbType.Int, sp.SoLuong),
-                _db.P("@gianhap", SqlDbType.BigInt, sp.DonGiaNhap),
-                _db.P("@giabansi", SqlDbType.BigInt, sp.GiaBanSi),
-                _db.P("@giabanle", SqlDbType.BigInt, sp.GiaBanLe)
+                _db.P("@gianhap", SqlDbType.Int, sp.DonGiaNhap),
+                _db.P("@giabansi", SqlDbType.Int, sp.GiaBanSi),
+                _db.P("@giabanle", SqlDbType.Int, sp.GiaBanLe)
             ) > 0;
         }
 
@@ -118,12 +117,12 @@ namespace CuahangNongduoc.DataLayer
                 WHERE ID=@id";
             return _db.ExecuteNonQuery(sql, CommandType.Text,
                 _db.P("@id", SqlDbType.NVarChar, sp.Id, 50),
-                _db.P("@ten", SqlDbType.NVarChar, sp.TenSanPham, 200),
+                _db.P("@ten", SqlDbType.NVarChar, sp.TenSanPham, 50),
                 _db.P("@id_dvt", SqlDbType.Int, sp.DonViTinh.Id),
                 _db.P("@soluong", SqlDbType.Int, sp.SoLuong),
-                _db.P("@gianhap", SqlDbType.BigInt, sp.DonGiaNhap),
-                _db.P("@giabansi", SqlDbType.BigInt, sp.GiaBanSi),
-                _db.P("@giabanle", SqlDbType.BigInt, sp.GiaBanLe)
+                _db.P("@gianhap", SqlDbType.Int, sp.DonGiaNhap),
+                _db.P("@giabansi", SqlDbType.Int, sp.GiaBanSi),
+                _db.P("@giabanle", SqlDbType.Int, sp.GiaBanLe)
             ) > 0;
         }
 
@@ -133,9 +132,6 @@ namespace CuahangNongduoc.DataLayer
             return _db.ExecuteNonQuery(sql, CommandType.Text,
                 _db.P("@id", SqlDbType.NVarChar, id, 50)) > 0;              // CHANGED
         }
-
-        /* ==================== DataTable pattern (giữ API cũ) ==================== */
-
         public DataRow NewRow()
         {
             EnsureSchema();                      // CHANGED
@@ -150,16 +146,12 @@ namespace CuahangNongduoc.DataLayer
 
         public bool Save()
         {
-            // CHANGED: thay toàn bộ DataService + tự mở connection bằng DbClient + DataAdapter
             EnsureSchema();
             using (var cn = _db.Open())
             using (var da = CreateAdapter(cn))
             {
                 return da.Update(_table) > 0;
             }
-        }
-
-        // REMOVED: internal void Save() { throw new NotImplementedException(); }
-        // CHANGED: xoá method trùng tên gây lỗi "already defines a member called 'Save'"
+        }   
     }
 }

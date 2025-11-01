@@ -6,10 +6,6 @@ using System.Windows.Forms;
 using CuahangNongduoc.BusinessObject;
 using CuahangNongduoc.DataLayer;
 
-
-
-
-
 namespace CuahangNongduoc.Controller
 {
     public class SanPhamController
@@ -35,7 +31,7 @@ namespace CuahangNongduoc.Controller
         public void TimMaSanPham(String ma)
         {
             factory.TimMaSanPham(ma);
-        }
+        } // 
         public void TimTenSanPham(String ten)
         {
             factory.TimTenSanPham(ten);
@@ -79,7 +75,7 @@ namespace CuahangNongduoc.Controller
             {
                 long tong_so = Convert.ToInt32(tbl.Rows[0]["SO_LUONG"]);
                 long tong_gia = Convert.ToInt64(tbl.Rows[0]["DON_GIA_NHAP"]);
-                if (tong_gia != gia_moi)
+                if (tong_gia != gia_moi) // chỉ tỉnh giá bình quân khi giá mới khác giá cũ????
                 {
                     long thanh_tien = gia_moi * so_luong + tong_gia * tong_so;
                     tong_so += so_luong;

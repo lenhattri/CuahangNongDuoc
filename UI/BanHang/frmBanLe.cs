@@ -35,7 +35,7 @@ namespace CuahangNongduoc
             status = Controll.Normal;
         }
 
-        private void frmNhapHang_Load(object sender, EventArgs e)
+        private void frmBanLe_Load(object sender, EventArgs e)
         {
 
             ctrlSanPham.HienthiAutoComboBox(cmbSanPham);
@@ -47,11 +47,7 @@ namespace CuahangNongduoc
 
             ctrlPhieuBan.HienthiPhieuBan(bindingNavigator,cmbKhachHang, txtMaPhieu, dtNgayLapPhieu, numTongTien, numDaTra, numConNo);
 
-            bindingNavigator.BindingSource.CurrentChanged -= new EventHandler(BindingSource_CurrentChanged);
-            bindingNavigator.BindingSource.CurrentChanged += new EventHandler(BindingSource_CurrentChanged);
-            
-            ctrlChiTiet.HienThiChiTiet(dgvDanhsachSP, txtMaPhieu.Text);
-
+               
 
             if (status == Controll.AddNew)
             {
@@ -61,6 +57,10 @@ namespace CuahangNongduoc
             {
                 this.Allow(false);
             }
+            ctrlChiTiet.HienThiChiTiet(dgvDanhsachSP, txtMaPhieu.Text);
+
+            bindingNavigator.BindingSource.CurrentChanged -= new EventHandler(BindingSource_CurrentChanged);
+            bindingNavigator.BindingSource.CurrentChanged += new EventHandler(BindingSource_CurrentChanged);
 
 
         }
@@ -144,11 +144,13 @@ namespace CuahangNongduoc
         private void numDonGia_ValueChanged(object sender, EventArgs e)
         {
             numThanhTien.Value = numDonGia.Value * numSoLuong.Value;
+            //chưa xử lý nếu người dùng chỉ đổi số lượng mà không đụng numDonGia) numThanhTien sẽ không tự update
         }
 
         private void numTongTien_ValueChanged(object sender, EventArgs e)
         {
-            numConNo.Value = numTongTien.Value - numDaTra.Value;
+            numConNo.Value = numTongTien.Value - numDaTra.Value;//Tổng tiền thay đổi thì nợ tính lại
+            //chưa có xử lý khi người dùng đổi số tiền đã trả
         }
 
         private void toolLuu_Click(object sender, EventArgs e)
@@ -336,7 +338,7 @@ namespace CuahangNongduoc
             }
         }
 
-        private void btnThemDaiLy_Click(object sender, EventArgs e)
+        private void btnThemKhachHang_Click(object sender, EventArgs e)
         {
             frmKhachHang KhachHang = new frmKhachHang();
             KhachHang.ShowDialog();
@@ -350,6 +352,14 @@ namespace CuahangNongduoc
             ctrlSanPham.HienthiAutoComboBox(cmbSanPham);
         }
 
+        private void dgvDanhsachSP_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
 
-     }
+        }
+
+        private void cmbMaSanPham_SelectedIndexChanged_1(object sender, EventArgs e)
+        {
+
+        }
+    }
 }

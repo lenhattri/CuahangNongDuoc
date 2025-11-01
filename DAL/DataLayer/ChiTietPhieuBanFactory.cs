@@ -90,7 +90,7 @@ namespace CuahangNongduoc.DataLayer
             const string sql = @"
             SELECT SUM(DON_GIA_NHAP * SO_LUONG) / NULLIF(SUM(SO_LUONG), 0)
             FROM MA_SAN_PHAM
-            WHERE ID_SAN_PHAM = @idSanPham AND SO_LUONG_TON > 0";
+            WHERE ID_SAN_PHAM = @idSanPham AND SO_LUONG > 0";
             decimal? result = _db.ExecuteScalar<decimal>(sql, CommandType.Text,
                 _db.P("@idSanPham", SqlDbType.VarChar, idSanPham, 50));
             return result ?? 0;
