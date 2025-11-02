@@ -107,6 +107,7 @@
             this.reportViewer.LocalReport.ReportEmbeddedResource = "CuahangNongduoc.Report.rptSanPhamHetHan.rdlc";
             this.reportViewer.Location = new System.Drawing.Point(0, 0);
             this.reportViewer.Name = "reportViewer";
+            this.reportViewer.ServerReport.BearerToken = null;
             this.reportViewer.Size = new System.Drawing.Size(803, 487);
             this.reportViewer.TabIndex = 0;
             // 
@@ -120,7 +121,7 @@
             this.Controls.Add(this.panel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmSanphamHethan";
-            this.Text = "SAN PHAM HET HAN";
+            this.Text = "SẢN PHẨM HẾT HẠN";
             this.Load += new System.EventHandler(this.frmSanphamHethan_Load);
             ((System.ComponentModel.ISupportInitialize)(this.MaSanPhamBindingSource)).EndInit();
             this.panel1.ResumeLayout(false);

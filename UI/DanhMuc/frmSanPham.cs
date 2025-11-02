@@ -27,6 +27,7 @@ namespace CuahangNongduoc
             ctrl.HienthiDataGridview(dataGridView, bindingNavigator,
                  txtMaSanPham, txtTenSanPham, cmbDVT, numSoLuong, numDonGiaNhap, numGiaBanSi, numGiaBanLe);
             AppTheme.ApplyTheme(this);
+
         }
 
         private void toolLuu_Click(object sender, EventArgs e)

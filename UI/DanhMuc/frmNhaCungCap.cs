@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CuahangNongduoc.Utils;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -35,6 +36,8 @@ namespace CuahangNongduoc
         private void frmNhaCungCap_Load(object sender, EventArgs e)
         {
             ctrl.HienthiDataGridview(dataGridView, bindingNavigator);
+            AppTheme.ApplyTheme(this);
+            this.Refresh();
         }
 
         private void bindingNavigatorAddNewItem_Click(object sender, EventArgs e)
@@ -67,14 +70,8 @@ namespace CuahangNongduoc
         {
             if (e.KeyChar == 13)
             {
-                if (toolTimHoTen.Checked)
-                {
-                    ctrl.TimHoTen(toolTimNhaCungCap.Text);
-                }
-                else
-                {
-                    ctrl.TimDiaChi(toolTimNhaCungCap.Text);
-                }
+                TimNhaCungCap();
+                e.Handled = true;
             }
         }
 
@@ -103,5 +100,18 @@ namespace CuahangNongduoc
             toolTimNhaCungCap.Text = "Tìm theo Địa chỉ";
             bindingNavigator.Focus();
         }
+
+        private void TimNhaCungCap()
+        {
+            DataTable dt;
+
+            if (toolTimHoTen.Checked)
+                dt = ctrl.TimHoTen(toolTimNhaCungCap.Text);
+            else
+                dt = ctrl.TimDiaChi(toolTimNhaCungCap.Text);
+
+            dataGridView.DataSource = dt;
+        }
+
     }
 }
