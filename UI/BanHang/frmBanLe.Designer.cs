@@ -30,9 +30,6 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmBanLe));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.bindingNavigator = new System.Windows.Forms.BindingNavigator(this.components);
             this.bindingNavigatorCountItem = new System.Windows.Forms.ToolStripLabel();
             this.bindingNavigatorMoveFirstItem = new System.Windows.Forms.ToolStripButton();
@@ -53,12 +50,6 @@
             this.toolThoat = new System.Windows.Forms.ToolStripButton();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.dgvDanhsachSP = new Guna.UI2.WinForms.Guna2DataGridView();
-            this.colMaPhieuBan = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colMaSanPham = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.colDonGia = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colSoLuong = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colThanhTien = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel1 = new System.Windows.Forms.Panel();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.btnThemSanPham = new System.Windows.Forms.Button();
@@ -97,11 +88,16 @@
             this.numDaTra = new System.Windows.Forms.NumericUpDown();
             this.label6 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
+            this.dgvDanhsachSP = new System.Windows.Forms.DataGridView();
+            this.colMaPhieuBan = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colMaSanPham = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.colDonGia = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colSoLuong = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colThanhTien = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.bindingNavigator)).BeginInit();
             this.bindingNavigator.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.panel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvDanhsachSP)).BeginInit();
             this.panel1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -112,6 +108,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numConNo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numTongTien)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numDaTra)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvDanhsachSP)).BeginInit();
             this.SuspendLayout();
             // 
             // bindingNavigator
@@ -321,113 +318,6 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(912, 155);
             this.panel2.TabIndex = 1;
-            // 
-            // dgvDanhsachSP
-            // 
-            this.dgvDanhsachSP.AllowUserToAddRows = false;
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.White;
-            this.dgvDanhsachSP.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(88)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvDanhsachSP.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
-            this.dgvDanhsachSP.ColumnHeadersHeight = 18;
-            this.dgvDanhsachSP.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.EnableResizing;
-            this.dgvDanhsachSP.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.colMaPhieuBan,
-            this.colMaSanPham,
-            this.colDonGia,
-            this.colSoLuong,
-            this.colThanhTien});
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(229)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvDanhsachSP.DefaultCellStyle = dataGridViewCellStyle3;
-            this.dgvDanhsachSP.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.dgvDanhsachSP.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(229)))), ((int)(((byte)(255)))));
-            this.dgvDanhsachSP.Location = new System.Drawing.Point(0, 5);
-            this.dgvDanhsachSP.Name = "dgvDanhsachSP";
-            this.dgvDanhsachSP.ReadOnly = true;
-            this.dgvDanhsachSP.RowHeadersVisible = false;
-            this.dgvDanhsachSP.RowHeadersWidth = 51;
-            this.dgvDanhsachSP.RowTemplate.Height = 24;
-            this.dgvDanhsachSP.Size = new System.Drawing.Size(912, 150);
-            this.dgvDanhsachSP.TabIndex = 0;
-            this.dgvDanhsachSP.ThemeStyle.AlternatingRowsStyle.BackColor = System.Drawing.Color.White;
-            this.dgvDanhsachSP.ThemeStyle.AlternatingRowsStyle.Font = null;
-            this.dgvDanhsachSP.ThemeStyle.AlternatingRowsStyle.ForeColor = System.Drawing.Color.Empty;
-            this.dgvDanhsachSP.ThemeStyle.AlternatingRowsStyle.SelectionBackColor = System.Drawing.Color.Empty;
-            this.dgvDanhsachSP.ThemeStyle.AlternatingRowsStyle.SelectionForeColor = System.Drawing.Color.Empty;
-            this.dgvDanhsachSP.ThemeStyle.BackColor = System.Drawing.Color.White;
-            this.dgvDanhsachSP.ThemeStyle.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(229)))), ((int)(((byte)(255)))));
-            this.dgvDanhsachSP.ThemeStyle.HeaderStyle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(88)))), ((int)(((byte)(255)))));
-            this.dgvDanhsachSP.ThemeStyle.HeaderStyle.BorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-            this.dgvDanhsachSP.ThemeStyle.HeaderStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.dgvDanhsachSP.ThemeStyle.HeaderStyle.ForeColor = System.Drawing.Color.White;
-            this.dgvDanhsachSP.ThemeStyle.HeaderStyle.HeaightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.EnableResizing;
-            this.dgvDanhsachSP.ThemeStyle.HeaderStyle.Height = 18;
-            this.dgvDanhsachSP.ThemeStyle.ReadOnly = true;
-            this.dgvDanhsachSP.ThemeStyle.RowsStyle.BackColor = System.Drawing.Color.White;
-            this.dgvDanhsachSP.ThemeStyle.RowsStyle.BorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
-            this.dgvDanhsachSP.ThemeStyle.RowsStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.dgvDanhsachSP.ThemeStyle.RowsStyle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
-            this.dgvDanhsachSP.ThemeStyle.RowsStyle.Height = 24;
-            this.dgvDanhsachSP.ThemeStyle.RowsStyle.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(229)))), ((int)(((byte)(255)))));
-            this.dgvDanhsachSP.ThemeStyle.RowsStyle.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
-            this.dgvDanhsachSP.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvDanhsachSP_CellContentClick);
-            // 
-            // colMaPhieuBan
-            // 
-            this.colMaPhieuBan.DataPropertyName = "ID_PHIEU_BAN";
-            this.colMaPhieuBan.HeaderText = "MaPhieuBan";
-            this.colMaPhieuBan.MinimumWidth = 6;
-            this.colMaPhieuBan.Name = "colMaPhieuBan";
-            this.colMaPhieuBan.ReadOnly = true;
-            this.colMaPhieuBan.Visible = false;
-            // 
-            // colMaSanPham
-            // 
-            this.colMaSanPham.DataPropertyName = "ID_MA_SAN_PHAM";
-            this.colMaSanPham.FillWeight = 40.64171F;
-            this.colMaSanPham.HeaderText = "Mã Số";
-            this.colMaSanPham.MinimumWidth = 6;
-            this.colMaSanPham.Name = "colMaSanPham";
-            this.colMaSanPham.ReadOnly = true;
-            // 
-            // colDonGia
-            // 
-            this.colDonGia.DataPropertyName = "DON_GIA";
-            this.colDonGia.FillWeight = 60F;
-            this.colDonGia.HeaderText = "Đơn Giá";
-            this.colDonGia.MinimumWidth = 6;
-            this.colDonGia.Name = "colDonGia";
-            this.colDonGia.ReadOnly = true;
-            // 
-            // colSoLuong
-            // 
-            this.colSoLuong.DataPropertyName = "SO_LUONG";
-            this.colSoLuong.FillWeight = 40.64171F;
-            this.colSoLuong.HeaderText = "Số Lượng";
-            this.colSoLuong.MinimumWidth = 6;
-            this.colSoLuong.Name = "colSoLuong";
-            this.colSoLuong.ReadOnly = true;
-            // 
-            // colThanhTien
-            // 
-            this.colThanhTien.DataPropertyName = "THANH_TIEN";
-            this.colThanhTien.FillWeight = 40.64171F;
-            this.colThanhTien.HeaderText = "Thành Tiền";
-            this.colThanhTien.MinimumWidth = 6;
-            this.colThanhTien.Name = "colThanhTien";
-            this.colThanhTien.ReadOnly = true;
             // 
             // panel1
             // 
@@ -919,6 +809,73 @@
             this.label8.TabIndex = 42;
             this.label8.Text = "Tổng tiền";
             // 
+            // dgvDanhsachSP
+            // 
+            this.dgvDanhsachSP.AllowUserToAddRows = false;
+            this.dgvDanhsachSP.BackgroundColor = System.Drawing.SystemColors.Control;
+            this.dgvDanhsachSP.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvDanhsachSP.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.colMaPhieuBan,
+            this.colMaSanPham,
+            this.colDonGia,
+            this.colSoLuong,
+            this.colThanhTien});
+            this.dgvDanhsachSP.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgvDanhsachSP.Location = new System.Drawing.Point(0, 0);
+            this.dgvDanhsachSP.Margin = new System.Windows.Forms.Padding(4);
+            this.dgvDanhsachSP.Name = "dgvDanhsachSP";
+            this.dgvDanhsachSP.ReadOnly = true;
+            this.dgvDanhsachSP.RowHeadersWidth = 51;
+            this.dgvDanhsachSP.Size = new System.Drawing.Size(912, 155);
+            this.dgvDanhsachSP.TabIndex = 7;
+            // 
+            // colMaPhieuBan
+            // 
+            this.colMaPhieuBan.DataPropertyName = "ID_PHIEU_BAN";
+            this.colMaPhieuBan.HeaderText = "MaPhieuBan";
+            this.colMaPhieuBan.MinimumWidth = 6;
+            this.colMaPhieuBan.Name = "colMaPhieuBan";
+            this.colMaPhieuBan.ReadOnly = true;
+            this.colMaPhieuBan.Visible = false;
+            this.colMaPhieuBan.Width = 125;
+            // 
+            // colMaSanPham
+            // 
+            this.colMaSanPham.DataPropertyName = "ID_MA_SAN_PHAM";
+            this.colMaSanPham.HeaderText = "Mã số";
+            this.colMaSanPham.MinimumWidth = 6;
+            this.colMaSanPham.Name = "colMaSanPham";
+            this.colMaSanPham.ReadOnly = true;
+            this.colMaSanPham.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.colMaSanPham.Width = 150;
+            // 
+            // colDonGia
+            // 
+            this.colDonGia.DataPropertyName = "DON_GIA";
+            this.colDonGia.HeaderText = "Đơn giá";
+            this.colDonGia.MinimumWidth = 6;
+            this.colDonGia.Name = "colDonGia";
+            this.colDonGia.ReadOnly = true;
+            this.colDonGia.Width = 125;
+            // 
+            // colSoLuong
+            // 
+            this.colSoLuong.DataPropertyName = "SO_LUONG";
+            this.colSoLuong.HeaderText = "Số lượng";
+            this.colSoLuong.MinimumWidth = 6;
+            this.colSoLuong.Name = "colSoLuong";
+            this.colSoLuong.ReadOnly = true;
+            this.colSoLuong.Width = 125;
+            // 
+            // colThanhTien
+            // 
+            this.colThanhTien.DataPropertyName = "THANH_TIEN";
+            this.colThanhTien.HeaderText = "Thành tiền";
+            this.colThanhTien.MinimumWidth = 6;
+            this.colThanhTien.Name = "colThanhTien";
+            this.colThanhTien.ReadOnly = true;
+            this.colThanhTien.Width = 125;
+            // 
             // frmBanLe
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -937,7 +894,6 @@
             this.bindingNavigator.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dgvDanhsachSP)).EndInit();
             this.panel1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
@@ -951,6 +907,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numConNo)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numTongTien)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numDaTra)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvDanhsachSP)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1016,7 +973,7 @@
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Button btnThemSanPham;
         private System.Windows.Forms.Button btnThemKhachHang;
-        private Guna.UI2.WinForms.Guna2DataGridView dgvDanhsachSP;
+        private System.Windows.Forms.DataGridView dgvDanhsachSP;
         private System.Windows.Forms.DataGridViewTextBoxColumn colMaPhieuBan;
         private System.Windows.Forms.DataGridViewComboBoxColumn colMaSanPham;
         private System.Windows.Forms.DataGridViewTextBoxColumn colDonGia;

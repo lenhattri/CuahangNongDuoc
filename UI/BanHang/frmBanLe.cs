@@ -8,6 +8,8 @@ using System.Windows.Forms;
 using CuahangNongduoc.Controller;
 using CuahangNongduoc.BusinessObject;
 using CuahangNongduoc.BLL.Helpers;
+using static CuahangNongduoc.Utils.AppTheme;
+using CuahangNongduoc.Utils;
 
 namespace CuahangNongduoc
 {
@@ -37,7 +39,7 @@ namespace CuahangNongduoc
 
         private void frmBanLe_Load(object sender, EventArgs e)
         {
-
+            AppTheme.ApplyTheme(this);
             ctrlSanPham.HienthiAutoComboBox(cmbSanPham);
             ctrlMaSanPham.HienThiDataGridViewComboBox(colMaSanPham);
 
@@ -245,18 +247,7 @@ namespace CuahangNongduoc
 
         private void dgvDanhsachSP_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
         {
-            if (MessageBox.Show("Bạn có chắc chắn xóa không?", "Phieu Ban Le", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
-            {
-                e.Cancel = true;
-            }
-            else
-            {
-                BindingSource bs = ((BindingSource)dgvDanhsachSP.DataSource);
-                DataRowView row = (DataRowView)bs.Current;
-                numTongTien.Value -= Convert.ToInt64(row["THANH_TIEN"]);
-                deleted.Add(new MaSanPham(Convert.ToString(row["ID_MA_SAN_PHAM"]), Convert.ToInt32(row["SO_LUONG"])));
 
-            }
         }
 
         private void toolLuuIn_Click(object sender, EventArgs e)
