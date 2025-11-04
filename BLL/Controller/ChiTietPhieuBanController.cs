@@ -109,7 +109,8 @@ namespace CuahangNongduoc.Controller
 
         // Bộ đệm hàng Added để Save() một lượt (thay cho DataService cũ)
         private readonly DataTable _buffer;
-
+        // Hiển thị buffer cho UI sử dụng
+        public DataTable Buffer => _buffer;
         public ChiTietPhieuBanController()
         {
             _buffer = CreateBufferSchema();

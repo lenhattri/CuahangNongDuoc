@@ -144,6 +144,13 @@ namespace CuahangNongduoc
         }
         public void TinhTongTien()
         {
+            decimal tongSanPham = 0;
+
+            // Duyệt tất cả các dòng sản phẩm trong phiếu
+            foreach (DataRow row in ctrlChiTiet.Buffer.Rows)
+            {
+                tongSanPham += Convert.ToDecimal(row["THANH_TIEN"]);
+            }
             numTongTien.Value = (numThanhTien.Value + numPhiVanChuyen.Value + numPhiDichVu.Value) - (numGiamGia.Value);
             numConNo.Value = numTongTien.Value - numDaTra.Value;
         }
