@@ -25,6 +25,9 @@ namespace CuahangNongduoc
         {
             InitializeComponent();
             status = Controll.AddNew;
+            numPhiVanChuyen.ValueChanged += PhiHoacGiamGia_ValueChanged;
+            numPhiDichVu.ValueChanged += PhiHoacGiamGia_ValueChanged;
+            numGiamGia.ValueChanged += PhiHoacGiamGia_ValueChanged;
         }
 
      
@@ -136,19 +139,44 @@ namespace CuahangNongduoc
                 row["SO_LUONG"] = numSoLuong.Value;
                 row["THANH_TIEN"] = numThanhTien.Value;
                 ctrlChiTiet.Add(row);
-
+                
             }
 
         }
+        public void TinhTongTien()
+        {
+            decimal tongSanPham = 0;
 
+            // Duyệt tất cả các dòng sản phẩm trong phiếu
+            foreach (DataRow row in ctrlChiTiet.Buffer.Rows)
+            {
+                tongSanPham += Convert.ToDecimal(row["THANH_TIEN"]);
+            }
+            numTongTien.Value = (numThanhTien.Value + numPhiVanChuyen.Value + numPhiDichVu.Value) - (numGiamGia.Value);
+            numConNo.Value = numTongTien.Value - numDaTra.Value;
+        }
+        private void PhiHoacGiamGia_ValueChanged(object sender, EventArgs e)
+        {
+            if(numGiamGia.Value > numTongTien.Value)
+            {
+                MessageBox.Show("Giảm giá không được lớn hơn Tổng tiền!", "Phieu Nhap", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                numGiamGia.Value = 0;
+                numGiamGia.Focus();
+            }
+            else
+            {
+                TinhTongTien();
+            }
+        }
         private void numDonGia_ValueChanged(object sender, EventArgs e)
         {
             numThanhTien.Value = numDonGia.Value * numSoLuong.Value;
         }
 
+       
         private void numTongTien_ValueChanged(object sender, EventArgs e)
         {
-            numConNo.Value = numTongTien.Value - numDaTra.Value;
+            TinhTongTien();
         }
 
         private void toolLuu_Click(object sender, EventArgs e)
@@ -194,6 +222,9 @@ namespace CuahangNongduoc
             row["TONG_TIEN"] = numTongTien.Value;
             row["DA_TRA"] = numDaTra.Value;
             row["CON_NO"] = numConNo.Value;
+            row["CHI_PHI_VAN_CHUYEN"] = numPhiVanChuyen.Value;
+            row["PHI_DICH_VU"] = numPhiDichVu.Value;
+            row["GIAM_GIA"] = numGiamGia.Value;
             ctrlPhieuBan.Add(row);
 
             PhieuBanController ctrl = new PhieuBanController();
@@ -350,6 +381,6 @@ namespace CuahangNongduoc
             ctrlSanPham.HienthiAutoComboBox(cmbSanPham);
         }
 
-
-     }
+        
+    }
 }
