@@ -620,6 +620,7 @@
     <Content Include="lib\Microsoft.ReportViewer.Common.dll" />
     <Content Include="lib\Microsoft.ReportViewer.WinForms.dll" />
     <Content Include="lib\XPExplorerBar.dll" />
+    <None Include="Resources\search.png" />
     <None Include="Resources\password.png" />
     <None Include="Resources\username.png" />
     <None Include="Resources\HeroImages.jpg" />

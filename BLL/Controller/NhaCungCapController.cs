@@ -183,14 +183,22 @@ namespace CuahangNongduoc.Controller
             return ds;
         }
 
-        public void TimDiaChi(string diachi)
+        // 🔍 Tìm kiếm theo Họ tên (Nhà cung cấp)
+        public DataTable TimHoTen(string hoten)
         {
-            dal.TimDiaChi(diachi);
+            if (string.IsNullOrWhiteSpace(hoten))
+                return dal.DanhsachNCC();
+
+            return dal.TimHoTen(hoten);
         }
 
-        public void TimHoTen(string hoten)
+        // 🔍 Tìm kiếm theo Địa chỉ
+        public DataTable TimDiaChi(string diachi)
         {
-            dal.TimHoTen(hoten);
+            if (string.IsNullOrWhiteSpace(diachi))
+                return dal.DanhsachNCC();
+
+            return dal.TimDiaChi(diachi);
         }
 
         public void Insert(NhaCungCap ncc)

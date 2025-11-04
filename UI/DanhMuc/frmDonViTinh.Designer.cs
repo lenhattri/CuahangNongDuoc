@@ -132,6 +132,7 @@
             // 
             this.bindingNavigatorPositionItem.AccessibleName = "Position";
             this.bindingNavigatorPositionItem.AutoSize = false;
+            this.bindingNavigatorPositionItem.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.bindingNavigatorPositionItem.Name = "bindingNavigatorPositionItem";
             this.bindingNavigatorPositionItem.Size = new System.Drawing.Size(50, 23);
             this.bindingNavigatorPositionItem.Text = "0";
@@ -177,6 +178,8 @@
             // 
             // dataGridView
             // 
+            this.dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dataGridView.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dataGridView.BackgroundColor = System.Drawing.SystemColors.Control;
             this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -185,7 +188,7 @@
             this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView.Location = new System.Drawing.Point(0, 38);
             this.dataGridView.Name = "dataGridView";
-            this.dataGridView.Size = new System.Drawing.Size(323, 228);
+            this.dataGridView.Size = new System.Drawing.Size(323, 184);
             this.dataGridView.TabIndex = 1;
             // 
             // colId
@@ -200,18 +203,17 @@
             this.colTenDV.DataPropertyName = "TEN_DON_VI";
             this.colTenDV.HeaderText = "Tên đơn vị";
             this.colTenDV.Name = "colTenDV";
-            this.colTenDV.Width = 200;
             // 
             // frmDonViTinh
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(323, 266);
+            this.ClientSize = new System.Drawing.Size(323, 222);
             this.Controls.Add(this.dataGridView);
             this.Controls.Add(this.bindingNavigator);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmDonViTinh";
-            this.Text = "Don Vi Tinh";
+            this.Text = "ĐƠN VỊ TÍNH";
             this.Load += new System.EventHandler(this.frmDonViTinh_Load);
             ((System.ComponentModel.ISupportInitialize)(this.bindingNavigator)).EndInit();
             this.bindingNavigator.ResumeLayout(false);
