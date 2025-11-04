@@ -98,19 +98,6 @@ namespace CuahangNongduoc.DataLayer
         }
 
         /* API */
-        public DataTable DanhsachLyDo()
-        {
-            using (var cn = _db.Open())
-            using (var cmd = _db.Cmd(cn, SELECT_ALL, CommandType.Text))
-            using (var da = new SqlDataAdapter(cmd))
-            {
-                var dt = new DataTable("LY_DO_CHI");
-                da.Fill(dt);
-                _table = dt;
-                return dt;
-            }
-
-        }
 
         /// <summary>
         /// Retrieves a specific reason for expenditure by ID.

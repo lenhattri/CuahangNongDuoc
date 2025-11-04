@@ -372,6 +372,7 @@
       <DependentUpon>frmTimPhieuThu.cs</DependentUpon>
     </Compile>
     <Compile Include="Utils\AppTheme.cs" />
+    <Compile Include="Utils\Functions\DataAccessHelper.cs" />
     <Compile Include="Utils\Functions\DataTableHelper.cs" />
     <Compile Include="Utils\Functions\LogHelper.cs" />
     <Compile Include="Utils\Functions\Num2Str.cs" />
@@ -379,7 +380,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\Functions\SafeExecutor.cs" />
     <Compile Include="Utils\Functions\SqlHelper.cs" />
-    <Compile Include="Utils\Session.cs" />
+    <Compile Include="Utils\Functions\Validation.cs" />
     <EmbeddedResource Include="UI\HeThong\frmCauHinh.resx">
       <DependentUpon>frmCauHinh.cs</DependentUpon>
     </EmbeddedResource>
