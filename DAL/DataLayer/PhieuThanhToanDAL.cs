@@ -3,77 +3,97 @@ using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Windows.Forms;
-using CuahangNongduoc.DAL.Infrastructure; // CHANGED: dùng DbClient (singleton) thay vì ConfigurationManager/SqlConnection tự mở
+using CuahangNongduoc.DAL.Infrastructure;
+using System.Collections.Generic;      // NEW: Thêm để dùng List
+using CuahangNongduoc.Utils.Functions; // NEW: Thêm để dùng DataAccessHelper
 
 namespace CuahangNongduoc.DataLayer
 {
     public class PhieuThanhToanDAL
     {
-        private DataTable m_DataTable;
+        private DataTable _dataTable; // CHANGED: đổi tên từ m_DataTable
+        private readonly DbClient _db = DbClient.Instance;
 
-        // CHANGED: bỏ property ConnectionString; dùng DbClient cho tất cả truy vấn
-        private readonly DbClient _db = DbClient.Instance; // NEW
+        // NEW: Định nghĩa Select-All
+        private const string SELECT_ALL = "SELECT * FROM PHIEU_THANH_TOAN";
+
+        /* ==================== Helpers ==================== */
+
+        // NEW: Đảm bảo _dataTable có schema
+        private void EnsureSchema()
+        {
+            if (_dataTable != null) return;
+
+            // Dùng ExecuteDataTable với 1=0 để lấy schema
+            _dataTable = _db.ExecuteDataTable(SELECT_ALL + " WHERE 1=0", CommandType.Text);
+            _dataTable.TableName = "PHIEU_THANH_TOAN";
+        }
+
+        // NEW: Hàm tạo Adapter để dùng cho DataAccessHelper/SqlCommandBuilder
+        private SqlDataAdapter CreateAdapter(SqlConnection cn)
+        {
+            var da = new SqlDataAdapter
+            {
+                SelectCommand = _db.Cmd(cn, SELECT_ALL, CommandType.Text)
+            };
+            // Quan trọng: Phải có AddWithKey để CommandBuilder 
+            // biết khóa chính và tạo lệnh UPDATE/DELETE
+            da.MissingSchemaAction = MissingSchemaAction.AddWithKey;
+
+            _ = new SqlCommandBuilder(da); // Tự sinh INSERT, UPDATE, DELETE
+            return da;
+        }
 
         /* ===================== SELECT ALL ===================== */
         public DataTable DanhsachPhieuThanhToan()
         {
-            var dt = new DataTable("PHIEU_THANH_TOAN");
-            // CHANGED: dùng _db.Open() + _db.Cmd(...)
-            using (var cn = _db.Open())                                                                 // CHANGED
-            using (var cmd = _db.Cmd(cn, "SELECT * FROM PHIEU_THANH_TOAN", CommandType.Text))           // CHANGED
-            using (var da = new SqlDataAdapter(cmd))                                                    // CHANGED
-            {
-                da.Fill(dt);
-            }
-            m_DataTable = dt;
+            // CHANGED: Dùng DbClient.ExecuteDataTable cho ngắn gọn
+            var dt = _db.ExecuteDataTable(SELECT_ALL, CommandType.Text);
+            dt.TableName = "PHIEU_THANH_TOAN";
+            _dataTable = dt; // Đồng bộ
             return dt;
         }
 
         /* ===================== FIND BY CUSTOMER + DATE (range) ===================== */
         public DataTable TimPhieuThanhToan(string kh, DateTime ngay)
         {
-            m_DataTable = new DataTable("PHIEU_THANH_TOAN");
-            var start = ngay.Date;                 // NEW: giữ sargability
-            var end = start.AddDays(1);          // NEW
+            var start = ngay.Date;
+            var end = start.AddDays(1);
 
-            // CHANGED: thay DATEADD bằng khoảng [@start, @end)
             const string sql = @"
                 SELECT * FROM PHIEU_THANH_TOAN
                 WHERE ID_KHACH_HANG = @kh
                   AND NGAY_THANH_TOAN >= @start
                   AND NGAY_THANH_TOAN <  @end";
 
-            using (var cn = _db.Open())                                                                    // CHANGED
-            using (var cmd = _db.Cmd(cn, sql, CommandType.Text, null, 30,
-                       _db.P("@kh", SqlDbType.NVarChar, kh, 50),                                        // CHANGED: NVarChar hỗ trợ Unicode
-                       _db.P("@start", SqlDbType.DateTime, start),                                        // CHANGED
-                       _db.P("@end", SqlDbType.DateTime, end)))                                         // CHANGED
-            using (var da = new SqlDataAdapter(cmd))                                                        // CHANGED
-            {
-                da.Fill(m_DataTable);
-            }
-            return m_DataTable;
+            // CHANGED: Dùng DbClient.ExecuteDataTable cho ngắn gọn
+            var dt = _db.ExecuteDataTable(sql, CommandType.Text,
+                _db.P("@kh", SqlDbType.NVarChar, kh, 50),
+                _db.P("@start", SqlDbType.DateTime, start),
+                _db.P("@end", SqlDbType.DateTime, end));
+
+            dt.TableName = "PHIEU_THANH_TOAN";
+            _dataTable = dt; // Đồng bộ
+            return dt;
         }
 
         /* ===================== GET BY ID ===================== */
         public DataTable LayPhieuThanhToan(string id)
         {
-            m_DataTable = new DataTable("PHIEU_THANH_TOAN");
-            using (var cn = _db.Open())                                                                    // CHANGED
-            using (var cmd = _db.Cmd(cn, "SELECT * FROM PHIEU_THANH_TOAN WHERE ID = @id", CommandType.Text,
-                       null, 30,
-                       _db.P("@id", SqlDbType.NVarChar, id, 50)))                                          // CHANGED
-            using (var da = new SqlDataAdapter(cmd))                                                        // CHANGED
-            {
-                da.Fill(m_DataTable);
-            }
-            return m_DataTable;
+            // CHANGED: Dùng DbClient.ExecuteDataTable cho ngắn gọn
+            const string sql = SELECT_ALL + " WHERE ID = @id";
+            var dt = _db.ExecuteDataTable(sql, CommandType.Text,
+                _db.P("@id", SqlDbType.NVarChar, id, 50));
+
+            dt.TableName = "PHIEU_THANH_TOAN";
+            _dataTable = dt; // Đồng bộ
+            return dt;
         }
 
         /* ===================== AGGREGATE: SUM(TONG_TIEN) ===================== */
+        // Phương thức này là static và đã dùng DbClient, giữ nguyên
         public static long LayTongTien(string kh, int thang, int nam)
         {
-            // CHANGED: dùng DbClient thay vì tự tạo SqlConnection/ConnectionString
             var db = DbClient.Instance;
             const string sql = @"
                 SELECT SUM(TONG_TIEN)
@@ -81,7 +101,7 @@ namespace CuahangNongduoc.DataLayer
                 WHERE ID_KHACH_HANG = @kh
                   AND MONTH(NGAY_THANH_TOAN) = @thang
                   AND YEAR(NGAY_THANH_TOAN)  = @nam";
-            var obj = db.ExecuteScalar<object>(sql, CommandType.Text,                                      // CHANGED
+            var obj = db.ExecuteScalar<object>(sql, CommandType.Text,
                 db.P("@kh", SqlDbType.NVarChar, kh, 50),
                 db.P("@thang", SqlDbType.Int, thang),
                 db.P("@nam", SqlDbType.Int, nam));
@@ -91,41 +111,44 @@ namespace CuahangNongduoc.DataLayer
         /* ===================== DATATABLE HELPERS (giữ API cũ) ===================== */
         public DataRow NewRow()
         {
-            if (m_DataTable == null)
-                DanhsachPhieuThanhToan(); // giữ hành vi cũ
-            return m_DataTable.NewRow();
+            // CHANGED: Dùng EnsureSchema (lấy schema) thay vì DanhsachPhieuThanhToan (lấy data)
+            EnsureSchema();
+            return _dataTable.NewRow();
         }
 
         public void Add(DataRow row)
         {
-            if (m_DataTable == null)
-                DanhsachPhieuThanhToan(); // giữ hành vi cũ
-            m_DataTable.Rows.Add(row);
+            // CHANGED: Dùng EnsureSchema
+            EnsureSchema();
+            _dataTable.Rows.Add(row);
         }
 
-        /* ===================== SAVE (DataAdapter + CommandBuilder) ===================== */
+        /* ===================== SAVE (DataAccessHelper) ===================== */
+
+        // NEW: Danh sách các quy tắc kiểm tra hợp lệ
+        private static readonly List<ValidationRule> _phieuThanhToanRules = new List<ValidationRule>
+        {
+            new ValidationRule("ID", ValidationType.NotEmpty, "Số phiếu thanh toán không được để trống."),
+            new ValidationRule("ID_KHACH_HANG", ValidationType.NotEmpty, "Khách hàng không được để trống."),
+            new ValidationRule("NGAY_THANH_TOAN", ValidationType.NotEmpty, "Ngày thanh toán không được để trống."),
+            new ValidationRule("TONG_TIEN", ValidationType.NotEmpty, "Tổng tiền không được để trống.")
+        };
+
+        /// <summary>
+        /// Lưu tất cả thay đổi (Thêm, Sửa, Xóa) vào CSDL
+        /// </summary>
         public bool Save()
         {
-            if (m_DataTable == null) return false;
+            // CHANGED: Thay thế toàn bộ logic cũ
+            if (_dataTable == null) return false;
 
-            // CHANGED: dùng DbClient cho SelectCommand, để CommandBuilder sinh CRUD
-            using (var cn = _db.Open())                                                                    // CHANGED
-            using (var cmd = _db.Cmd(cn, "SELECT * FROM PHIEU_THANH_TOAN", CommandType.Text))              // CHANGED
-            using (var da = new SqlDataAdapter(cmd))                                                       // CHANGED
-            using (var builder = new SqlCommandBuilder(da))
-            {
-                da.RowUpdated += (s, e) =>
-                {
-                    if (e.StatementType == StatementType.Insert)
-                    {
-                        // giữ nguyên behavior cũ
-                        MessageBox.Show("Inserted ID: " + e.Row["ID"].ToString());
-                    }
-                };
-
-                int affectedRows = da.Update(m_DataTable);
-                return affectedRows > 0;
-            }
+            EnsureSchema();
+            return DataAccessHelper.PerformSave(
+                _dataTable,
+                _phieuThanhToanRules,
+                this.CreateAdapter,
+                _db
+            );
         }
     }
 }

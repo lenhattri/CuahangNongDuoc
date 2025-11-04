@@ -10,7 +10,6 @@ namespace CuahangNongduoc.Controller
     public class DonViTinhController
     {
         private readonly DonViTinhDAL _dal = new DonViTinhDAL();
-        private DataTable _tableForEdit; // bảng đang bind để Save()
 
         // Pick the first available column name from candidates; fall back to a string column or the first column.
         private static string PickColumn(DataTable dt, params string[] candidates)
@@ -63,8 +62,7 @@ namespace CuahangNongduoc.Controller
 
         public void HienthiDataGridview(DataGridView dg, BindingNavigator bn)
         {
-            _tableForEdit = _dal.DanhSachDVT();
-            var bs = new BindingSource { DataSource = _tableForEdit };
+            var bs = new BindingSource { DataSource = _dal.DanhSachDVT() };
             if (bn != null) bn.BindingSource = bs;
             dg.DataSource = bs;
             // (Tuỳ chọn) dg.AutoGenerateColumns = true; // nếu bạn không tự tạo cột trong Designer
@@ -85,8 +83,7 @@ namespace CuahangNongduoc.Controller
 
         public bool Save()
         {
-            if (_tableForEdit == null) return false; // chưa gọi HienthiDataGridview
-            return _dal.Save(_tableForEdit);         // đẩy các Added/Modified/Deleted
+            return _dal.Save();         // đẩy các Added/Modified/Deleted
         }
     }
 }

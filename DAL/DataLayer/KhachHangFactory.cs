@@ -1,8 +1,10 @@
 ﻿// DAL/DataLayer/KhachHangFactory.cs
+using CuahangNongduoc.DAL.Infrastructure;                 // CHANGED: dùng DbClient (singleton)
+using CuahangNongduoc.Utils.Functions;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using CuahangNongduoc.DAL.Infrastructure;                 // CHANGED: dùng DbClient (singleton)
 
 namespace CuahangNongduoc.DataLayer
 {
@@ -105,15 +107,31 @@ namespace CuahangNongduoc.DataLayer
             _table.Rows.Add(row);
         }
 
+        // CHANGED: Thay thế hàm Save() cũ
         public bool Save()
         {
             EnsureSchema();
-            // CHANGED: dùng DbClient.Open() + SqlDataAdapter + CommandBuilder để đẩy thay đổi
-            using (var conn = _db.Open())                                                    // CHANGED
-            using (var da = CreateAdapter(conn))
-            {
-                return da.Update(_table) > 0;
-            }
+
+            // Gọi helper tĩnh để thực hiện logic Save
+            return DataAccessHelper.PerformSave(
+                _table,             // DataTable nội bộ
+                _khachHangRules,    // Danh sách quy tắc
+                this.CreateAdapter, // Phương thức tạo Adapter
+                _db                 // Instance DbClient
+            );
         }
+
+        // NEW: Thêm danh sách quy tắc cho Khách Hàng
+        /// <summary>
+        /// Danh sách các quy tắc kiểm tra hợp lệ cho bảng KHACH_HANG
+        /// </summary>
+        private static readonly List<ValidationRule> _khachHangRules = new List<ValidationRule>
+        {
+            new ValidationRule("ID", ValidationType.NotEmpty, "Mã khách hàng không được để trống."),
+            new ValidationRule("HO_TEN", ValidationType.NotEmpty, "Tên khách hàng không được để trống."),
+            new ValidationRule("LOAI_KH", ValidationType.NotNull, "Chưa chọn loại khách hàng."),
+            
+            // Các cột DIEN_THOAI, DIA_CHI được phép trống (không cần quy tắc)
+        };
     }
 }
