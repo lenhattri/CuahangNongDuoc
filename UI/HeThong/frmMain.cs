@@ -59,8 +59,6 @@ namespace CuahangNongduoc
         }
 
 
-
-
         frmDonViTinh DonViTinh = null;
         private void mnuDonViTinh_Click(object sender, EventArgs e)
         {

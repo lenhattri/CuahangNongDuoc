@@ -215,15 +215,15 @@ namespace CuahangNongduoc.Controller
             dg.DataSource = bs;
         }
 
-        public void TimHoTen(string hoten, bool loai)
+        public DataTable TimHoTen(string hoten, bool loai)
         {
             // Nếu form muốn hiện kết quả tìm, hãy bind DataSource = factory.TimHoTen(...)
-            factory.TimHoTen(hoten, loai);
+            return factory.TimHoTen(hoten, loai);
         }
 
-        public void TimDiaChi(string diachi, bool loai)
+        public DataTable TimDiaChi(string diachi, bool loai)
         {
-            factory.TimDiaChi(diachi, loai);
+            return factory.TimDiaChi(diachi, loai);
         }
 
         public KhachHang LayKhachHang(string id)
@@ -259,6 +259,18 @@ namespace CuahangNongduoc.Controller
             }
             return ds;
         }
+
+        // ✅ Bổ sung 2 overload để form Khách Hàng gọi cho gọn
+        public DataTable TimHoTen(string hoten)
+        {
+            return factory.TimHoTen(hoten, false);
+        }
+
+        public DataTable TimDiaChi(string diachi)
+        {
+            return factory.TimDiaChi(diachi, false);
+        }
+
 
         public DataRow NewRow() => factory.NewRow();
         public void Add(DataRow row) => factory.Add(row);

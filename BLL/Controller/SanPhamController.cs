@@ -32,13 +32,13 @@ namespace CuahangNongduoc.Controller
             cmb.ValueMember = "ID";
             cmb.AutoComplete = true;
         }
-        public void TimMaSanPham(String ma)
+        public DataTable TimMaSanPham(String ma)
         {
-            factory.TimMaSanPham(ma);
+            return factory.TimMaSanPham(ma);
         }
-        public void TimTenSanPham(String ten)
+        public DataTable TimTenSanPham(String ten)
         {
-            factory.TimTenSanPham(ten);
+            return factory.TimTenSanPham(ten);
         }
 
         public void HienthiDataGridview(System.Windows.Forms.DataGridView dg, System.Windows.Forms.BindingNavigator bn,
