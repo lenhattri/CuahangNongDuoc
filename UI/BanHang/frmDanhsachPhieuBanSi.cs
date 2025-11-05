@@ -18,6 +18,7 @@ namespace CuahangNongduoc
             dataGridView.AutoGenerateColumns = false;
         }
 
+
         PhieuBanController ctrl = new PhieuBanController();
         KhachHangController ctrlKH = new KhachHangController();
         private void frmDanhsachPhieuNhap_Load(object sender, EventArgs e)

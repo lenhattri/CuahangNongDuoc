@@ -155,6 +155,7 @@ namespace CuahangNongduoc
             numTongTien.Value = (numThanhTien.Value + numPhiVanChuyen.Value + numPhiDichVu.Value) - (numGiamGia.Value);
             numConNo.Value = numTongTien.Value - numDaTra.Value;
         }
+
         private void PhiHoacGiamGia_ValueChanged(object sender, EventArgs e)
         {
             if(numGiamGia.Value > numTongTien.Value)
