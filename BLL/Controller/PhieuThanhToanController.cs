@@ -1,6 +1,4 @@
-﻿using CuahangNongduoc.BusinessObject;
-using CuahangNongduoc.DataLayer;
-using System;
+﻿using System;
 using System.Data;
 using System.Windows.Forms;
 using CuahangNongduoc.BusinessObject;
