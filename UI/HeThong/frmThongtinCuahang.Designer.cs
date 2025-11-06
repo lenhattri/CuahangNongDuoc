@@ -128,7 +128,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "frmThongtinCuahang";
-            this.Text = "THONG TIN CUA HANG";
+            this.Text = "THÔNG TIN CỬA HÀNG";
             this.Load += new System.EventHandler(this.frmThongtinCuahang_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

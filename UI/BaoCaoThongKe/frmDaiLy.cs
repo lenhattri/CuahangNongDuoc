@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CuahangNongduoc.Utils;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -18,7 +19,7 @@ namespace CuahangNongduoc
 
         private void frmKhachHang_Load(object sender, EventArgs e)
         {
-
+            AppTheme.ApplyTheme(this);
             ctrl.HienthiDaiLyDataGridview(dataGridView, bindingNavigator);
         }
 

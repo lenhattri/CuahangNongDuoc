@@ -1,3 +1,4 @@
+using CuahangNongduoc.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -17,7 +18,7 @@ namespace CuahangNongduoc
 
         private void frmDoanhThu_Load(object sender, EventArgs e)
         {
-
+            AppTheme.ApplyTheme(this);
             this.reportViewer.RefreshReport();
         }
     }

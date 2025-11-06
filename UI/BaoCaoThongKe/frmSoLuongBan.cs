@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using CuahangNongduoc.BusinessObject;
 using CuahangNongduoc.Controller;
+using CuahangNongduoc.Utils;
 
 namespace CuahangNongduoc
 {
@@ -21,6 +22,7 @@ namespace CuahangNongduoc
         {
             cmbThang.SelectedIndex = DateTime.Now.Month - 1;
             numNam.Value = DateTime.Now.Year;
+            AppTheme.ApplyTheme(this);
         }
 
         ChiTietPhieuBanController ctrl = new ChiTietPhieuBanController();

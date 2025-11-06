@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using CuahangNongduoc.Controller;
 using CuahangNongduoc.BusinessObject;
+using CuahangNongduoc.Utils;
 
 namespace CuahangNongduoc
 {
@@ -61,7 +62,7 @@ namespace CuahangNongduoc
                 this.Allow(false);
             }
 
-
+            AppTheme.ApplyTheme(this);
         }
 
         void BindingSource_CurrentChanged(object sender, EventArgs e)

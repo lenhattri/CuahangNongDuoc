@@ -128,6 +128,7 @@
             // 
             this.bindingNavigatorPositionItem.AccessibleName = "Position";
             this.bindingNavigatorPositionItem.AutoSize = false;
+            this.bindingNavigatorPositionItem.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.bindingNavigatorPositionItem.Name = "bindingNavigatorPositionItem";
             this.bindingNavigatorPositionItem.Size = new System.Drawing.Size(50, 23);
             this.bindingNavigatorPositionItem.Text = "0";
@@ -205,7 +206,7 @@
             this.toolPrint.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.toolPrint.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolPrint.Name = "toolPrint";
-            this.toolPrint.Size = new System.Drawing.Size(55, 43);
+            this.toolPrint.Size = new System.Drawing.Size(54, 43);
             this.toolPrint.Text = "Trang in";
             this.toolPrint.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.toolPrint.Click += new System.EventHandler(this.toolPrint_Click);
@@ -239,9 +240,9 @@
             this.dataGridView.ReadOnly = true;
             this.dataGridView.Size = new System.Drawing.Size(636, 373);
             this.dataGridView.TabIndex = 1;
+            this.dataGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellContentClick);
             this.dataGridView.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.dataGridView_UserDeletingRow);
             this.dataGridView.DoubleClick += new System.EventHandler(this.dataGridView_DoubleClick);
-            this.dataGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellContentClick);
             // 
             // colId
             // 
@@ -309,8 +310,7 @@
             this.Controls.Add(this.bindingNavigator);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmDanhsachPhieuBanLe";
-            this.Text = "DANH SACH PHIEU BAN LE";
-            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.Text = "DANH SÁCH PHIẾU BÁN LẺ";
             this.Load += new System.EventHandler(this.frmDanhsachPhieuNhap_Load);
             ((System.ComponentModel.ISupportInitialize)(this.bindingNavigator)).EndInit();
             this.bindingNavigator.ResumeLayout(false);
