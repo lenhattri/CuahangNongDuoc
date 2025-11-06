@@ -7,13 +7,15 @@ using System.Text;
 using System.Windows.Forms;
 using CuahangNongduoc.Controller;
 using CuahangNongduoc.BusinessObject;
+using CuahangNongduoc.BLL.Helpers;
+using CuahangNongduoc.DataLayer;
 
 namespace CuahangNongduoc
 {
     public partial class frmBanSi: Form
     {
         SanPhamController ctrlSanPham = new SanPhamController();
-        KhachHangController ctrlKhachHang = new KhachHangController();
+        KhachHangController ctrlKhachHang = new KhachHangController(new KhachHangFactory());
         MaSanPhamController ctrlMaSanPham = new MaSanPhamController();
         PhieuBanController ctrlPhieuBan = new PhieuBanController();
         ChiTietPhieuBanController ctrlChiTiet = new ChiTietPhieuBanController();
@@ -48,7 +50,7 @@ namespace CuahangNongduoc
             ctrlKhachHang.HienthiAutoComboBox(cmbKhachHang, true);
 
             
-            ctrlPhieuBan.HienthiPhieuBan(bindingNavigator,cmbKhachHang, txtMaPhieu, dtNgayLapPhieu, numTongTien, numDaTra, numConNo);
+            ctrlPhieuBan.HienThiPhieuBan(bindingNavigator,cmbKhachHang, txtMaPhieu, dtNgayLapPhieu, numTongTien, numDaTra, numConNo);
             bindingNavigator.BindingSource.CurrentChanged += new EventHandler(BindingSource_CurrentChanged);
             
             ctrlChiTiet.HienThiChiTiet(dgvDanhsachSP, txtMaPhieu.Text);
@@ -163,7 +165,8 @@ namespace CuahangNongduoc
 
             foreach (MaSanPham masp in deleted)
             {
-                CuahangNongduoc.DataLayer.MaSanPhanFactory.CapNhatSoLuong(masp.Id, masp.SoLuong);
+                var maspFactory = new CuahangNongduoc.DataLayer.MaSanPhamFactory();
+                maspFactory.CapNhatSoLuong(masp.Id, masp.SoLuong);
             }
             deleted.Clear();
 
@@ -310,8 +313,9 @@ namespace CuahangNongduoc
                      IList<ChiTietPhieuBan> ds = ctrl.ChiTietPhieuBan(view["ID"].ToString());
                      foreach (ChiTietPhieuBan ct in ds)
                      {
-                         CuahangNongduoc.DataLayer.MaSanPhanFactory.CapNhatSoLuong(ct.MaSanPham.Id, ct.SoLuong);
-                     }
+                        var maspFactory = new CuahangNongduoc.DataLayer.MaSanPhamFactory();
+                        maspFactory.CapNhatSoLuong(ct.MaSanPham.Id, ct.SoLuong);
+                    }
                      bindingNavigator.BindingSource.RemoveCurrent();
                      ctrlPhieuBan.Save();
                  }

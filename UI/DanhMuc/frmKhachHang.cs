@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CuahangNongduoc.DataLayer;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -10,7 +11,7 @@ namespace CuahangNongduoc
 {
     public partial class frmKhachHang : Form
     {
-        CuahangNongduoc.Controller.KhachHangController ctrl = new CuahangNongduoc.Controller.KhachHangController();
+        CuahangNongduoc.Controller.KhachHangController ctrl = new CuahangNongduoc.Controller.KhachHangController(new KhachHangFactory());
         public frmKhachHang()
         {
             InitializeComponent();

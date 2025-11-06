@@ -39,11 +39,13 @@ using System.Configuration;
 
 namespace CuahangNongduoc.DataLayer
 {
-    public class DonViTinhDAL
+    public class DonViTinhDAL : IDonViTinhDAL
     {
-        private readonly string _cs =
-            ConfigurationManager.ConnectionStrings["ConnStr"].ConnectionString;
-
+        private readonly DbClient _db = DbClient.Instance; // CHANGED
+        public static IDonViTinhDAL Create()
+        {
+            return new DonViTinhDAL();
+        }
         // SELECT * FROM DON_VI_TINH
         public DataTable DanhSachDVT()
         {

@@ -51,21 +51,30 @@ namespace CuahangNongduoc.Controller
         public void HienthiAutoComboBox(ComboBox cmb)
         {
             var dt = _dal.DanhSachDVT();
+            if (dt == null) return;
+
             cmb.DataSource = dt;
-            cmb.DisplayMember = "TEN_DON_VI"; // giữ nguyên schema cũ
-            cmb.ValueMember = "ID";
+            cmb.DisplayMember = PickColumn(dt, "TEN", "TEN_DON_VI", "TEN_DON_VI_T", "NAME");
+            cmb.ValueMember = dt.Columns.Contains("ID") ? "ID" : PickColumn(dt, "Id", "id");
+            cmb.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+            cmb.AutoCompleteSource = AutoCompleteSource.ListItems;
         }
 
         // ====================== BINDING DATAGRIDVIEW (COMBO COLUMN) ==========================
         public DataGridViewComboBoxColumn HienthiDataGridViewComboBoxColumn()
         {
+            var dt = _dal.DanhSachDVT();
+            var display = PickColumn(dt, "TEN", "TEN_DON_VI", "TEN_DON_VI_T", "NAME");
+            var value = dt != null && dt.Columns.Contains("ID") ? "ID" : PickColumn(dt, "Id", "id");
+
             var col = new DataGridViewComboBoxColumn
             {
-                DataSource = _dal.DanhSachDVT(),
-                DisplayMember = "TEN_DON_VI",
-                ValueMember = "ID",
+                DataSource = dt,
+                DisplayMember = display,
+                ValueMember = value,
                 DataPropertyName = "ID_DON_VI_TINH",
-                HeaderText = "Đơn vị tính"
+                HeaderText = "Đơn vị tính",
+                AutoComplete = true
             };
             return col;
         }
@@ -84,12 +93,13 @@ namespace CuahangNongduoc.Controller
         public DonViTinh LayDVT(int id)
         {
             var tbl = _dal.LayDVT(id);
-            if (tbl.Rows.Count == 0) return null;
+            if (tbl == null || tbl.Rows.Count == 0) return null;
 
             var r = tbl.Rows[0];
+            var nameCol = PickColumn(tbl, "TEN_DON_VI", "TEN", "TEN_DON_VI_T", "NAME");
             return new DonViTinh(
                 Convert.ToInt32(r["ID"]),
-                Convert.ToString(r["TEN_DON_VI"])
+                Convert.ToString(r[nameCol])
             );
         }
 

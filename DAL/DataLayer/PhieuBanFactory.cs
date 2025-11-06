@@ -6,7 +6,7 @@ using System.Data.SqlClient;
 
 namespace CuahangNongduoc.DataLayer
 {
-    public class PhieuBanFactory
+    public class PhieuBanFactory : IPhieuBanFactory
     {
         DataService m_Ds = new DataService();
 
@@ -54,7 +54,7 @@ namespace CuahangNongduoc.DataLayer
             return m_Ds;
         }
 
-        public static long LayConNo(String kh, int thang, int nam)
+        public  long LayConNo(string kh, int thang, int nam)
         {
             DataService ds = new DataService();
             SqlCommand cmd = new SqlCommand("SELECT SUM(CON_NO) FROM PHIEU_BAN WHERE ID_KHACH_HANG = @kh AND MONTH(NGAY_BAN)=@thang AND YEAR(NGAY_BAN)= @nam");
@@ -69,7 +69,7 @@ namespace CuahangNongduoc.DataLayer
                 return Convert.ToInt64(obj);
         }
 
-        public static int LaySoPhieu()
+        public int LaySoPhieu()
         {
             DataService ds = new DataService();
             SqlCommand cmd = new SqlCommand("SELECT COUNT(*) FROM PHIEU_BAN");

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Data;
+using System.Windows.Forms;
 using CuahangNongduoc.BusinessObject;
 using CuahangNongduoc.DataLayer;
 using System.Data.SqlClient;
@@ -11,16 +12,23 @@ namespace CuahangNongduoc.Controller
 {
     public class NhaCungCapController
     {
-        NhaCungCapFactory factory = new  NhaCungCapFactory();
+        private readonly INhaCungCapDAL _dal;
 
-        public void HienthiAutoComboBox(System.Windows.Forms.ComboBox cmb)
+        // ✅ Cho phép DI hoặc dùng mặc định
+        public NhaCungCapController(INhaCungCapDAL dal = null)
         {
-            cmb.DataSource = factory.DanhsachNCC();
+            _dal = dal ?? new NhaCungCapDAL();
+        }
+
+        public void HienthiAutoComboBox(ComboBox cmb)
+        {
+            cmb.DataSource = _dal.DanhsachNCC();
             cmb.DisplayMember = "HO_TEN";
             cmb.ValueMember = "ID";
             
         }
-        public void HienthiAllComboBox(System.Windows.Forms.ComboBox cmb)
+
+        public void HienthiAllComboBox(ComboBox cmb)
         {
             IList<NhaCungCap> ds = this.LayDanhSachNCC();
             ds.Add(new NhaCungCap("ALL","Tất cả"));
@@ -30,20 +38,20 @@ namespace CuahangNongduoc.Controller
 
         }
 
-        public void HienthiDataGridview(System.Windows.Forms.DataGridView dg, System.Windows.Forms.BindingNavigator bn)
+        public void HienthiDataGridview(DataGridView dg, BindingNavigator bn)
         {
-            System.Windows.Forms.BindingSource bs = new System.Windows.Forms.BindingSource();
-            DataTable tbl = factory.DanhsachNCC();
-            bs.DataSource = tbl;
+            var bs = new BindingSource
+            {
+                DataSource = _dal.DanhsachNCC()
+            };
             bn.BindingSource = bs;
             dg.DataSource = bs;
             
         }
 
-        public void HienthiDataGridviewComboBox(System.Windows.Forms.DataGridViewComboBoxColumn cmb)
+        public void HienthiDataGridviewComboBox(DataGridViewComboBoxColumn cmb)
         {
-
-            cmb.DataSource = factory.DanhsachNCC();
+            cmb.DataSource = _dal.DanhsachNCC();
             cmb.DisplayMember = "HO_TEN";
             cmb.ValueMember = "ID";
             cmb.DataPropertyName = "ID_NHA_CUNG_CAP";
@@ -53,61 +61,43 @@ namespace CuahangNongduoc.Controller
         
         public NhaCungCap LayNCC(String id)
         {
-            DataTable tbl = factory.LayNCC(id);
-            NhaCungCap ncc = new NhaCungCap();
-            if (tbl.Rows.Count > 0)
+            DataTable tbl = _dal.LayNCC(id);
+            if (tbl.Rows.Count == 0)
+                return null;
+
+            DataRow r = tbl.Rows[0];
+            return new NhaCungCap
             {
-                ncc.Id = Convert.ToString(tbl.Rows[0]["ID"]);
-                ncc.HoTen = Convert.ToString(tbl.Rows[0]["HO_TEN"]);
-                ncc.DienThoai = Convert.ToString(tbl.Rows[0]["DIEN_THOAI"]);
-                ncc.DiaChi = Convert.ToString(tbl.Rows[0]["DIA_CHI"]);
-            }
-            return ncc;
+                Id = Convert.ToString(r["ID"]),
+                HoTen = Convert.ToString(r["HO_TEN"]),
+                DienThoai = Convert.ToString(r["DIEN_THOAI"]),
+                DiaChi = Convert.ToString(r["DIA_CHI"])
+            };
         }
 
         public IList<NhaCungCap> LayDanhSachNCC()
         {
-            DataTable tbl = factory.DanhsachNCC();
+            DataTable tbl = _dal.DanhsachNCC();
             IList<NhaCungCap> ds = new List<NhaCungCap>();
 
             foreach (DataRow row in tbl.Rows)
             {
-                NhaCungCap kh = new NhaCungCap();
-                kh.Id = Convert.ToString(row["ID"]);
-                kh.HoTen = Convert.ToString(row["HO_TEN"]);
-                kh.DienThoai = Convert.ToString(row["DIEN_THOAI"]);
-                kh.DiaChi = Convert.ToString(row["DIA_CHI"]);
-                ds.Add(kh);
+                ds.Add(new NhaCungCap
+                {
+                    Id = Convert.ToString(row["ID"]),
+                    HoTen = Convert.ToString(row["HO_TEN"]),
+                    DienThoai = Convert.ToString(row["DIEN_THOAI"]),
+                    DiaChi = Convert.ToString(row["DIA_CHI"])
+                });
             }
             return ds;
         }
 
-        public void TimDiaChi(String diachi)
-        {
-            factory.TimDiaChi(diachi);
-        }
-        public void TimHoTen(String hoten)
-        {
-            factory.TimHoTen(hoten);
-        }
-
-        public DataRow NewRow()
-        {
-            return factory.NewRow();
-        }
-        public void Add(DataRow row)
-        {
-            factory.Add(row);
-        }
-        public bool Save()
-        {
-            SqlCommand cmd = new SqlCommand();
-            return Save(cmd);
-        }
-
-        private bool Save(SqlCommand cmd)
-        {
-            throw new NotImplementedException();
-        }
+        public void TimDiaChi(string diachi) => _dal.TimDiaChi(diachi);
+        public void TimHoTen(string hoten) => _dal.TimHoTen(hoten);
+        public void Insert(NhaCungCap ncc) => _dal.Insert(ncc);
+        public void Update(NhaCungCap ncc) => _dal.Update(ncc);
+        public void Delete(string id) => _dal.Delete(id);
     }
 }
+

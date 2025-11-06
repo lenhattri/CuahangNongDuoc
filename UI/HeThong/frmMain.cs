@@ -296,5 +296,99 @@ namespace CuahangNongduoc
         {
            // Help.ShowHelp(this, "CPP.CHM");
         }
+
+        frmDangNhap DangNhap = null;
+        private void mnuDangNhap_Click(object sender, EventArgs e)
+        {
+            if (DangNhap == null || DangNhap.IsDisposed)
+            {
+                DangNhap = new frmDangNhap();
+                //DangNhap.MdiParent = this;
+                if( DangNhap.ShowDialog() == DialogResult.OK )
+                {
+                    PhanQuyen();
+                }
+            }
+            else
+                DangNhap.Activate();
+        }
+
+        private void mnuDangXuat_Click(object sender, EventArgs e)
+        {
+            Session.CurrentUser = null;
+            ChuaDangNhap();
+        }
+
+        frmNguoiDung NguoiDung = null;
+        private void mnuNguoiDung_Click(object sender, EventArgs e)
+        {
+            if (NguoiDung == null || NguoiDung.IsDisposed)
+            {
+                NguoiDung = new frmNguoiDung();
+                NguoiDung.MdiParent = this;
+                NguoiDung.Show();
+            }
+            else
+                NguoiDung.Activate();
+        }
+        frmCauHinh CauHinh = null;
+        private void mnuTuyChinhCauHinh_Click(object sender, EventArgs e)
+        {
+            if (CauHinh != null || CauHinh.IsDisposed)
+            {
+                CauHinh = new frmCauHinh();
+                CauHinh.MdiParent = this;
+                CauHinh.Show();
+            }
+            else
+            {
+                CauHinh.Activate();
+            }
+        }
+        private void ChuaDangNhap()
+        {
+            mnuDangNhap.Enabled = true;
+            mnuBanHang.Enabled = false;
+            mnuDangXuat.Enabled = false;
+            mnuBaocao.Enabled = false;
+            toolStrip.Enabled = false;
+            taskPane.Enabled = false;
+            mnuQuanLy.Enabled = false;
+            mnuNghiepVu.Enabled = false;
+        }
+
+        private void QuyenAdmin()
+        {
+            mnuDangNhap.Enabled = false;
+            mnuBanHang.Enabled = true;
+            mnuDangXuat.Enabled = true;
+            mnuBaocao.Enabled = true;
+            toolStrip.Enabled = true;
+            taskPane.Enabled = true;
+            mnuQuanLy.Enabled = true;
+            mnuNghiepVu.Enabled = true;
+        }
+
+        private void QuyenNhanVien()
+        {
+            mnuDangNhap.Enabled = false;
+            mnuBanHang.Enabled = true;
+            toolStrip.Enabled = true;
+            taskPane.Enabled = true;
+            mnuDangXuat.Enabled = true;
+        }
+
+        private void PhanQuyen()
+        {
+            if (Session.CurrentUser.Quyen == "Admin")
+            {
+                QuyenAdmin();
+            }
+            else if (Session.CurrentUser.Quyen == "NhanVien")
+            {
+                QuyenNhanVien();
+            }
+            toolstlb_StatusLogin.Text = "Người dùng: " + Session.CurrentUser.HoTen + " - Quyền: " + Session.CurrentUser.Quyen;
+        }
     }
 }

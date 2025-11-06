@@ -10,26 +10,35 @@ namespace CuahangNongduoc.Controller
 {
     public class KhachHangController
     {
-        KhachHangFactory factory = new KhachHangFactory();
+        private readonly IKhachHangFactory _factory;
 
-        public void HienthiAutoComboBox(System.Windows.Forms.ComboBox cmb, bool loai)
+        // ✅ Inject Factory qua constructor (Dependency Injection)
+        public KhachHangController(IKhachHangFactory factory)
         {
-            cmb.DataSource = factory.DanhsachKhachHang(loai);
+            _factory = factory ?? throw new ArgumentNullException(nameof(factory));
+        }
+
+        public void HienthiAutoComboBox(ComboBox cmb, bool loai)
+        {
+            cmb.DataSource = _factory.DanhsachKhachHang(loai);
             cmb.DisplayMember = "HO_TEN";
             cmb.ValueMember = "ID";
         }
         public void HienthiChungAutoComboBox(System.Windows.Forms.ComboBox cmb)
         {
-            cmb.DataSource = factory.DanhsachKhachHang();
+            cmb.DataSource = _factory.DanhsachKhachHang();
             cmb.DisplayMember = "HO_TEN";
             cmb.ValueMember = "ID";
         }
 
         public void HienthiKhachHangDataGridview(System.Windows.Forms.DataGridView dg, System.Windows.Forms.BindingNavigator bn)
         {
-            System.Windows.Forms.BindingSource bs = new System.Windows.Forms.BindingSource();
-            DataTable tbl = factory.DanhsachKhachHang(false);
-            tbl.Columns[4].DefaultValue = false;
+            var bs = new BindingSource();
+            DataTable tbl = _factory.DanhsachKhachHang(false);
+
+            if (tbl.Columns.Contains("LOAI_KH"))
+                tbl.Columns["LOAI_KH"].DefaultValue = false;
+
             bs.DataSource = tbl;
             bn.BindingSource = bs;
             dg.DataSource = bs;
@@ -38,8 +47,7 @@ namespace CuahangNongduoc.Controller
 
         public void HienthiKhachHangChungDataGridviewComboBox(System.Windows.Forms.DataGridViewComboBoxColumn cmb)
         {
-
-            cmb.DataSource = factory.DanhsachKhachHang();
+            cmb.DataSource = _factory.DanhsachKhachHang();
             cmb.DisplayMember = "HO_TEN";
             cmb.ValueMember = "ID";
             cmb.DataPropertyName = "ID_KHACH_HANG";
@@ -49,8 +57,7 @@ namespace CuahangNongduoc.Controller
 
         public void HienthiKhachHangDataGridviewComboBox(System.Windows.Forms.DataGridViewComboBoxColumn cmb)
         {
-        
-            cmb.DataSource = factory.DanhsachKhachHang(false);
+            cmb.DataSource = _factory.DanhsachKhachHang(false);
             cmb.DisplayMember = "HO_TEN";
             cmb.ValueMember = "ID";
             cmb.DataPropertyName = "ID_KHACH_HANG";
@@ -60,7 +67,9 @@ namespace CuahangNongduoc.Controller
         public void HienthiDaiLyDataGridviewComboBox(System.Windows.Forms.DataGridViewComboBoxColumn cmb)
         {
 
-            cmb.DataSource = factory.DanhsachKhachHang(true);
+        public void HienthiDaiLyDataGridviewComboBox(DataGridViewComboBoxColumn cmb)
+        {
+            cmb.DataSource = _factory.DanhsachKhachHang(true);
             cmb.DisplayMember = "HO_TEN";
             cmb.ValueMember = "ID";
             cmb.DataPropertyName = "ID_KHACH_HANG";
@@ -69,9 +78,12 @@ namespace CuahangNongduoc.Controller
         }
         public void HienthiDaiLyDataGridview(System.Windows.Forms.DataGridView dg, System.Windows.Forms.BindingNavigator bn)
         {
-            System.Windows.Forms.BindingSource bs = new System.Windows.Forms.BindingSource();
-            DataTable tbl = factory.DanhsachKhachHang(true);
-            tbl.Columns[4].DefaultValue = true;
+            var bs = new BindingSource();
+            DataTable tbl = _factory.DanhsachKhachHang(true);
+
+            if (tbl.Columns.Contains("LOAI_KH"))
+                tbl.Columns["LOAI_KH"].DefaultValue = true;
+
             bs.DataSource = tbl;
             bn.BindingSource = bs;
             dg.DataSource = bs;
@@ -80,16 +92,16 @@ namespace CuahangNongduoc.Controller
 
         public void TimHoTen(String hoten, bool loai)
         {
-            factory.TimHoTen(hoten, loai);
+            _factory.TimHoTen(hoten, loai);
         }
         public void TimDiaChi(String diachi, bool loai)
         {
-            factory.TimDiaChi(diachi, loai);
+            _factory.TimDiaChi(diachi, loai);
         }
         
         public KhachHang LayKhachHang(String id)
         {
-            DataTable tbl = factory.LayKhachHang(id);
+            DataTable tbl = _factory.LayKhachHang(id);
             KhachHang kh = new KhachHang();
             if (tbl.Rows.Count > 0)
             {
@@ -104,7 +116,7 @@ namespace CuahangNongduoc.Controller
 
         public IList<KhachHang> LayDanhSachKhachHang()
         {
-            DataTable tbl = factory.DanhsachKhachHang();
+            DataTable tbl = _factory.DanhsachKhachHang();
             IList<KhachHang> ds = new List<KhachHang>();
 
             foreach (DataRow row in tbl.Rows)
@@ -128,13 +140,9 @@ namespace CuahangNongduoc.Controller
             factory.Add(row);
         }
 
-        internal void Save()
-        {
-            throw new NotImplementedException();
-        }
-        /*public bool Save()
-{
-   return factory.Save();
-}*/
+        public DataRow NewRow() => _factory.NewRow();
+        public void Add(DataRow row) => _factory.Add(row);
+        public bool Save() => _factory.Save();
     }
 }
+

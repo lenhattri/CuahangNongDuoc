@@ -1,3 +1,4 @@
+using CuahangNongduoc.DataLayer;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -17,7 +18,7 @@ namespace CuahangNongduoc
 
         private void frmTimPhieuThu_Load(object sender, EventArgs e)
         {
-            Controller.KhachHangController ctrl = new CuahangNongduoc.Controller.KhachHangController();
+            Controller.KhachHangController ctrl = new CuahangNongduoc.Controller.KhachHangController(new KhachHangFactory());
             ctrl.HienthiChungAutoComboBox(cmbKhachHang);
         }
     }

@@ -6,9 +6,10 @@ using System.Data.SqlClient;
 
 namespace CuahangNongduoc.DataLayer
 {
-    public class NhaCungCapFactory
+    public class NhaCungCapDAL : INhaCungCapDAL
     {
-        DataService m_Ds = new DataService();
+        private readonly DbClient _db = DbClient.Instance;
+        private const string TABLE = "[dbo].[NHA_CUNG_CAP]";
 
         public DataTable DanhsachNCC()
         {

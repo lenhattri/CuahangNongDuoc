@@ -70,13 +70,13 @@
 using System;
 using System.Data;
 using System.Windows.Forms;
-using CuahangNongduoc.DataLayer; // DuNoKhachHangDAL + các Factory cũ
+using CuahangNongduoc.DataLayer;
 
 namespace CuahangNongduoc.Controller
 {
     public class DuNoKhachHangController
     {
-        private readonly DuNoKhachHangDAL _duNoDal = new DuNoKhachHangDAL();
+        private readonly IDuNoKhachHangDAL _duNoDal = DuNoKhachHangDAL.Create(); // ✅ Dùng Factory
         private readonly KhachHangFactory _khFactory = new KhachHangFactory();
 
         public void Tonghop(int thang, int nam,
@@ -85,10 +85,8 @@ namespace CuahangNongduoc.Controller
             int thangTruoc = 0, namTruoc = 0;
             ThamSo.PreMonth(ref thangTruoc, ref namTruoc, thang, nam);
 
-            // 1) Xoá dữ liệu tổng hợp kỳ hiện tại
             _duNoDal.Clear(thang, nam);
 
-            // 2) Lấy bảng rỗng đúng schema để bind và để DAL giữ _table nội bộ
             var dtBind = _duNoDal.DanhsachDuNo(thang, nam);
 
             var bs = new BindingSource { DataSource = dtBind };
@@ -108,9 +106,14 @@ namespace CuahangNongduoc.Controller
             {
                 string kh = Convert.ToString(row["ID"]);
 
-                long dauky = DuNoKhachHangDAL.LayDuNo(kh, thangTruoc, namTruoc);
-                long phatsinh = PhieuBanFactory.LayConNo(kh, thang, nam);          // Factory cũ
-                long datra = PhieuThanhToanFactory.LayTongTien(kh, thang, nam); // Factory cũ
+                var duNoDal = DuNoKhachHangDAL.Create();     // ✅ Dùng factory thay vì new
+                var phieuBanFactory = new PhieuBanFactory();
+                var phieuThanhToanDal = new PhieuThanhToanDAL();
+
+                long dauky = duNoDal.LayDuNo(kh, thangTruoc, namTruoc);
+                long phatsinh = phieuBanFactory.LayConNo(kh, thang, nam);
+                long datra = phieuThanhToanDal.LayTongTien(kh, thang, nam);
+
                 long cuoiky = dauky + phatsinh - datra;
 
                 DataRow r = _duNoDal.NewRow();
@@ -134,3 +137,4 @@ namespace CuahangNongduoc.Controller
         }
     }
 }
+

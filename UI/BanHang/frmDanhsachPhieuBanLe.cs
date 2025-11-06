@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using CuahangNongduoc.BusinessObject;
 using CuahangNongduoc.Controller;
+using CuahangNongduoc.DataLayer;
 
 namespace CuahangNongduoc
 {
@@ -18,11 +19,11 @@ namespace CuahangNongduoc
         }
 
         PhieuBanController ctrl = new PhieuBanController();
-        KhachHangController ctrlKH = new KhachHangController();
+        KhachHangController ctrlKH = new KhachHangController(new KhachHangFactory());
         private void frmDanhsachPhieuNhap_Load(object sender, EventArgs e)
         {
             ctrlKH.HienthiKhachHangDataGridviewComboBox(colKhachhang);
-            ctrl.HienthiPhieuBanLe(bindingNavigator, dataGridView);
+            ctrl.HienThiPhieuBanLe(bindingNavigator, dataGridView);
         }
         frmBanLe BanLe = null;
         private void dataGridView_DoubleClick(object sender, EventArgs e)
@@ -60,7 +61,8 @@ namespace CuahangNongduoc
                 IList<ChiTietPhieuBan> ds = ctrl.ChiTietPhieuBan(view["ID"].ToString());
                 foreach (ChiTietPhieuBan ct in ds)
                 {
-                    CuahangNongduoc.DataLayer.MaSanPhanFactory.CapNhatSoLuong(ct.MaSanPham.Id, ct.SoLuong);
+                    var spFactory = new CuahangNongduoc.DataLayer.MaSanPhamFactory();
+                    spFactory.CapNhatSoLuong(ct.MaSanPham.Id, ct.SoLuong);
                 }
                 ctrl.Save();
             }
@@ -78,8 +80,9 @@ namespace CuahangNongduoc
                      IList<ChiTietPhieuBan> ds = ctrl.ChiTietPhieuBan(view["ID"].ToString());
                      foreach (ChiTietPhieuBan ct in ds)
                      {
-                         CuahangNongduoc.DataLayer.MaSanPhanFactory.CapNhatSoLuong(ct.MaSanPham.Id, ct.SoLuong);
-                     }
+                        var maspFactory = new CuahangNongduoc.DataLayer.MaSanPhamFactory();
+                        maspFactory.CapNhatSoLuong(ct.MaSanPham.Id, ct.SoLuong);
+                    }
                      bindingNavigator.BindingSource.RemoveCurrent();
                      ctrl.Save();
                  }

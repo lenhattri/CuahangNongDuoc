@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using CuahangNongduoc.BusinessObject;
 using CuahangNongduoc.Controller;
+using CuahangNongduoc.DataLayer;
 
 
 namespace CuahangNongduoc
@@ -18,7 +19,7 @@ namespace CuahangNongduoc
             InitializeComponent();
         }
         DuNoKhachHangController ctrl = new DuNoKhachHangController();
-        KhachHangController ctrlKH = new KhachHangController();
+        KhachHangController ctrlKH = new KhachHangController(new KhachHangFactory());
         private void frmDunoKhachhang_Load(object sender, EventArgs e)
         {
 
@@ -77,7 +78,7 @@ namespace CuahangNongduoc
         private void toolIn_Click(object sender, EventArgs e)
         {
             DataRowView row = (DataRowView)bindingNavigator.BindingSource.Current;
-            KhachHangController ctrlKH = new KhachHangController();
+            KhachHangController ctrlKH = new KhachHangController(new KhachHangFactory());
             DuNoKhachHang dn = new DuNoKhachHang();
 
             dn.Thang = Convert.ToInt32(row["THANG"]);

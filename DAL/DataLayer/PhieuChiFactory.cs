@@ -6,15 +6,79 @@ using System.Data.SqlClient;
 
 namespace CuahangNongduoc.DataLayer
 {
-    public class PhieuChiFactory
+    public class PhieuChiFactory : IPhieuChiFactory
     {
         DataService m_Ds = new DataService();
 
+        private readonly string _connectionString = ConfigurationManager.ConnectionStrings["ConnStr"].ConnectionString;
+
+        /// <summary>
+        /// Retrieves payment vouchers filtered by reason ID and date.
+        /// </summary>
+        /// <param name="lydo">The ID of the reason for payment.</param>
+        /// <param name="ngay">The payment date.</param>
+        /// <returns>A DataTable containing the matching records.</returns>
+       /* public DataTable TimPhieuChi(int lydo, DateTime ngay)
+        {
+            var dataTable = new DataTable();
+            using (var connection = new SqlConnection(_connectionString))
+            using (var command = new SqlCommand("SELECT * FROM PHIEU_CHI WHERE ID_LY_DO_CHI = @lydo AND NGAY_CHI = @ngay", connection))
+            {
+                command.Parameters.Add(new SqlParameter("@lydo", SqlDbType.Int) { Value = lydo });
+                command.Parameters.Add(new SqlParameter("@ngay", SqlDbType.Date) { Value = ngay });
+
+                using (var adapter = new SqlDataAdapter(command))
+                {
+                    adapter.Fill(dataTable);
+                }
+            }
+
+            return dataTable;
+        }*/
+
+
+        private readonly DbClient _db = DbClient.Instance;   // CHANGED
+        private DataTable _table;                            // NEW: DataTable nội bộ cho pattern NewRow/Add/Save
+
+        private const string SELECT_ALL = "SELECT * FROM PHIEU_CHI"; // giữ nguyên SELECT * để CommandBuilder sinh CRUD
+
+        /* ===================== Helpers ===================== */
+
+        private void EnsureSchema() // NEW
+        {
+            if (_table != null) return;
+            using (var cn = _db.Open())
+            using (var cmd = _db.Cmd(cn, SELECT_ALL + " WHERE 1=0", CommandType.Text))
+            using (var da = new SqlDataAdapter(cmd))
+            {
+                _table = new DataTable("PHIEU_CHI");
+                da.FillSchema(_table, SchemaType.Source); // CHANGED: lấy schema rỗng rõ ràng
+            }
+        }
+
+        private SqlDataAdapter CreateAdapter(SqlConnection cn) // NEW: phục vụ Save()
+        {
+            var da = new SqlDataAdapter
+            {
+                SelectCommand = _db.Cmd(cn, SELECT_ALL, CommandType.Text)
+            };
+            da.MissingSchemaAction = MissingSchemaAction.AddWithKey;
+            _ = new SqlCommandBuilder(da); // auto sinh Insert/Update/Delete
+            return da;
+        }
+
+        /* ===================== SELECTs ===================== */
+
+        // Tìm theo lý do + NGAY_CHI (dùng range [@start,@end) để sargable)
         public DataTable TimPhieuChi(int lydo, DateTime ngay)
         {
-            SqlCommand cmd = new SqlCommand("SELECT * FROM PHIEU_CHI WHERE ID_LY_DO_CHI = @lydo AND NGAY_CHI = @ngay");
-            cmd.Parameters.Add("lydo", SqlDbType.VarChar).Value = lydo;
-            cmd.Parameters.Add("ngay", SqlDbType.Date).Value = ngay;
+            var start = ngay.Date;              // NEW
+            var end = start.AddDays(1);       // NEW
+
+            const string sql = @"
+                SELECT * FROM PHIEU_CHI
+                WHERE ID_LY_DO_CHI = @lydo
+                  AND NGAY_CHI >= @start AND NGAY_CHI < @end";            // CHANGED
 
             m_Ds.Load(cmd);
 
@@ -28,17 +92,57 @@ namespace CuahangNongduoc.DataLayer
 
             return m_Ds;
         }
-      
-        public DataTable LayPhieuChi(String id)
+
+        /// <summary>
+        /// Retrieves a specific payment voucher by ID.
+        /// </summary>
+        /// <param name="id">The ID of the payment voucher.</param>
+        /// <returns>A DataTable containing the matching record.</returns>
+        /*public DataTable LayPhieuChi(string id)
         {
-            SqlCommand cmd = new SqlCommand("SELECT * FROM PHIEU_CHI WHERE ID = @id");
-            cmd.Parameters.Add("id", SqlDbType.VarChar,50).Value = id;
-            m_Ds.Load(cmd);
-            return m_Ds;
+            var dataTable = new DataTable();
+            using (var connection = new SqlConnection(_connectionString))
+            using (var command = new SqlCommand("SELECT * FROM PHIEU_CHI WHERE ID = @id", connection))
+            {
+                using (var adapter = new SqlDataAdapter(command))
+                {
+                    command.Parameters.Add("@id", SqlDbType.VarChar, 50).Value = id;
+                    adapter.Fill(dataTable);
+                }
+            }
+
+            return dataTable;
+        }*/
+
+        /// <summary>
+        /// Calculates the total amount for a given reason, month, and year.
+        /// </summary>
+        /// <param name="lydo">The ID of the reason for payment (as string).</param>
+        /// <param name="thang">The month (1-12).</param>
+        /// <param name="nam">The year.</param>
+        /// <returns>The total amount as long.</returns>
+        public static long LayTongTien(string lydo, int thang, int nam)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["ConnStr"].ConnectionString;
+            using (var connection = new SqlConnection(connectionString))
+            using (var command = new SqlCommand("SELECT SUM(TONG_TIEN) FROM PHIEU_CHI WHERE ID_LY_DO_CHI = @lydo AND MONTH(NGAY_CHI)=@thang AND YEAR(NGAY_CHI)= @nam", connection))
+            {
+                command.Parameters.Add("@lydo", SqlDbType.VarChar, 50).Value = lydo;
+                command.Parameters.Add("@thang", SqlDbType.Int).Value = thang;
+                command.Parameters.Add("@nam", SqlDbType.Int).Value = nam;
+
+                connection.Open();
+                var result = command.ExecuteScalar();
+
+                return result == null || result == DBNull.Value ? 0L : Convert.ToInt64(result);
+            }
         }
 
-
-        public static long LayTongTien(String lydo, int thang, int nam)
+        /// <summary>
+        /// Creates a new DataRow for a payment voucher.
+        /// </summary>
+        /// <returns>A new DataRow with the schema of PHIEU_CHI table.</returns>
+        /*public DataRow NewRow()
         {
             DataService ds = new DataService();
             SqlCommand cmd = new SqlCommand("SELECT SUM(TONG_TIEN) FROM PHIEU_CHI WHERE ID_LY_DO_CHI = @lydo AND MONTH(NGAY_CHI)=@thang AND YEAR(NGAY_CHI)= @nam");
@@ -46,14 +150,80 @@ namespace CuahangNongduoc.DataLayer
             cmd.Parameters.Add("thang", SqlDbType.VarChar).Value = thang;
             cmd.Parameters.Add("nam", SqlDbType.VarChar).Value = nam;
 
-            object obj = ds.ExecuteScalar(cmd);
-            
-            if (obj == null)
-                return 0;
-            else
-                return Convert.ToInt64(obj);
+            return dataTable.NewRow();
+        }*/
+
+        /* ===================== INSERT/UPDATE/DELETE ===================== */
+        // Gợi ý: dùng theo kiểu “row-based” cho nhanh; nếu team muốn DTO, mình viết thêm class DTO.
+
+        public int Insert(DataRow row, SqlTransaction tx = null)
+        {
+            // Giả định các cột đã tồn tại trong row
+            const string sql =
+                @"INSERT INTO PHIEU_CHI
+                    (ID, ID_LY_DO_CHI, NGAY_CHI, TONG_TIEN, GHI_CHU)
+                  VALUES(@ID, @ID_LY_DO_CHI, @NGAY_CHI, @TONG_TIEN, @GHI_CHU)";
+
+            using (var cmd = new SqlCommand(sql, tx?.Connection, tx))
+            {
+                cmd.Parameters.Add("@ID", SqlDbType.VarChar, 50).Value = row["ID"];
+                cmd.Parameters.Add("@ID_LY_DO_CHI", SqlDbType.Int).Value = row["ID_LY_DO_CHI"];
+                cmd.Parameters.Add("@NGAY_CHI", SqlDbType.DateTime).Value = row["NGAY_CHI"];
+                cmd.Parameters.Add("@TONG_TIEN", SqlDbType.BigInt).Value = row["TONG_TIEN"];
+                cmd.Parameters.Add("@GHI_CHU", SqlDbType.VarChar, 255).Value = row["GHI_CHU"] ?? (object)DBNull.Value; // Assuming max length 255, adjust as needed
+                return cmd.ExecuteNonQuery();
+            }
         }
-        
+        public int Update(DataRow row, SqlTransaction tx = null)
+        {
+            const string sql = @"
+                UPDATE PHIEU_CHI
+                    SET ID_LY_DO_CHI = @ID_LY_DO_CHI,
+                        NGAY_CHI = @NGAY_CHI,
+                    TONG_TIEN = @TONG_TIEN,
+                    GHI_CHU = @GHI_CHU
+                        WHERE ID = @ID";
+
+            using (var cmd = new SqlCommand(sql, tx?.Connection, tx))
+            {
+                cmd.Parameters.Add("@ID_LY_DO_CHI", SqlDbType.VarChar, 50).Value = row["ID_LY_DO_CHI"];
+                cmd.Parameters.Add("@NGAY_CHI", SqlDbType.DateTime).Value = row["NGAY_CHI"];
+                cmd.Parameters.Add("@TONG_TIEN", SqlDbType.BigInt).Value = row["TONG_TIEN"];
+                cmd.Parameters.Add("@GHI_CHU", SqlDbType.VarChar, 255).Value = row["GHI_CHU"] ?? (object)DBNull.Value;
+                cmd.Parameters.Add("@ID", SqlDbType.VarChar, 50).Value = row["ID"];
+
+                return cmd.ExecuteNonQuery(); // ✅ chỉ trả số dòng được cập nhật
+            }
+        }
+
+
+        public DataTable LayPhieuChi(string id)
+        {
+            const string sql = "SELECT * FROM PHIEU_CHI WHERE ID = @id";
+            var dt = _db.ExecuteDataTable(sql, CommandType.Text,
+                _db.P("@id", SqlDbType.NVarChar, id, 50));                 // CHANGED: tham số hoá, Unicode-safe
+            _table = dt;
+            return dt;
+        }
+
+        long IPhieuChiFactory.LayTongTien(string lydo, int thang, int nam)
+        {
+            var db = DbClient.Instance;                                     // CHANGED
+            const string sql = @"
+                SELECT SUM(TONG_TIEN)
+                FROM PHIEU_CHI
+                WHERE ID_LY_DO_CHI = @lydo
+                  AND MONTH(NGAY_CHI) = @thang
+                  AND YEAR(NGAY_CHI)  = @nam";
+
+            // Nếu ID_LY_DO_CHI là INT trong DB, có thể đổi sang SqlDbType.Int và Convert.ToInt32(lydo)
+            var obj = db.ExecuteScalar<object>(sql, CommandType.Text,
+                db.P("@lydo", SqlDbType.NVarChar, lydo, 50),              // CHANGED: giữ nguyên kiểu chuỗi 
+                db.P("@thang", SqlDbType.Int, thang),
+                db.P("@nam", SqlDbType.Int, nam));
+            return (obj == null || obj == DBNull.Value) ? 0L : Convert.ToInt64(obj);
+        }
+
         public DataRow NewRow()
         {
             return m_Ds.NewRow();

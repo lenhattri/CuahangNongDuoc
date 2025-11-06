@@ -1,122 +1,154 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using CuahangNongduoc.DataLayer;
-using CuahangNongduoc.BusinessObject;
-using System.Windows.Forms;
 using System.Data;
+using System.Windows.Forms;
+using CuahangNongduoc.BusinessObject;
+using CuahangNongduoc.DataLayer;
 
 namespace CuahangNongduoc.Controller
 {
-    
     public class PhieuBanController
     {
-        PhieuBanFactory factory = new PhieuBanFactory();
-
-        BindingSource bs = new BindingSource();
-
-
+        private readonly IPhieuBanFactory _phieuBanFactory;
+        private readonly BindingSource _bindingSource;
+        // ✅ Constructor mặc định (dành cho WinForms, 3 lớp truyền thống)
         public PhieuBanController()
+            : this(new PhieuBanFactory())
+        { }
+        // ✅ Constructor nhận dependency từ bên ngoài
+        public PhieuBanController(IPhieuBanFactory phieuBanFactory)
         {
-            bs.DataSource = factory.LayPhieuBan("-1");
+            _phieuBanFactory = phieuBanFactory ?? throw new ArgumentNullException(nameof(phieuBanFactory));
+            _bindingSource = new BindingSource
+            {
+                DataSource = _phieuBanFactory.LayPhieuBan("-1")
+            };
         }
-        public DataRow NewRow()
-        {
-            return factory.NewRow();
-        }
+
+        // ✅ Trả về DataRow mới từ DAL
+        public DataRow NewRow() => _phieuBanFactory.NewRow();
+
+        // ✅ Thêm phiếu bán mới
         public void Add(DataRow row)
         {
-            factory.Add(row);
+            if (row == null)
+                throw new ArgumentNullException(nameof(row));
+
+            _phieuBanFactory.Add(row);
         }
+
+        // ✅ Cập nhật thông tin phiếu bán
         public void Update()
         {
-            bs.MoveNext();
-            factory.Save();
+            _bindingSource.MoveNext();
+            _phieuBanFactory.Save();
         }
+
+        // ✅ Lưu phiếu bán (và hiển thị cảnh báo dùng thử)
         public void Save()
         {
-            int n = PhieuBanFactory.LaySoPhieu();
-            if (n >= 50)
+            int soPhieu = _phieuBanFactory.LaySoPhieu();
+
+            if (soPhieu >= 50)
             {
-                MessageBox.Show("Đây là bản dùng thử! Chỉ lưu được 50 phiếu bán!", "Phieu Ban", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
+                MessageBox.Show(
+                    "Đây là bản dùng thử! Chỉ lưu được 50 phiếu bán!",
+                    "Phiếu Bán",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information
+                );
+                return;
             }
-            else
-            {
-                MessageBox.Show("Đây là bản dùng thử! Chỉ lưu được thêm " + Convert.ToString(50-n) + " phiếu bán!", "Phieu Ban", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                factory.Save();
-            }
-            
-        }
-        public void HienthiPhieuBanLe(BindingNavigator bn, DataGridView dg)
-        {
 
-            bs.DataSource = factory.DanhsachPhieuBanLe();
-            bn.BindingSource = bs;
-            dg.DataSource = bs;
+            MessageBox.Show(
+                $"Đây là bản dùng thử! Chỉ lưu được thêm {50 - soPhieu} phiếu bán!",
+                "Phiếu Bán",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information
+            );
+
+            _phieuBanFactory.Save();
         }
 
-        public void HienthiPhieuBanSi(BindingNavigator bn, DataGridView dg)
+        // ✅ Hiển thị danh sách phiếu bán lẻ
+        public void HienThiPhieuBanLe(BindingNavigator navigator, DataGridView grid)
         {
-
-            bs.DataSource = factory.DanhsachPhieuBanSi();
-            bn.BindingSource = bs;
-            dg.DataSource = bs;
+            _bindingSource.DataSource = _phieuBanFactory.DanhsachPhieuBanLe();
+            navigator.BindingSource = _bindingSource;
+            grid.DataSource = _bindingSource;
         }
 
-        public void HienthiPhieuBan(BindingNavigator bn,ComboBox cmb, TextBox txt, DateTimePicker dt, NumericUpDown numTongTien, NumericUpDown numDatra, NumericUpDown numConNo)
+        // ✅ Hiển thị danh sách phiếu bán sỉ
+        public void HienThiPhieuBanSi(BindingNavigator navigator, DataGridView grid)
         {
+            _bindingSource.DataSource = _phieuBanFactory.DanhsachPhieuBanSi();
+            navigator.BindingSource = _bindingSource;
+            grid.DataSource = _bindingSource;
+        }
 
-            bn.BindingSource = bs;
+        // ✅ Hiển thị thông tin phiếu bán chi tiết lên form
+        public void HienThiPhieuBan(
+            BindingNavigator navigator,
+            ComboBox cmbKhachHang,
+            TextBox txtId,
+            DateTimePicker dtNgayBan,
+            NumericUpDown numTongTien,
+            NumericUpDown numDaTra,
+            NumericUpDown numConNo)
+        {
+            navigator.BindingSource = _bindingSource;
 
-            txt.DataBindings.Clear();
-            txt.DataBindings.Add("Text", bs, "ID");
+            txtId.DataBindings.Clear();
+            txtId.DataBindings.Add("Text", _bindingSource, "ID");
 
-            cmb.DataBindings.Clear();
-            cmb.DataBindings.Add("SelectedValue", bs, "ID_KHACH_HANG");
+            cmbKhachHang.DataBindings.Clear();
+            cmbKhachHang.DataBindings.Add("SelectedValue", _bindingSource, "ID_KHACH_HANG");
 
-            dt.DataBindings.Clear();
-            dt.DataBindings.Add("Value", bs, "NGAY_BAN");
+            dtNgayBan.DataBindings.Clear();
+            dtNgayBan.DataBindings.Add("Value", _bindingSource, "NGAY_BAN");
 
             numTongTien.DataBindings.Clear();
-            numTongTien.DataBindings.Add("Value", bs, "TONG_TIEN");
+            numTongTien.DataBindings.Add("Value", _bindingSource, "TONG_TIEN");
 
-            numDatra.DataBindings.Clear();
-            numDatra.DataBindings.Add("Value", bs, "DA_TRA");
+            numDaTra.DataBindings.Clear();
+            numDaTra.DataBindings.Add("Value", _bindingSource, "DA_TRA");
 
             numConNo.DataBindings.Clear();
-            numConNo.DataBindings.Add("Value", bs, "CON_NO");
-
-
+            numConNo.DataBindings.Add("Value", _bindingSource, "CON_NO");
         }
 
-        public PhieuBan LayPhieuBan(String id)
+        // ✅ Lấy chi tiết 1 phiếu bán theo ID
+        public PhieuBan LayPhieuBan(string id)
         {
-            DataTable tbl = factory.LayPhieuBan(id);
-            PhieuBan ph = null;
-            if (tbl.Rows.Count > 0)
+            if (string.IsNullOrEmpty(id))
+                throw new ArgumentException("Mã phiếu bán không hợp lệ.", nameof(id));
+
+            DataTable tbl = _phieuBanFactory.LayPhieuBan(id);
+            if (tbl.Rows.Count == 0)
+                return null;
+
+            var row = tbl.Rows[0];
+            var phieu = new PhieuBan
             {
+                Id = row["ID"].ToString(),
+                NgayBan = Convert.ToDateTime(row["NGAY_BAN"]),
+                TongTien = Convert.ToInt64(row["TONG_TIEN"]),
+                DaTra = Convert.ToInt64(row["DA_TRA"]),
+                ConNo = Convert.ToInt64(row["CON_NO"])
+            };
 
-                ph = new PhieuBan();
-                ph.Id = Convert.ToString(tbl.Rows[0]["ID"]);
-                
-                ph.NgayBan = Convert.ToDateTime(tbl.Rows[0]["NGAY_BAN"]);
-                ph.TongTien = Convert.ToInt64(tbl.Rows[0]["TONG_TIEN"]);
-                ph.DaTra = Convert.ToInt64(tbl.Rows[0]["DA_TRA"]);
-                ph.ConNo = Convert.ToInt64(tbl.Rows[0]["CON_NO"]);
-                KhachHangController ctrlKH = new KhachHangController();
-                ph.KhachHang = ctrlKH.LayKhachHang(Convert.ToString(tbl.Rows[0]["ID_KHACH_HANG"]));
-                ChiTietPhieuBanController ctrl = new ChiTietPhieuBanController();
-                ph.ChiTiet = ctrl.ChiTietPhieuBan(ph.Id);
-            }
-            return ph;
+            var khCtrl = new KhachHangController(new KhachHangFactory());
+            phieu.KhachHang = khCtrl.LayKhachHang(row["ID_KHACH_HANG"].ToString());
+
+            var ctCtrl = new ChiTietPhieuBanController();
+            phieu.ChiTiet = ctCtrl.ChiTietPhieuBan(phieu.Id);
+
+            return phieu;
         }
 
-        public void TimPhieuBan(String maKH, DateTime dt)
+        // ✅ Tìm phiếu bán theo mã KH + ngày bán
+        public void TimPhieuBan(string maKH, DateTime ngayBan)
         {
-            factory.TimPhieuBan(maKH, dt);
-
+            _phieuBanFactory.TimPhieuBan(maKH, ngayBan);
         }
-
     }
 }

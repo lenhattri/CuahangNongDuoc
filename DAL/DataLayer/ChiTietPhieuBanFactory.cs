@@ -73,7 +73,7 @@ namespace CuahangNongduoc.DataLayer
     /// <summary>
     /// DAL cho CHI_TIET_PHIEU_BAN – bản ADO.NET (SqlClient)
     /// </summary>
-    public class ChiTietPhieuBanDAL
+    public class ChiTietPhieuBanDAL : IChiTietPhieuBanDAL
     {
         private readonly string _cs = //"Server=.\\DESKTOP-LP4MN8P;Database=cuahangnongduoc;Trusted_Connection=True;Encrypt=False;";
         ConfigurationManager.ConnectionStrings["ConnStr"].ConnectionString;

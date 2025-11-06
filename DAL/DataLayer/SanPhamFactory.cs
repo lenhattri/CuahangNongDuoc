@@ -7,7 +7,7 @@ using System.Text;
 
 namespace CuahangNongduoc.DataLayer
 {
-    public class SanPhamFactory
+    public class SanPhamFactory : ISanPhamFactory
     {
         DataService m_Ds = new DataService();
 

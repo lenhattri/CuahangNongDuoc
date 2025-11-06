@@ -7,17 +7,23 @@ using System.Data.SqlClient;
 
 namespace CuahangNongduoc.DataLayer
 {
-    public class LyDoChiFactory
+    public class LyDoChiFactory : ILyDoChiFactory
     {
         DataService m_Ds = new DataService();
 
-        public DataTable DanhsachLyDo()
+        private readonly string _connectionString = ConfigurationManager.ConnectionStrings["ConnStr"].ConnectionString;
+
+        /// <summary>
+        /// Retrieves all reasons for expenditure.
+        /// </summary>
+        /// <returns>A DataTable containing all records.</returns>
+       /* public DataTable DanhsachLyDo()
         {
             SqlCommand cmd = new SqlCommand("SELECT * FROM LY_DO_CHI");
             m_Ds.Load(cmd);
 
-            return m_Ds;
-        }
+            return dataTable;
+        }*/
 
         public DataTable LayLyDoChi(long id)
         {

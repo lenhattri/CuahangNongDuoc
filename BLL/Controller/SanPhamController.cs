@@ -7,47 +7,46 @@ using System.Data.SqlClient;
 using System.Text;
 using System.Windows.Forms;
 
-
-
-
-
 namespace CuahangNongduoc.Controller
 {
     public class SanPhamController
     {
-        SanPhamFactory factory = new SanPhamFactory();
+        private readonly ISanPhamFactory factory;
 
-        public void HienthiAutoComboBox(System.Windows.Forms.ComboBox cmb)
+        public SanPhamController()
         {
-            DataTable tbl = factory.DanhsachSanPham(); 
+            factory = new SanPhamFactory(); // dùng interface
+        }
+
+        /* ==================== Hiển thị ==================== */
+
+        public void HienthiAutoComboBox(ComboBox cmb)
+        {
+            DataTable tbl = factory.DanhsachSanPham();
             cmb.DataSource = tbl;
             cmb.DisplayMember = "TEN_SAN_PHAM";
             cmb.ValueMember = "ID";
-            cmb.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
-            cmb.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            cmb.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+            cmb.AutoCompleteSource = AutoCompleteSource.ListItems;
         }
-        public void HienthiDataGridViewComboBoxColumn(System.Windows.Forms.DataGridViewComboBoxColumn cmb)
+
+        public void HienthiDataGridViewComboBoxColumn(DataGridViewComboBoxColumn cmb)
         {
             cmb.DataSource = factory.DanhsachSanPham();
             cmb.DisplayMember = "TEN_SAN_PHAM";
             cmb.ValueMember = "ID";
             cmb.AutoComplete = true;
         }
-        public void TimMaSanPham(String ma)
-        {
-            factory.TimMaSanPham(ma);
-        }
-        public void TimTenSanPham(String ten)
-        {
-            factory.TimTenSanPham(ten);
-        }
 
-        public void HienthiDataGridview(System.Windows.Forms.DataGridView dg, System.Windows.Forms.BindingNavigator bn,
-            TextBox txtMaSp, TextBox txtTenSp, ComboBox cmbDVT, NumericUpDown numSL, NumericUpDown numDonGiaNhap, NumericUpDown numGiaBanSi, NumericUpDown numGiaBanLe)
+        public void HienthiDataGridview(DataGridView dg, BindingNavigator bn,
+            TextBox txtMaSp, TextBox txtTenSp, ComboBox cmbDVT,
+            NumericUpDown numSL, NumericUpDown numDonGiaNhap, NumericUpDown numGiaBanSi, NumericUpDown numGiaBanLe)
         {
-            System.Windows.Forms.BindingSource bs = new System.Windows.Forms.BindingSource();
-            bs.DataSource = factory.DanhsachSanPham();
-            
+            BindingSource bs = new BindingSource
+            {
+                DataSource = factory.DanhsachSanPham()
+            };
+
             txtMaSp.DataBindings.Clear();
             txtMaSp.DataBindings.Add("Text", bs, "ID");
 
@@ -68,39 +67,61 @@ namespace CuahangNongduoc.Controller
 
             numGiaBanLe.DataBindings.Clear();
             numGiaBanLe.DataBindings.Add("Value", bs, "GIA_BAN_LE");
+
             bn.BindingSource = bs;
             dg.DataSource = bs;
-
-            
         }
-        public void CapNhatGiaNhap(String id, long gia_moi ,long so_luong)
+
+        /* ==================== CRUD ==================== */
+
+        public bool ThemSanPham(SanPham sp) => factory.Insert(sp);
+
+        public bool CapNhatSanPham(SanPham sp) => factory.Update(sp);
+
+        public bool XoaSanPham(string id) => factory.Delete(id);
+
+        public DataRow NewRow() => factory.NewRow();
+
+        public void Add(DataRow row) => factory.Add(row);
+
+        public bool Save() => factory.Save();
+
+        /* ==================== Tìm kiếm ==================== */
+
+        public DataTable TimMaSanPham(string ma) => factory.TimMaSanPham(ma);
+
+        public DataTable TimTenSanPham(string ten) => factory.TimTenSanPham(ten);
+
+        /* ==================== Logic nghiệp vụ ==================== */
+
+        public void CapNhatGiaNhap(string id, long giaMoi, long soLuong)
         {
             DataTable tbl = factory.LaySanPham(id);
-            if (tbl.Rows.Count > 0)
+            if (tbl.Rows.Count == 0) return;
+
+            long tongSo = Convert.ToInt32(tbl.Rows[0]["SO_LUONG"]);
+            long tongGia = Convert.ToInt64(tbl.Rows[0]["DON_GIA_NHAP"]);
+
+            if (tongGia != giaMoi)
             {
-                long tong_so = Convert.ToInt32(tbl.Rows[0]["SO_LUONG"]);
-                long tong_gia = Convert.ToInt64(tbl.Rows[0]["DON_GIA_NHAP"]);
-                if (tong_gia != gia_moi)
-                {
-                    long thanh_tien = gia_moi * so_luong + tong_gia * tong_so;
-                    tong_so += so_luong;
-                    tbl.Rows[0]["DON_GIA_NHAP"] = thanh_tien / tong_so;
-                    tbl.Rows[0]["SO_LUONG"] = tong_so;
-                }
+                long thanhTien = giaMoi * soLuong + tongGia * tongSo;
+                tongSo += soLuong;
+                tbl.Rows[0]["DON_GIA_NHAP"] = thanhTien / tongSo;
+                tbl.Rows[0]["SO_LUONG"] = tongSo;
                 factory.Save();
             }
-
         }
-    
-        public SanPham LaySanPham(String id)
+
+        public SanPham LaySanPham(string id)
         {
             DataTable tbl = factory.LaySanPham(id);
             SanPham sp = new SanPham();
             DonViTinhController ctrlDVT = new DonViTinhController();
+
             if (tbl.Rows.Count > 0)
             {
                 sp.Id = Convert.ToString(tbl.Rows[0]["ID"]);
-                sp.TenSanPham =  Convert.ToString(tbl.Rows[0]["TEN_SAN_PHAM"]);
+                sp.TenSanPham = Convert.ToString(tbl.Rows[0]["TEN_SAN_PHAM"]);
                 sp.SoLuong = Convert.ToInt32(tbl.Rows[0]["SO_LUONG"]);
                 sp.DonGiaNhap = Convert.ToInt64(tbl.Rows[0]["DON_GIA_NHAP"]);
                 sp.GiaBanLe = Convert.ToInt64(tbl.Rows[0]["GIA_BAN_LE"]);
@@ -108,64 +129,33 @@ namespace CuahangNongduoc.Controller
                 sp.DonViTinh = ctrlDVT.LayDVT(Convert.ToInt32(tbl.Rows[0]["ID_DON_VI_TINH"]));
             }
             return sp;
-
         }
 
         public static IList<SoLuongTon> LaySoLuongTon()
         {
             SanPhamFactory f = new SanPhamFactory();
             DataTable tbl = f.LaySoLuongTon();
-
             IList<SoLuongTon> ds = new List<SoLuongTon>();
-            
 
             DonViTinhController ctrlDVT = new DonViTinhController();
-            foreach(DataRow row in tbl.Rows)
+            foreach (DataRow row in tbl.Rows)
             {
                 SoLuongTon slt = new SoLuongTon();
-                SanPham sp = new SanPham();
-                sp.Id = Convert.ToString(row["ID"]);
-                sp.TenSanPham = Convert.ToString(row["TEN_SAN_PHAM"]);
-                sp.SoLuong = Convert.ToInt32(row["SO_LUONG"]);
-                sp.DonGiaNhap = Convert.ToInt64(row["DON_GIA_NHAP"]);
-                sp.GiaBanLe = Convert.ToInt64(row["GIA_BAN_LE"]);
-                sp.GiaBanSi = Convert.ToInt64(row["GIA_BAN_SI"]);
-                sp.DonViTinh = ctrlDVT.LayDVT(Convert.ToInt32(row["ID_DON_VI_TINH"]));
+                SanPham sp = new SanPham
+                {
+                    Id = Convert.ToString(row["ID"]),
+                    TenSanPham = Convert.ToString(row["TEN_SAN_PHAM"]),
+                    SoLuong = Convert.ToInt32(row["SO_LUONG"]),
+                    DonGiaNhap = Convert.ToInt64(row["DON_GIA_NHAP"]),
+                    GiaBanLe = Convert.ToInt64(row["GIA_BAN_LE"]),
+                    GiaBanSi = Convert.ToInt64(row["GIA_BAN_SI"]),
+                    DonViTinh = ctrlDVT.LayDVT(Convert.ToInt32(row["ID_DON_VI_TINH"]))
+                };
                 slt.SanPham = sp;
                 slt.SoLuong = Convert.ToInt32(row["SO_LUONG_TON"]);
                 ds.Add(slt);
             }
             return ds;
-
-        }
-
-        public DataRow NewRow()
-        {
-            return factory.NewRow();
-        }
-        public void Add(DataRow row)
-        {
-            factory.Add(row);
-        }
-        public bool Save()
-        {
-            SqlCommand cmd = new SqlCommand();
-            return factory.Save(cmd);
-        }
-
-        public bool ThemSanPham(SanPham sp)
-        {
-            return factory.Insert(sp);
-        }
-
-        public bool SuaSanPham(SanPham sp)
-        {
-            return factory.Update(sp);
-        }
-
-        public bool XoaSanPham(string id)
-        {
-            return factory.Delete(id);
         }
 
     }

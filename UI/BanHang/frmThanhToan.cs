@@ -1,4 +1,7 @@
-﻿using System;
+﻿using CuahangNongduoc.Controller;
+using CuahangNongduoc.DataLayer;
+using CuahangNongduoc.Utils;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -11,7 +14,7 @@ namespace CuahangNongduoc
 {
     public partial class frmThanhToan : Form
     {
-        KhachHangController ctrlKH = new KhachHangController();
+        KhachHangController ctrlKH = new KhachHangController(new KhachHangFactory());
         PhieuThanhToanController ctrl = new PhieuThanhToanController();
         public frmThanhToan()
         {
@@ -22,7 +25,7 @@ namespace CuahangNongduoc
         {
             ctrlKH.HienthiChungAutoComboBox(cmbKhachHang);
             ctrlKH.HienthiKhachHangChungDataGridviewComboBox(colKhachHang);
-            ctrl.HienthiPhieuThanhToan(bindingNavigator, dataGridView, cmbKhachHang, txtMaPhieu, dtNgayThanhToan, numTongTien, txtGhiChu);
+            ctrl.HienthiPhieuThanhToan(bindingNavigator, cmbKhachHang, txtMaPhieu, dtNgayThanhToan, numTongTien, txtGhiChu);
             bindingNavigator.BindingSource.AddingNew += new AddingNewEventHandler(BindingSource_AddingNew);
         }
 

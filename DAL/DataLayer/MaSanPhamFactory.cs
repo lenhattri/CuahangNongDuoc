@@ -6,7 +6,7 @@ using System.Data.SqlClient;
 
 namespace CuahangNongduoc.DataLayer
 {
-    public class MaSanPhanFactory
+    public class MaSanPhamFactory : IMaSanPhamFactory
     {
         DataService m_Ds = new DataService();
 
@@ -69,7 +69,7 @@ namespace CuahangNongduoc.DataLayer
             return m_Ds;
         }
 
-        public static void CapNhatSoLuong(string masp, int so_luong)
+        public  void CapNhatSoLuong(string masp, int so_luong)
         {
             DataService ds = new DataService();
             SqlCommand cmd = new SqlCommand("UPDATE MA_SAN_PHAM SET SO_LUONG = SO_LUONG + @so WHERE ID = @id");
