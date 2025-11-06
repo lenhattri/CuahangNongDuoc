@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using CuahangNongduoc.Controller;
+using CuahangNongduoc.Utils;
 
 namespace CuahangNongduoc
 {
@@ -20,6 +21,7 @@ namespace CuahangNongduoc
 
         private void frmThanhToan_Load(object sender, EventArgs e)
         {
+            AppTheme.ApplyTheme(this);
             ctrlLyDo.HienthiAutoComboBox(cmbLyDoChi);
             ctrlLyDo.HienthiDataGridviewComboBox(colLyDoChi);
             ctrl.HienthiPhieuChi(bindingNavigator, dataGridView, cmbLyDoChi, txtMaPhieu, dtNgayChi, numTongTien, txtGhiChu);

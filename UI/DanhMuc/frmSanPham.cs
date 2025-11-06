@@ -68,7 +68,7 @@ namespace CuahangNongduoc
         private void dataGridView_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
             e.Cancel = true;
-            
+            System.Diagnostics.Debug.WriteLine($"DGV DataError: {e.Exception?.Message}");
         }
 
         private void btnThemDVT_Click(object sender, EventArgs e)
