@@ -137,6 +137,7 @@
     <Compile Include="BLL\Controller\DonViTinhController.cs" />
     <Compile Include="DAL\DataLayer\PhieuChiFactory.cs" />
     <Compile Include="Domain\Entities\NguoiDung.cs" />
+    <Compile Include="DTO\ChiPhiKhuyenMaiReport.cs" />
     <Compile Include="DTO\ChiTietPhieuBanReport.cs" />
     <Compile Include="DTO\ChiTietPhieuNhapReport.cs" />
     <Compile Include="DTO\DuNoKhachHangReport.cs" />
@@ -146,6 +147,12 @@
     <Compile Include="DTO\PhieuNhapReport.cs" />
     <Compile Include="DTO\PhieuThanhToanReport.cs" />
     <Compile Include="DTO\SoLuongTonView.cs" />
+    <Compile Include="UI\BaoCaoThongKe\frmChiPhiVaKhuyenMai.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\BaoCaoThongKe\frmChiPhiVaKhuyenMai.Designer.cs">
+      <DependentUpon>frmChiPhiVaKhuyenMai.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\HeThong\frmCauHinh.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -381,6 +388,10 @@
     <Compile Include="Utils\Functions\SafeExecutor.cs" />
     <Compile Include="Utils\Functions\SqlHelper.cs" />
     <Compile Include="Utils\Functions\Validation.cs" />
+    <EmbeddedResource Include="Report\rptChiPhi_KhuyenMai.rdlc" />
+    <EmbeddedResource Include="UI\BaoCaoThongKe\frmChiPhiVaKhuyenMai.resx">
+      <DependentUpon>frmChiPhiVaKhuyenMai.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UI\HeThong\frmCauHinh.resx">
       <DependentUpon>frmCauHinh.cs</DependentUpon>
     </EmbeddedResource>
@@ -543,6 +554,7 @@
     <None Include="packages.config" />
     <None Include="Properties\DataSources\CuahangNongduoc.BusinessObject.PhieuThanhToan.datasource" />
     <None Include="Properties\DataSources\CuahangNongduoc.BusinessObject.PhieuThanhToanReport.datasource" />
+    <None Include="Properties\DataSources\CuahangNongduoc.DTO.ChiPhiKhuyenMaiReport.datasource" />
     <None Include="Properties\DataSources\CuahangNongduoc.DTO.ChiTietPhieuBanReport.datasource" />
     <None Include="Properties\DataSources\CuahangNongduoc.DTO.ChiTietPhieuNhapReport.datasource" />
     <None Include="Properties\DataSources\CuahangNongduoc.DTO.DuNoKhachHangReport.datasource" />
