@@ -1,3 +1,6 @@
+using CuahangNongduoc.BusinessObject;
+using CuahangNongduoc.Controller;
+using CuahangNongduoc.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -5,8 +8,6 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using CuahangNongduoc.BusinessObject;
-using CuahangNongduoc.Controller;
 
 namespace CuahangNongduoc
 {
@@ -19,6 +20,7 @@ namespace CuahangNongduoc
 
         private void frmSoLuongBan_Load(object sender, EventArgs e)
         {
+            AppTheme.ApplyTheme(this);
             cmbThang.SelectedIndex = DateTime.Now.Month - 1;
             numNam.Value = DateTime.Now.Year;
         }

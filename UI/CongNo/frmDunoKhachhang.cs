@@ -1,12 +1,13 @@
-﻿using System;
+﻿using CuahangNongduoc.BusinessObject;
+using CuahangNongduoc.Controller;
+using CuahangNongduoc.Utils;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using CuahangNongduoc.BusinessObject;
-using CuahangNongduoc.Controller;
 
 
 namespace CuahangNongduoc
@@ -21,7 +22,7 @@ namespace CuahangNongduoc
         KhachHangController ctrlKH = new KhachHangController();
         private void frmDunoKhachhang_Load(object sender, EventArgs e)
         {
-
+            AppTheme.ApplyTheme(this);
             this.toolThang.SelectedIndex = DateTime.Now.Month - 1;
             this.toolNam.Text = DateTime.Now.Year.ToString();
             ctrlKH.HienthiKhachHangChungDataGridviewComboBox(colKhachHang);

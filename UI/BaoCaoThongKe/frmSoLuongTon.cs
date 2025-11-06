@@ -1,4 +1,6 @@
-﻿using Microsoft.Reporting.WinForms;
+﻿using CuahangNongduoc.DTO;
+using CuahangNongduoc.Utils;
+using Microsoft.Reporting.WinForms;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -7,7 +9,6 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using CuahangNongduoc.DTO;
 namespace CuahangNongduoc
 {
     public partial class frmSoLuongTon : Form
@@ -19,6 +20,7 @@ namespace CuahangNongduoc
 
         private void frmSoLuongTon_Load(object sender, EventArgs e)
         {
+            AppTheme.ApplyTheme(this);
             var raw = CuahangNongduoc.Controller.SanPhamController.LaySoLuongTon();
 
             var view = raw.Select(it => new SoLuongTonView

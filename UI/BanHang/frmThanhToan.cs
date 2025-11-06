@@ -21,12 +21,13 @@ namespace CuahangNongduoc
 
         private void frmThanhToan_Load(object sender, EventArgs e)
         {
+            AppTheme.ApplyTheme(this);
             ctrlKH.HienthiChungAutoComboBox(cmbKhachHang);
             ctrlKH.HienthiKhachHangChungDataGridviewComboBox(colKhachHang);
             ctrl.HienthiPhieuThanhToan(bindingNavigator, dataGridView, cmbKhachHang, txtMaPhieu, dtNgayThanhToan, numTongTien, txtGhiChu);
             bindingNavigator.BindingSource.AddingNew += new AddingNewEventHandler(BindingSource_AddingNew);
             dataGridView.AllowUserToAddRows = false;
-            AppTheme.ApplyTheme(this);
+        
         }
 
         void BindingSource_AddingNew(object sender, AddingNewEventArgs e)
