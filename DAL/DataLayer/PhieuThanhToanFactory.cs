@@ -6,7 +6,7 @@ using System.Data.SqlClient;
 
 namespace CuahangNongduoc.DataLayer
 {
-    public class PhieuThanhToanFactory
+    public class PhieuThanhToanFactory : IPhieuThanhToanFactory
     {
         DataService m_Ds = new DataService();
 
@@ -27,11 +27,11 @@ namespace CuahangNongduoc.DataLayer
 
             return m_Ds;
         }
-      
+
         public DataTable LayPhieuThanhToan(String id)
         {
             SqlCommand cmd = new SqlCommand("SELECT * FROM PHIEU_THANH_TOAN WHERE ID = @id");
-            cmd.Parameters.Add("id", SqlDbType.VarChar,50).Value = id;
+            cmd.Parameters.Add("id", SqlDbType.VarChar, 50).Value = id;
             m_Ds.Load(cmd);
             return m_Ds;
         }
@@ -46,13 +46,13 @@ namespace CuahangNongduoc.DataLayer
             cmd.Parameters.Add("nam", SqlDbType.VarChar, 50).Value = nam;
 
             object obj = ds.ExecuteScalar(cmd);
-            
+
             if (obj == null)
                 return 0;
             else
                 return Convert.ToInt64(obj);
         }
-        
+
         public DataRow NewRow()
         {
             return m_Ds.NewRow();
@@ -61,9 +61,9 @@ namespace CuahangNongduoc.DataLayer
         {
             m_Ds.Rows.Add(row);
         }
-       public bool Save(SqlCommand cmd)
+        public bool Save(SqlCommand cmd)
         {
-           
+
             return m_Ds.ExecuteNoneQuery(cmd) > 0;
         }
     }

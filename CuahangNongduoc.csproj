@@ -112,7 +112,6 @@
   <ItemGroup>
     <Compile Include="BLL\Controller\UserController.cs" />
     <Compile Include="BLL\Helpers\CauHinhCuaHang.cs" />
-    <Compile Include="DAL\DataLayer\IChiTietPhieuBanDAL.cs" />
     <Compile Include="DAL\DataLayer\IChiTietPhieuNhapFactory.cs" />
     <Compile Include="DAL\DataLayer\IDonViTinhDAL.cs" />
     <Compile Include="DAL\DataLayer\IDuNoKhachHangDAL.cs" />
@@ -123,7 +122,7 @@
     <Compile Include="DAL\DataLayer\IPhieuBanFactory.cs" />
     <Compile Include="DAL\DataLayer\IPhieuChiFactory.cs" />
     <Compile Include="DAL\DataLayer\IPhieuNhapFactory.cs" />
-    <Compile Include="DAL\DataLayer\IPhieuThanhToanDAL.cs" />
+    <Compile Include="DAL\DataLayer\IPhieuThanhToanFactory.cs" />
     <Compile Include="DAL\DataLayer\ISanPhamFactory.cs" />
     <Compile Include="DAL\DataLayer\IUserDAL.cs" />
     <Compile Include="DAL\DataLayer\UserDAL.cs" />
@@ -196,7 +195,6 @@
     <Compile Include="UI\BanHang\frmDanhsachPhieuBanLe.Designer.cs">
       <DependentUpon>frmDanhsachPhieuBanLe.cs</DependentUpon>
     </Compile>
-    <Compile Include="DAL\DataLayer\ChiTietPhieuBanFactory.cs" />
     <Compile Include="DAL\DataLayer\ChiTietPhieuNhapFactory.cs" />
     <Compile Include="DAL\DataLayer\PhieuNhapFactory.cs" />
     <Compile Include="DAL\DataLayer\MaSanPhamFactory.cs" />

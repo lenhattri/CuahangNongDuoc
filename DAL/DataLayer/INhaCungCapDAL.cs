@@ -3,13 +3,14 @@ using System.Data.SqlClient;
 
 namespace CuahangNongduoc.DataLayer
 {
-    public interface IChiTietPhieuNhapFactory
+    public interface INhaCungCapDAL
     {
         void Add(DataRow row);
-        DataTable LayChiTietPhieuNhap(string id);
-        void LoadSchema();
+        DataTable DanhsachNCC();
+        DataTable LayNCC(string id);
         DataRow NewRow();
         bool Save(SqlCommand cmd);
-        int XoaChiTietPhieuNhap(string id);
+        DataTable TimDiaChi(string diachi);
+        DataTable TimHoTen(string hoten);
     }
 }

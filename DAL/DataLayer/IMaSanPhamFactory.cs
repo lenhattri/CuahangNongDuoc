@@ -6,9 +6,8 @@ namespace CuahangNongduoc.DataLayer
 {
     public interface IMaSanPhamFactory
     {
-        // Removed 'static abstract' as it is not supported in C# 7.3 and target runtime.
-        void CapNhatSoLuong(string masp, int so_luong);
         void Add(DataRow row);
+        void CapNhatSoLuong(string masp, int so_luong);
         DataTable DanhsachChiTiet(string sp);
         DataTable DanhsachMaSanPham();
         DataTable DanhsachMaSanPham(string sp);

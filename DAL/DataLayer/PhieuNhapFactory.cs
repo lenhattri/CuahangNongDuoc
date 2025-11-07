@@ -13,7 +13,7 @@ namespace CuahangNongduoc.DataLayer
 
         public void LoadSchema()
         {
-           SqlCommand cmd = new SqlCommand("SELECT * FROM PHIEU_NHAP WHERE ID='-1'");
+            SqlCommand cmd = new SqlCommand("SELECT * FROM PHIEU_NHAP WHERE ID='-1'");
             m_Ds.Load(cmd);
 
         }
@@ -32,7 +32,7 @@ namespace CuahangNongduoc.DataLayer
             SqlCommand cmd = new SqlCommand(sql);
             cmd.Parameters.Add("ngay", SqlDbType.Date).Value = dt;
             cmd.Parameters.Add("ncc", SqlDbType.VarChar).Value = maNCC;
-            
+
             m_Ds.Load(cmd);
 
             return m_Ds;
@@ -42,13 +42,13 @@ namespace CuahangNongduoc.DataLayer
         public DataTable LayPhieuNhap(String id)
         {
             SqlCommand cmd = new SqlCommand("SELECT * FROM PHIEU_NHAP WHERE ID = @id");
-            cmd.Parameters.Add("id", SqlDbType.VarChar,50).Value = id;
+            cmd.Parameters.Add("id", SqlDbType.VarChar, 50).Value = id;
             m_Ds.Load(cmd);
             return m_Ds;
         }
 
 
-        
+
         public DataRow NewRow()
         {
             return m_Ds.NewRow();
@@ -57,9 +57,9 @@ namespace CuahangNongduoc.DataLayer
         {
             m_Ds.Rows.Add(row);
         }
-       public bool Save(SqlCommand cmd)
+        public bool Save(SqlCommand cmd)
         {
-           
+
             return m_Ds.ExecuteNoneQuery(cmd) > 0;
         }
 

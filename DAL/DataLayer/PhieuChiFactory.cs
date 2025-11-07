@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Data;
 using System.Data.SqlClient;
+using System.Configuration;
 
 namespace CuahangNongduoc.DataLayer
 {
@@ -232,7 +233,7 @@ namespace CuahangNongduoc.DataLayer
         {
             m_Ds.Rows.Add(row);
         }
-       public bool Save(SqlCommand cmd)
+        public bool Save(SqlCommand cmd)
         {
 
             SqlCommand cmd1 = new SqlCommand("SELECT * FROM PHIEU_CHI");

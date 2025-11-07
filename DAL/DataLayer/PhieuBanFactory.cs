@@ -30,7 +30,7 @@ namespace CuahangNongduoc.DataLayer
         }
         public DataTable DanhsachPhieuBanSi()
         {
-                SqlCommand cmd = new SqlCommand("SELECT PB.* FROM PHIEU_BAN PB INNER JOIN KHACH_HANG KH ON PB.ID_KHACH_HANG=KH.ID WHERE KH.LOAI_KH=TRUE");
+            SqlCommand cmd = new SqlCommand("SELECT PB.* FROM PHIEU_BAN PB INNER JOIN KHACH_HANG KH ON PB.ID_KHACH_HANG=KH.ID WHERE KH.LOAI_KH=TRUE");
             m_Ds.Load(cmd);
 
             return m_Ds;
@@ -40,7 +40,7 @@ namespace CuahangNongduoc.DataLayer
         public DataTable LayPhieuBan(String id)
         {
             SqlCommand cmd = new SqlCommand("SELECT * FROM PHIEU_BAN WHERE ID = @id");
-            cmd.Parameters.Add("id", SqlDbType.VarChar,50).Value = id;
+            cmd.Parameters.Add("id", SqlDbType.VarChar, 50).Value = id;
             m_Ds.Load(cmd);
             return m_Ds;
         }
@@ -49,17 +49,17 @@ namespace CuahangNongduoc.DataLayer
         public DataTable LayChiTietPhieuBan(String idPhieuBan)
         {
             SqlCommand cmd = new SqlCommand("SELECT * FROM CHI_TIET_PHIEU_BAN WHERE ID_PHIEU_BAN = @id");
-            cmd.Parameters.Add("id", SqlDbType.VarChar,50).Value = idPhieuBan;
+            cmd.Parameters.Add("id", SqlDbType.VarChar, 50).Value = idPhieuBan;
             m_Ds.Load(cmd);
             return m_Ds;
         }
 
-        public  long LayConNo(string kh, int thang, int nam)
+        public long LayConNo(string kh, int thang, int nam)
         {
             DataService ds = new DataService();
             SqlCommand cmd = new SqlCommand("SELECT SUM(CON_NO) FROM PHIEU_BAN WHERE ID_KHACH_HANG = @kh AND MONTH(NGAY_BAN)=@thang AND YEAR(NGAY_BAN)= @nam");
             cmd.Parameters.Add("kh", SqlDbType.VarChar, 50).Value = kh;
-            cmd.Parameters.Add("thang", SqlDbType.VarChar,50).Value = thang;
+            cmd.Parameters.Add("thang", SqlDbType.VarChar, 50).Value = thang;
             cmd.Parameters.Add("nam", SqlDbType.VarChar, 50).Value = nam;
 
             object obj = ds.ExecuteScalar(cmd);
@@ -73,14 +73,14 @@ namespace CuahangNongduoc.DataLayer
         {
             DataService ds = new DataService();
             SqlCommand cmd = new SqlCommand("SELECT COUNT(*) FROM PHIEU_BAN");
-            
+
             object obj = ds.ExecuteScalar(cmd);
             if (obj == null)
                 return 0;
             else
                 return Convert.ToInt32(obj);
         }
-        
+
         public DataRow NewRow()
         {
             return m_Ds.NewRow();
@@ -89,9 +89,9 @@ namespace CuahangNongduoc.DataLayer
         {
             m_Ds.Rows.Add(row);
         }
-       public bool Save(SqlCommand cmd)
+        public bool Save(SqlCommand cmd)
         {
-           
+
             return m_Ds.ExecuteNoneQuery(cmd) > 0;
         }
 

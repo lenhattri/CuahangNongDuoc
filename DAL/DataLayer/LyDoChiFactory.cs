@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Data;
 using System.Data.SqlClient;
+using System.Configuration;
 
 
 namespace CuahangNongduoc.DataLayer
@@ -35,7 +36,7 @@ namespace CuahangNongduoc.DataLayer
 
         public bool Save(SqlCommand cmd)
         {
-            SqlCommand cmd1= new SqlCommand("SELECT * FROM LY_DO_CHI");
+            SqlCommand cmd1 = new SqlCommand("SELECT * FROM LY_DO_CHI");
             SqlDataAdapter adapter = new SqlDataAdapter(cmd);
             SqlCommandBuilder builder = new SqlCommandBuilder(adapter);
             adapter.Update(m_Ds);

@@ -19,7 +19,7 @@ namespace CuahangNongduoc.DataLayer
         public DataTable LayChiTietPhieuNhap(String id)
         {
             SqlCommand cmd = new SqlCommand("SELECT * FROM CHI_TIET_PHIEU_NHAP WHERE ID_PHIEU_NHAP = @id");
-            cmd.Parameters.Add("id", SqlDbType.VarChar,50).Value = id;
+            cmd.Parameters.Add("id", SqlDbType.VarChar, 50).Value = id;
             m_Ds.Load(cmd);
             return m_Ds;
         }
@@ -30,8 +30,8 @@ namespace CuahangNongduoc.DataLayer
             cmd.Parameters.Add("id", SqlDbType.VarChar, 50).Value = id;
             return m_Ds.ExecuteNoneQuery(cmd);
         }
-        
-        
+
+
         public DataRow NewRow()
         {
             return m_Ds.NewRow();

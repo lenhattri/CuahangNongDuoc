@@ -1,6 +1,6 @@
-﻿// DAL/DataLayer/SanPhamFactory.cs
-using CuahangNongduoc.BusinessObject;
+﻿using CuahangNongduoc.BusinessObject;
 using System.Data;
+using System.Data.SqlClient;
 
 namespace CuahangNongduoc.DataLayer
 {
@@ -13,7 +13,7 @@ namespace CuahangNongduoc.DataLayer
         DataTable LaySanPham(string id);
         DataTable LaySoLuongTon();
         DataRow NewRow();
-        bool Save();
+        bool Save(SqlCommand cmd);
         DataTable TimMaSanPham(string id);
         DataTable TimTenSanPham(string ten);
         bool Update(SanPham sp);

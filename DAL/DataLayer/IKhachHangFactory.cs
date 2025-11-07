@@ -1,5 +1,4 @@
-﻿// DAL/DataLayer/KhachHangFactory.cs
-using System.Data;
+﻿using System.Data;
 
 namespace CuahangNongduoc.DataLayer
 {
@@ -10,7 +9,6 @@ namespace CuahangNongduoc.DataLayer
         DataTable DanhsachKhachHang(bool loai);
         DataTable LayKhachHang(string id);
         DataRow NewRow();
-        bool Save();
         DataTable TimDiaChi(string diachi, bool loai);
         DataTable TimHoTen(string hoten, bool loai);
     }

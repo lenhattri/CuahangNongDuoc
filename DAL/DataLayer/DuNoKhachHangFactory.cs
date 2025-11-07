@@ -1,7 +1,8 @@
 ﻿using System;
-using System.Data;
-using System.Data.SqlClient;
-using CuahangNongduoc.DAL.Infrastructure;
+using System.Configuration;  
+using System.Data; 
+using System.Data.SqlClient; 
+using CuahangNongduoc.DAL.Infrastructure; // CHANGED: dùng DbClient (singleton)
 
 namespace CuahangNongduoc.DataLayer
 {

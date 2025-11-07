@@ -46,7 +46,7 @@ namespace CuahangNongduoc.DataLayer
         public DataTable LayKhachHang(String id)
         {
             SqlCommand cmd = new SqlCommand("SELECT * FROM KHACH_HANG WHERE ID = @id");
-            cmd.Parameters.Add("id", SqlDbType.VarChar,50).Value = id;
+            cmd.Parameters.Add("id", SqlDbType.VarChar, 50).Value = id;
             m_Ds.Load(cmd);
             return m_Ds;
         }
