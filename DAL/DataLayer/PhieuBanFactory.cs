@@ -90,6 +90,21 @@ namespace CuahangNongduoc.DataLayer
             }
         }
 
+        public DataTable DanhsachPhieu()
+        {
+            const string sql =
+                "SELECT PB.* FROM PHIEU_BAN PB INNER JOIN KHACH_HANG KH ON PB.ID_KHACH_HANG = KH.ID";
+            using (var cn = _db.Open())                                  
+            using (var cmd = _db.Cmd(cn, sql, CommandType.Text))   
+            using (var da = new SqlDataAdapter(cmd))                         
+            {
+                var dtRes = new DataTable("PHIEU_BAN");
+                da.Fill(dtRes);
+                _table = dtRes;
+                return dtRes;
+            }
+        }
+
         public DataTable LayPhieuBan(string id)
         {
             using (var cn = _db.Open())                                      // CHANGED

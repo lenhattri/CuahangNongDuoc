@@ -207,5 +207,20 @@ namespace CuahangNongduoc.Controller
         {
             dal.Delete(id);
         }
+
+        public void Save()
+        {
+            dal.Save();
+        }
+
+        public DataRow NewRow()
+        {
+            return dal.NewRow();
+        }
+
+        public void Add(DataRow row)
+        {
+            dal.Add(row);
+        }
     }
 }

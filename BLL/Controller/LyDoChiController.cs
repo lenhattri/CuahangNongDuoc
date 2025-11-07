@@ -72,9 +72,6 @@ namespace CuahangNongduoc.Controller
         // DAL ADO.NET (SqlClient) đã viết ở bước trước
         private readonly LyDoChiFactory _dal = new LyDoChiFactory();
 
-        // Bảng hiện tại cho binding + add (thay cho DataService cũ)
-        private DataTable _currentTable;
-
         /* ===================== BINDING HIỂN THỊ ===================== */
         public void HienthiAutoComboBox(ComboBox cmb)
         {
@@ -85,10 +82,9 @@ namespace CuahangNongduoc.Controller
 
         public void HienthiDataGridview(DataGridView dg, BindingNavigator bn)
         {
-            _currentTable = _dal.DanhsachLyDo();
             var bs = new BindingSource
             {
-                DataSource = _currentTable
+                DataSource = _dal.DanhsachLyDo()
             };
             bn.BindingSource = bs;
             dg.DataSource = bs;
@@ -106,37 +102,20 @@ namespace CuahangNongduoc.Controller
         /* ===================== API GIỮ NGUYÊN CHO UI ===================== */
         public DataRow NewRow()
         {
-            if (_currentTable == null)
-                throw new InvalidOperationException("Phải load dữ liệu trước bằng HienthiDataGridview.");
-
-            return _currentTable.NewRow();
+            return _dal.NewRow();
         }
 
         public void Add(DataRow row)
         {
-            if (_currentTable == null)
-                throw new InvalidOperationException("Phải load dữ liệu trước bằng HienthiDataGridview.");
-
             if (row == null)
                 throw new ArgumentNullException(nameof(row));
 
-            _currentTable.Rows.Add(row);
+            _dal.Add(row);
         }
 
         public bool Save()
         {
-            if (_currentTable == null)
-                throw new InvalidOperationException("Phải load dữ liệu trước bằng HienthiDataGridview.");
-
-            // Chỉ ghi các row trạng thái Added → DAL sẽ Insert (transaction)
-            bool ok = _dal.SaveChanges(_currentTable);
-
-            if (ok)
-            {
-                _currentTable.AcceptChanges(); // reset RowState sau khi commit
-            }
-
-            return ok;
+            return _dal.Save();
         }
 
         /* ===================== TRẢ VỀ SINGLE DOMAIN OBJECT ===================== */
@@ -152,29 +131,6 @@ namespace CuahangNongduoc.Controller
                 Id = Convert.ToInt64(row["ID"]),
                 LyDo = Convert.ToString(row["LY_DO"])
             };
-        }
-
-        /* ===================== TRẢ VỀ LIST DOMAIN OBJECT (THÊM MỚI) ===================== */
-        public IList<LyDoChi> DanhSachLyDo()
-        {
-            return MapToList(_dal.DanhsachLyDo());
-        }
-
-        /* ===================== HELPERS ===================== */
-        private static IList<LyDoChi> MapToList(DataTable tbl)
-        {
-            var ds = new List<LyDoChi>();
-
-            foreach (DataRow row in tbl.Rows)
-            {
-                var lydo = new LyDoChi
-                {
-                    Id = Convert.ToInt64(row["ID"]),
-                    LyDo = Convert.ToString(row["LY_DO"])
-                };
-                ds.Add(lydo);
-            }
-            return ds;
         }
     }
 }

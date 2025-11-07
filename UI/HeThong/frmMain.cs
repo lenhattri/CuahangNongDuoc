@@ -1,4 +1,5 @@
 ﻿using CuahangNongduoc.Domain.Entities;
+using CuahangNongduoc.UI.BaoCaoThongKe;
 using CuahangNongduoc.UI.HeThong;
 using CuahangNongduoc.Utils;
 using Microsoft.Win32;
@@ -254,6 +255,20 @@ namespace CuahangNongduoc
                 SoLuongTon.Activate();
 
         }
+
+        frmChiPhiVaKhuyenMai ChiPhiVaKhuyenMai = null;
+        private void mnuBaocaoChiphiKhuyenmai_Click(object sender, EventArgs e)
+        {
+            if (ChiPhiVaKhuyenMai == null || ChiPhiVaKhuyenMai.IsDisposed)
+            {
+                ChiPhiVaKhuyenMai = new frmChiPhiVaKhuyenMai();
+                ChiPhiVaKhuyenMai.MdiParent = this;
+                ChiPhiVaKhuyenMai.Show();
+            }
+            else
+                ChiPhiVaKhuyenMai.Activate();
+        }
+
         frmSoLuongBan SoLuongBan = null;
         private void mnuSoLuongBan_Click(object sender, EventArgs e)
         {
@@ -389,7 +404,7 @@ namespace CuahangNongduoc
         frmCauHinh CauHinh = null;
         private void mnuTuyChinhCauHinh_Click(object sender, EventArgs e)
         {
-            if( CauHinh != null || CauHinh.IsDisposed)
+            if (CauHinh != null || CauHinh.IsDisposed)
             {
                 CauHinh = new frmCauHinh();
                 CauHinh.MdiParent = this;
@@ -399,6 +414,7 @@ namespace CuahangNongduoc
             {
                 CauHinh.Activate();
             }
+        }
 
         private void ChuaDangNhap()
         {

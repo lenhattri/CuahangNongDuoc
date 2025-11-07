@@ -66,9 +66,9 @@ namespace CuahangNongduoc.DataLayer
         public DataTable LayDanhSachMaTheoSanPham(string idSanPham)
         {
             const string sql = @"
-            SELECT ID, SO_LUONG, GIA_NHAP, NGAY_HET_HAN
+            SELECT ID, SO_LUONG, DON_GIA_NHAP, NGAY_HET_HAN
             FROM MA_SAN_PHAM
-            WHERE ID_SAN_PHAM = @idSanPham AND SO_LUONG_TON > 0
+            WHERE ID_SAN_PHAM = @idSanPham AND SO_LUONG > 0
             ORDER BY NGAY_HET_HAN ASC";
 
             return _db.ExecuteDataTable(sql, CommandType.Text,
@@ -77,7 +77,7 @@ namespace CuahangNongduoc.DataLayer
         public DataTable LayThongTinMotLo(string idMaSanPham)
         {
             const string sql = @"
-            SELECT ID, ID_SAN_PHAM, SO_LUONG, GIA_NHAP, NGAY_HET_HAN
+            SELECT ID, ID_SAN_PHAM, SO_LUONG, DON_GIA_NHAP, NGAY_HET_HAN
             FROM MA_SAN_PHAM
             WHERE ID = @idMaSanPham";
             return _db.ExecuteDataTable(sql, CommandType.Text,
@@ -89,7 +89,7 @@ namespace CuahangNongduoc.DataLayer
             const string sql = @"
             SELECT SUM(DON_GIA_NHAP * SO_LUONG) / NULLIF(SUM(SO_LUONG), 0)
             FROM MA_SAN_PHAM
-            WHERE ID_SAN_PHAM = @idSanPham AND SO_LUONG_TON > 0";
+            WHERE ID_SAN_PHAM = @idSanPham AND SO_LUONG > 0";
             decimal? result = _db.ExecuteScalar<decimal>(sql, CommandType.Text,
                 _db.P("@idSanPham", SqlDbType.VarChar, idSanPham, 50));
             return result ?? 0;
@@ -100,7 +100,7 @@ namespace CuahangNongduoc.DataLayer
             const string sql = @"
             SELECT TOP 1 GIA_NHAP
             FROM MA_SAN_PHAM
-            WHERE ID_SAN_PHAM = @idSanPham AND SO_LUONG > 0
+            WHERE ID_MA_SAN_PHAM = @idSanPham AND SO_LUONG > 0
             ORDER BY NGAY_NHAP ASC";
             decimal? result = _db.ExecuteScalar<decimal>(sql, CommandType.Text,
                 _db.P("@idSanPham", SqlDbType.VarChar, idSanPham, 50));
@@ -108,7 +108,7 @@ namespace CuahangNongduoc.DataLayer
         }
         public void XuatTheoFIFO(DataRow row, SqlTransaction tx, string idPhieuBan)
         {
-            string idSanPham = Convert.ToString(row["ID_SAN_PHAM"]);
+            string idSanPham = Convert.ToString(row["ID_MA_SAN_PHAM"]);
             int soLuongConPhaiXuat = Convert.ToInt32(row["SO_LUONG"]);
             decimal donGia = Convert.ToDecimal(row["DON_GIA"]);
             DataTable loSanPhams = LayDanhSachMaTheoSanPham(idSanPham);
@@ -130,7 +130,7 @@ namespace CuahangNongduoc.DataLayer
                 chiTietPhieuBan["ID_PHIEU_BAN"] = idPhieuBan;
                 chiTietPhieuBan["ID_MA_SAN_PHAM"] = idMaSanPham;
                 chiTietPhieuBan["SO_LUONG"] = soLuongXuatTuLo;
-                chiTietPhieuBan["DON_GIA"] = donGia;
+                chiTietPhieuBan["DON_GIA_NHAP"] = donGia;
                 chiTietPhieuBan["THANH_TIEN"] = donGia * soLuongXuatTuLo;
                 Insert(chiTietPhieuBan, tx);
                 // Cập nhật số lượng còn phải xuất

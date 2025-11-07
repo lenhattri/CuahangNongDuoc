@@ -30,12 +30,13 @@ namespace CuahangNongduoc
 
         private void bindingNavigatorAddNewItem_Click(object sender, EventArgs e)
         {
+            DataRow row = ctrl.NewRow();
             long maso = ThamSo.KhachHang;
             ThamSo.KhachHang = maso + 1;
 
-            DataRowView row = (DataRowView)bindingNavigator.BindingSource.AddNew();
             row["ID"] = maso;
-            
+            ctrl.Add(row);
+            bindingNavigator.BindingSource.MoveLast();
         }
 
         private void toolThoat_Click(object sender, EventArgs e)
