@@ -13,7 +13,7 @@ namespace CuahangNongduoc.DataLayer
         private DataTable _table;                          // NEW: giữ DataTable đang bind để Save()
 
         private const string SELECT_BASE =
-            "SELECT ID, ID_KHACH_HANG, NGAY_BAN, TONG_TIEN, DA_TRA, CON_NO FROM PHIEU_BAN";
+            "SELECT ID, ID_KHACH_HANG, NGAY_BAN, TONG_TIEN, DA_TRA, CON_NO, CHI_PHI_VAN_CHUYEN, PHI_DICH_VU, GIAM_GIA FROM PHIEU_BAN";
 
         /* ===================== Helpers ===================== */
 
@@ -86,6 +86,21 @@ namespace CuahangNongduoc.DataLayer
                 var dtRes = new DataTable("PHIEU_BAN");
                 da.Fill(dtRes);
                 _table = dtRes; // NEW
+                return dtRes;
+            }
+        }
+
+        public DataTable DanhsachPhieu()
+        {
+            const string sql =
+                "SELECT PB.* FROM PHIEU_BAN PB INNER JOIN KHACH_HANG KH ON PB.ID_KHACH_HANG = KH.ID";
+            using (var cn = _db.Open())                                  
+            using (var cmd = _db.Cmd(cn, sql, CommandType.Text))   
+            using (var da = new SqlDataAdapter(cmd))                         
+            {
+                var dtRes = new DataTable("PHIEU_BAN");
+                da.Fill(dtRes);
+                _table = dtRes;
                 return dtRes;
             }
         }

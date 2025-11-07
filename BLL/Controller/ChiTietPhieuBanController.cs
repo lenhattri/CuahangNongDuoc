@@ -110,6 +110,8 @@ namespace CuahangNongduoc.Controller
         // Bộ đệm hàng Added để Save() một lượt (thay cho DataService cũ)
         private readonly DataTable _buffer;
 
+        // Hiển thị buffer cho UI sử dụng
+        public DataTable Buffer => _buffer;
         public ChiTietPhieuBanController()
         {
             _buffer = CreateBufferSchema();
@@ -130,7 +132,7 @@ namespace CuahangNongduoc.Controller
         {
             return _buffer.NewRow();
         }
-
+        
         public void Add(DataRow row)
         {
             // Đảm bảo row thuộc schema _buffer
@@ -179,6 +181,20 @@ namespace CuahangNongduoc.Controller
         }
 
         /* ===================== HELPERS ===================== */
+        public decimal TinhTongTienBanTheoPhieuBan(string maPhieuBan)
+        {
+            return _dal.TinhTongThanhTienTheoPhieu(maPhieuBan);
+        }
+        // Tính giá bình quân gia quyền của sản phẩm
+        public decimal TinhGiaBinhQuanGiaQuyen(string idSanPham)
+        {
+            return _dal.TinhGiaBinhQuanGiaQuyen(idSanPham);
+        }
+        public decimal TinhGiaFIFO(string idSanPham)
+        {
+            return _dal.TinhGiaFIFO(idSanPham);
+        }
+
         private static DataTable CreateBufferSchema()
         {
             // Tạo schema tối thiểu cần để Insert + cập nhật kho

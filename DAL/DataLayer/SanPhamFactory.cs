@@ -1,7 +1,9 @@
 ﻿// DAL/DataLayer/SanPhamFactory.cs
 using CuahangNongduoc.BusinessObject;
-using CuahangNongduoc.DAL.Infrastructure;          
+using CuahangNongduoc.DAL.Infrastructure;
+using CuahangNongduoc.Utils.Functions;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -152,14 +154,33 @@ namespace CuahangNongduoc.DataLayer
         {
             // CHANGED: thay toàn bộ DataService + tự mở connection bằng DbClient + DataAdapter
             EnsureSchema();
-            using (var cn = _db.Open())
-            using (var da = CreateAdapter(cn))
-            {
-                return da.Update(_table) > 0;
-            }
+
+            return DataAccessHelper.PerformSave(
+                _table,             // DataTable nội bộ
+                _sanPhamRules,      // Danh sách quy tắc
+                this.CreateAdapter, // Phương thức tạo Adapter
+                _db                 // Instance DbClient
+            );
         }
 
         // REMOVED: internal void Save() { throw new NotImplementedException(); }
         // CHANGED: xoá method trùng tên gây lỗi "already defines a member called 'Save'"
+
+        private static readonly List<ValidationRule> _sanPhamRules = new List<ValidationRule>
+        {
+            new ValidationRule("ID", ValidationType.NotEmpty, "Mã sản phẩm không được để trống."),
+            new ValidationRule("TEN_SAN_PHAM", ValidationType.NotEmpty, "Tên sản phẩm không được để trống."),
+            new ValidationRule("ID_DON_VI_TINH", ValidationType.NotNull, "Chưa chọn đơn vị tính."),
+            
+            // Các quy tắc cho số
+            new ValidationRule("SO_LUONG", ValidationType.NotNegativeInt, "Số lượng không được âm."),
+            new ValidationRule("SO_LUONG", ValidationType.NotZero, "Số lượng không được bằng 0."),
+            new ValidationRule("DON_GIA_NHAP", ValidationType.NotNegativeLong, "Giá nhập không được âm."),
+            new ValidationRule("DON_GIA_NHAP", ValidationType.NotZero, "Số lượng không được bằng 0."),
+            new ValidationRule("GIA_BAN_SI", ValidationType.NotNegativeLong, "Giá bán sỉ không được âm."),
+            new ValidationRule("GIA_BAN_SI", ValidationType.NotZero, "Số lượng không được bằng 0."),
+            new ValidationRule("GIA_BAN_LE", ValidationType.NotNegativeLong, "Giá bán lẻ không được âm."),
+            new ValidationRule("GIA_BAN_LE", ValidationType.NotZero, "Số lượng không được bằng 0."),
+        };
     }
 }
