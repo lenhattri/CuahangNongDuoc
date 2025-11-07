@@ -15,6 +15,20 @@ namespace CuahangNongduoc.DataLayer
     public class ChiTietPhieuBanDAL
     {
         private readonly DbClient _db = DbClient.Instance; // CHANGED
+        private DataTable _dataTable;                      // NEW: Thêm DataTable nội bộ như UserDAL
+
+        // NEW: schema DataTable hợp nhất 2 bảng để NewRow/Add/Save giữ được cột
+        private void EnsureSchema()
+        {
+            if (_dataTable != null) return;
+            _dataTable = new DataTable("CHI_TIET_PHIEU_BAN");
+            // Dựa trên các cột trong phương thức Insert
+            _dataTable.Columns.Add("ID_PHIEU_BAN", typeof(string));
+            _dataTable.Columns.Add("ID_MA_SAN_PHAM", typeof(string));
+            _dataTable.Columns.Add("SO_LUONG", typeof(int));
+            _dataTable.Columns.Add("DON_GIA", typeof(decimal));
+            _dataTable.Columns.Add("THANH_TIEN", typeof(decimal));
+        }
 
         /* ===================== SELECT ===================== */
 
@@ -23,8 +37,12 @@ namespace CuahangNongduoc.DataLayer
             // CHANGED: dùng DbClient + chỉ chọn cột cần thiết (tùy ý)
             const string sql =
                 "SELECT * FROM CHI_TIET_PHIEU_BAN WHERE ID_PHIEU_BAN = @id";
-            return _db.ExecuteDataTable(sql, CommandType.Text,
+
+            // CHANGED: Gán vào _dataTable và đồng bộ, giống UserDAL
+            var dt = _db.ExecuteDataTable(sql, CommandType.Text,
                 _db.P("@id", SqlDbType.VarChar, idPhieuBan, 50));
+            _dataTable = dt; // đồng bộ
+            return dt;
         }
 
         public DataTable LayChiTietPhieuBan(DateTime ngayBan)
@@ -74,6 +92,20 @@ namespace CuahangNongduoc.DataLayer
             return _db.ExecuteDataTable(sql, CommandType.Text,
                 _db.P("@idSanPham", SqlDbType.VarChar, idSanPham, 50));
         }
+        public string LayIdSanPhamTuMaSanPham(string idMaSanPham)
+        {
+            const string sql = @"
+            SELECT ID_SAN_PHAM
+            FROM MA_SAN_PHAM
+            WHERE ID = @idMaSanPham";
+            DataTable dt = _db.ExecuteDataTable(sql, CommandType.Text,
+                _db.P("@idMaSanPham", SqlDbType.VarChar, idMaSanPham, 50)
+                );
+            if (dt.Rows.Count > 0)
+                return Convert.ToString(dt.Rows[0]["ID_SAN_PHAM"]);
+            else
+                return string.Empty;
+        }
         public DataTable LayThongTinMotLo(string idMaSanPham)
         {
             const string sql = @"
@@ -106,11 +138,30 @@ namespace CuahangNongduoc.DataLayer
                 _db.P("@idSanPham", SqlDbType.VarChar, idSanPham, 50));
             return result ?? 0;
         }
+
+        /* ========================= DataTable pattern (NEW) ========================= */
+
+        public DataRow NewRow()
+        {
+            EnsureSchema(); // NEW
+            return _dataTable.NewRow();
+        }
+
+        public void Add(DataRow row)
+        {
+            EnsureSchema(); // NEW
+            _dataTable.Rows.Add(row);
+        }
+
+        /* ===================== LOGIC XUẤT KHO (FIFO/CHONLO) ===================== */
+
         public void XuatTheoFIFO(DataRow row, SqlTransaction tx, string idPhieuBan)
         {
-            string idSanPham = Convert.ToString(row["ID_MA_SAN_PHAM"]);
+            string idSanPham = Convert.ToString(row["ID_MA_SAN_PHAM"]); // SỬA TẠM
             int soLuongConPhaiXuat = Convert.ToInt32(row["SO_LUONG"]);
             decimal donGia = Convert.ToDecimal(row["DON_GIA"]);
+
+            // string idSanPham = LayIdSanPhamTuMaSanPham(idMaSanPham); // Bỏ đi nếu giả định trên là đúng
             DataTable loSanPhams = LayDanhSachMaTheoSanPham(idSanPham);
 
             foreach (DataRow lo in loSanPhams.Rows)
@@ -118,21 +169,36 @@ namespace CuahangNongduoc.DataLayer
                 if (soLuongConPhaiXuat <= 0)
                     break;
                 // Lấy thông tin của Lô
-                string idMaSanPham = lo["ID_MA_SAN_PHAM"].ToString();
+                string idMaLoHienTai = lo["ID"].ToString(); // Sửa: Cột ID trong LayDanhSachMaTheoSanPham
                 int soLuongTon = Convert.ToInt32(lo["SO_LUONG"]);
                 int soLuongXuatTuLo = Math.Min(soLuongConPhaiXuat, soLuongTon);
+
+                // Lấy đơn giá nhập của lô này (hoặc dùng đơn giá bán tùy logic)
+                decimal donGiaNhapCuaLo = Convert.ToDecimal(lo["DON_GIA_NHAP"]);
+
                 // Cập nhật số lượng tồn kho của Lô
                 UpdateTonKho(idMaSanPham, -soLuongXuatTuLo, tx);
                 // Cập nhật tổng số lượng tồn kho của Sản phẩm
                 UpdateTongTonKhoSanPham(idSanPham, -soLuongXuatTuLo, tx);
+
                 // Ghi chi tiết phiếu bán cho Lô
-                DataRow chiTietPhieuBan = row.Table.NewRow();
-                chiTietPhieuBan["ID_PHIEU_BAN"] = idPhieuBan;
-                chiTietPhieuBan["ID_MA_SAN_PHAM"] = idMaSanPham;
-                chiTietPhieuBan["SO_LUONG"] = soLuongXuatTuLo;
-                chiTietPhieuBan["DON_GIA_NHAP"] = donGia;
-                chiTietPhieuBan["THANH_TIEN"] = donGia * soLuongXuatTuLo;
-                Insert(chiTietPhieuBan, tx);
+                // Sử dụng hàm Insert() thay vì tạo DataRow thủ công
+                // (Vì _dataTable dùng để *quản lý* danh sách, không phải để *thêm* vào)
+                // Chúng ta Insert trực tiếp vào DB qua Transaction
+                const string sqlInsert = @"
+                    INSERT INTO CHI_TIET_PHIEU_BAN (ID_PHIEU_BAN, ID_MA_SAN_PHAM, SO_LUONG, DON_GIA, THANH_TIEN)
+                    VALUES(@ID_PHIEU_BAN, @ID_MA_SAN_PHAM, @SO_LUONG, @DON_GIA, @THANH_TIEN)";
+
+                using (var cmd = _db.Cmd(tx.Connection, sqlInsert, CommandType.Text, tx, 30,
+                    _db.P("@ID_PHIEU_BAN", SqlDbType.VarChar, idPhieuBan, 50),
+                    _db.P("@ID_MA_SAN_PHAM", SqlDbType.VarChar, idMaLoHienTai, 50),
+                    _db.P("@SO_LUONG", SqlDbType.Int, soLuongXuatTuLo),
+                    _db.PDec("@DON_GIA", donGia), // Dùng đơn giá bán (row["DON_GIA"])
+                    _db.PDec("@THANH_TIEN", donGia * soLuongXuatTuLo)))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+
                 // Cập nhật số lượng còn phải xuất
                 soLuongConPhaiXuat -= soLuongXuatTuLo;
             }
@@ -151,7 +217,12 @@ namespace CuahangNongduoc.DataLayer
             decimal donGia = Convert.ToDecimal(row["DON_GIA"]);
             DataTable loSanPhams = LayThongTinMotLo(idMaSanPham);
 
-            string idSanPham = Convert.ToString(loSanPhams.Rows[0]["ID_SAN_PHAM"]);
+            if (loSanPhams.Rows.Count == 0)
+            {
+                throw new Exception($"Không tìm thấy Lô {idMaSanPham}.");
+            }
+
+            string idSanPham = LayIdSanPhamTuMaSanPham(idMaSanPham);
             int soLuongTon = Convert.ToInt32(loSanPhams.Rows[0]["SO_LUONG"]);
             if (soLuongTon < soLuongCanXuat)
             {
@@ -161,18 +232,28 @@ namespace CuahangNongduoc.DataLayer
             UpdateTonKho(idMaSanPham, -soLuongCanXuat, tx);
             // Cập nhật tổng số lượng tồn kho của Sản phẩm
             UpdateTongTonKhoSanPham(idSanPham, -soLuongCanXuat, tx);
+
             // Ghi chi tiết phiếu bán cho Lô
-            DataRow chiTietPhieuBan = row.Table.NewRow();
-            chiTietPhieuBan["ID_PHIEU_BAN"] = idPhieuBan;
-            chiTietPhieuBan["ID_MA_SAN_PHAM"] = idMaSanPham;
-            chiTietPhieuBan["SO_LUONG"] = soLuongCanXuat;
-            chiTietPhieuBan["DON_GIA"] = donGia;
-            chiTietPhieuBan["THANH_TIEN"] = donGia * soLuongCanXuat;
-            Insert(chiTietPhieuBan, tx);
+            // Tương tự FIFO, gọi Insert trực tiếp
+            const string sqlInsert = @"
+                INSERT INTO CHI_TIET_PHIEU_BAN (ID_PHIEU_BAN, ID_MA_SAN_PHAM, SO_LUONG, DON_GIA, THANH_TIEN)
+                VALUES(@ID_PHIEU_BAN, @ID_MA_SAN_PHAM, @SO_LUONG, @DON_GIA, @THANH_TIEN)";
+
+            using (var cmd = _db.Cmd(tx.Connection, sqlInsert, CommandType.Text, tx, 30,
+                _db.P("@ID_PHIEU_BAN", SqlDbType.VarChar, idPhieuBan, 50),
+                _db.P("@ID_MA_SAN_PHAM", SqlDbType.VarChar, idMaSanPham, 50),
+                _db.P("@SO_LUONG", SqlDbType.Int, soLuongCanXuat),
+                _db.PDec("@DON_GIA", donGia),
+                _db.PDec("@THANH_TIEN", donGia * soLuongCanXuat)))
+            {
+                cmd.ExecuteNonQuery();
+            }
         }
 
         /* ===================== INSERT/UPDATE/DELETE ===================== */
 
+        // Phương thức này chủ yếu được gọi nội bộ từ XuatTheo...
+        // Hoặc có thể bị loại bỏ nếu XuatTheo... tự Insert trực tiếp (như đã sửa ở trên)
         public int Insert(DataRow row, SqlTransaction tx = null)
         {
             // CHANGED: dùng DbClient.Cmd + P/PDec
@@ -185,7 +266,7 @@ namespace CuahangNongduoc.DataLayer
                 _db.P("@ID_PHIEU_BAN", SqlDbType.VarChar, row["ID_PHIEU_BAN"], 50),
                 _db.P("@ID_MA_SAN_PHAM", SqlDbType.VarChar, row["ID_MA_SAN_PHAM"], 50),
                 _db.P("@SO_LUONG", SqlDbType.Int, row["SO_LUONG"]),
-                _db.PDec("@DON_GIA", row["DON_GIA"]),          // NEW: decimal 18,2
+                _db.PDec("@DON_GIA", row["DON_GIA"]),       // NEW: decimal 18,2
                 _db.PDec("@THANH_TIEN", row["THANH_TIEN"])))   // NEW: decimal 18,2
             {
                 return cmd.ExecuteNonQuery();
@@ -197,8 +278,8 @@ namespace CuahangNongduoc.DataLayer
             // Giữ đúng logic cũ: cộng/trừ tồn kho theo delta
             const string sql = @"
                 UPDATE MA_SAN_PHAM 
-                   SET SO_LUONG = SO_LUONG + @delta
-                 WHERE ID = @id";
+                    SET SO_LUONG = SO_LUONG + @delta
+                WHERE ID = @id";
             using (var cmd = _db.Cmd(tx.Connection, sql, CommandType.Text, tx, 30,
                 _db.P("@delta", SqlDbType.Int, deltaSoLuong),
                 _db.P("@id", SqlDbType.VarChar, idMaSanPham, 50)))
@@ -211,8 +292,8 @@ namespace CuahangNongduoc.DataLayer
             // Giữ đúng logic cũ: cộng/trừ tồn kho theo delta
             const string sql = @"
                 UPDATE SAN_PHAM 
-                   SET SO_LUONG = SO_LUONG + @delta
-                 WHERE ID = @idSanPham";
+                    SET SO_LUONG = SO_LUONG + @delta
+                WHERE ID = @idSanPham";
             using (var cmd = _db.Cmd(tx.Connection, sql, CommandType.Text, tx, 30,
                 _db.P("@delta", SqlDbType.Int, deltaSoLuong),
                 _db.P("@idSanPham", SqlDbType.VarChar, idSanPham, 50)))
@@ -224,29 +305,36 @@ namespace CuahangNongduoc.DataLayer
         /// <summary>
         /// Duyệt bảng, thêm CT + cập nhật kho trong 1 transaction.
         /// Chỉ xử lý các row trạng thái Added.
+        /// (Phương thức này nhận DataTable từ ngoài, không dùng _dataTable nội bộ)
         /// </summary>
-        public bool SaveAddedRows(DataTable table)
+        public bool SaveAddedRows()
         {
             // CHANGED: dùng DbClient.InTx
             return _db.InTx((cn, tx) =>
             {
                 int n = 0;
                 var phuongPhapXuat = CauHinhCuaHang.PhuongThucXuatKhoHienTai;
-                foreach (DataRow row in table.Rows)
+                foreach (DataRow row in _dataTable.Rows)
                 {
                     if (row.RowState != DataRowState.Added) continue;
+
+                    // Lấy ID_PHIEU_BAN từ hàng
+                    string idPhieuBan = Convert.ToString(row["ID_PHIEU_BAN"]);
+
                     if (phuongPhapXuat == CauHinhCuaHang.PhuongThucXuatKho.FIFO)
                     {
-                        XuatTheoFIFO(row, tx, Convert.ToString(row["ID_PHIEU_BAN"]));
+                        XuatTheoFIFO(row, tx, idPhieuBan);
                     }
                     else if (phuongPhapXuat == CauHinhCuaHang.PhuongThucXuatKho.ChonLo)
                     {
-                        XuatTheoChonLo(row, tx, Convert.ToString(row["ID_PHIEU_BAN"]));
+                        XuatTheoChonLo(row, tx, idPhieuBan);
                     }
 
 
                     n++;
                 }
+                // (Ghi chú: Phương thức này không gọi AcceptChanges() trên `table`
+                // vì `table` được truyền từ bên ngoài vào.)
                 return n;
             }) > 0;
         }

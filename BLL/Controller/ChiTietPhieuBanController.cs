@@ -107,12 +107,9 @@ namespace CuahangNongduoc.Controller
         // DAL ADO.NET (SqlClient) đã viết ở bước trước
         private readonly ChiTietPhieuBanDAL _dal = new ChiTietPhieuBanDAL();
 
-        // Bộ đệm hàng Added để Save() một lượt (thay cho DataService cũ)
-        private readonly DataTable _buffer;
-
         public ChiTietPhieuBanController()
         {
-            _buffer = CreateBufferSchema();
+            //_buffer = CreateBufferSchema();
         }
 
         /* ===================== BINDING HIỂN THỊ ===================== */
@@ -128,38 +125,17 @@ namespace CuahangNongduoc.Controller
         /* ===================== API GIỮ NGUYÊN CHO UI ===================== */
         public DataRow NewRow()
         {
-            return _buffer.NewRow();
+            return _dal.NewRow();
         }
         
         public void Add(DataRow row)
         {
-            // Đảm bảo row thuộc schema _buffer
-            if (row.Table != _buffer)
-            {
-                var newRow = _buffer.NewRow();
-                foreach (DataColumn col in _buffer.Columns)
-                    if (row.Table.Columns.Contains(col.ColumnName))
-                        newRow[col.ColumnName] = row[col.ColumnName];
-                _buffer.Rows.Add(newRow);
-            }
-            else
-            {
-                _buffer.Rows.Add(row);
-            }
+            _dal.Add(row);
         }
 
         public void Save()
         {
-            // Chỉ ghi các row trạng thái Added → DAL sẽ:
-            // 1) Trừ kho
-            // 2) Insert CHI_TIET_PHIEU_BAN (transaction)
-            bool ok = _dal.SaveAddedRows(_buffer);
-
-            if (ok)
-            {
-                _buffer.Clear();        // reset buffer sau khi đã commit
-                _buffer.AcceptChanges();
-            }
+            bool ok = _dal.SaveAddedRows();
         }
 
         /* ===================== TRẢ VỀ LIST DOMAIN OBJECT ===================== */
@@ -189,17 +165,17 @@ namespace CuahangNongduoc.Controller
             return _dal.TinhGiaFIFO(idSanPham);
         }
 
-        private static DataTable CreateBufferSchema()
-        {
-            // Tạo schema tối thiểu cần để Insert + cập nhật kho
-            var t = new DataTable("CHI_TIET_PHIEU_BAN");
-            t.Columns.Add("ID_PHIEU_BAN", typeof(string));
-            t.Columns.Add("ID_MA_SAN_PHAM", typeof(string));
-            t.Columns.Add("SO_LUONG", typeof(int));
-            t.Columns.Add("DON_GIA", typeof(decimal));
-            t.Columns.Add("THANH_TIEN", typeof(decimal));
-            return t;
-        }
+        //private static DataTable CreateBufferSchema()
+        //{
+        //    // Tạo schema tối thiểu cần để Insert + cập nhật kho
+        //    var t = new DataTable("CHI_TIET_PHIEU_BAN");
+        //    t.Columns.Add("ID_PHIEU_BAN", typeof(string));
+        //    t.Columns.Add("ID_MA_SAN_PHAM", typeof(string));
+        //    t.Columns.Add("SO_LUONG", typeof(int));
+        //    t.Columns.Add("DON_GIA", typeof(decimal));
+        //    t.Columns.Add("THANH_TIEN", typeof(decimal));
+        //    return t;
+        //}
 
         private static IList<ChiTietPhieuBan> MapToList(DataTable tbl)
         {
