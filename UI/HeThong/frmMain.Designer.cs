@@ -371,7 +371,8 @@ namespace CuahangNongduoc
             this.mnuBaocaoSoluongton,
             this.mnuSoLuongBan,
             this.toolStripSeparator5,
-            this.mnuSanphamHethan});
+            this.mnuSanphamHethan,
+            this.mnuChiPhiKhuyenMai});
             this.mnuBaocao.Image = global::CuahangNongduoc.Properties.Resources.report;
             this.mnuBaocao.Name = "mnuBaocao";
             this.mnuBaocao.Size = new System.Drawing.Size(111, 29);
@@ -950,12 +951,12 @@ namespace CuahangNongduoc
             this.toolStripStatusLabel2.Size = new System.Drawing.Size(181, 25);
             this.toolStripStatusLabel2.Text = "Cửa hàng nông dược";
             // 
-            // mnuChiPhiPhatSinh
+            // mnuChiPhiKhuyenMai
             // 
-            this.mnuChiPhiPhatSinh.Name = "mnuChiPhiPhatSinh";
-            this.mnuChiPhiPhatSinh.Size = new System.Drawing.Size(270, 34);
-            this.mnuChiPhiPhatSinh.Text = "Chi phí phát sinh";
-            this.mnuChiPhiPhatSinh.Click += new System.EventHandler(this.mnuChiPhiPhatSinh_Click);
+            this.mnuChiPhiKhuyenMai.Name = "mnuChiPhiKhuyenMai";
+            this.mnuChiPhiKhuyenMai.Size = new System.Drawing.Size(196, 26);
+            this.mnuChiPhiKhuyenMai.Text = "Chi phí và khuyến mãi";
+            this.mnuChiPhiKhuyenMai.Click += new System.EventHandler(this.mnuBaocaoChiphiKhuyenmai_Click);
             // 
             // frmMain
             // 

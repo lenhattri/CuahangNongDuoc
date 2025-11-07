@@ -1,81 +1,170 @@
 ﻿// DAL/DataLayer/NhaCungCapFactory.cs
+using CuahangNongduoc.BusinessObject;        // NEW: Thêm BusinessObject
+using CuahangNongduoc.DAL.Infrastructure;
+using CuahangNongduoc.Utils.Functions;       // NEW: Thêm để dùng ValidationRule
+using System;                                 // NEW
+using System.Collections.Generic;           // NEW: Thêm để dùng List
 using System.Data;
 using System.Data.SqlClient;
-using CuahangNongduoc.DAL.Infrastructure;
 
 namespace CuahangNongduoc.DataLayer
 {
+    // CHANGED: Đổi tên class
     public class NhaCungCapDAL
     {
-        private readonly DbClient _db = DbClient.Instance;            
-        private const string TABLE = "[dbo].[NHA_CUNG_CAP]";          
+        private readonly DbClient _db = DbClient.Instance;
+        private DataTable _table;                           // NEW: DataTable nội bộ
+        private const string SELECT_ALL = "SELECT * FROM NHA_CUNG_CAP"; // NEW
+
+        /* ==================== Helpers (NEW) ==================== */
+
+        private void EnsureSchema()
+        {
+            if (_table != null) return;
+            using (var cn = _db.Open())
+            using (var cmd = _db.Cmd(cn, SELECT_ALL + " WHERE 1=0", CommandType.Text))
+            using (var da = new SqlDataAdapter(cmd))
+            {
+                _table = new DataTable("NHA_CUNG_CAP");
+                da.FillSchema(_table, SchemaType.Source);
+            }
+        }
+
+        private SqlDataAdapter CreateAdapter(SqlConnection cn)
+        {
+            var da = new SqlDataAdapter
+            {
+                SelectCommand = _db.Cmd(cn, SELECT_ALL, CommandType.Text)
+            };
+            da.MissingSchemaAction = MissingSchemaAction.AddWithKey;
+            _ = new SqlCommandBuilder(da); // auto sinh Insert/Update/Delete
+            return da;
+        }
+
+        /* ==================== SELECTs ==================== */
 
         // Lấy toàn bộ danh sách NCC
         public DataTable DanhsachNCC()
         {
-            string sql = $"SELECT ID, HO_TEN, DIEN_THOAI, DIA_CHI FROM {TABLE}"; // CHANGED
-            return _db.ExecuteDataTable(sql, CommandType.Text);
+            // CHANGED: Dùng SELECT_ALL
+            var dt = _db.ExecuteDataTable(SELECT_ALL, CommandType.Text);
+            _table = dt; // NEW: đồng bộ
+            return dt;
         }
 
         // Lấy NCC theo ID
         public DataTable LayNCC(string id)
         {
-            string sql = $"SELECT ID, HO_TEN, DIEN_THOAI, DIA_CHI FROM {TABLE} WHERE ID = @Id"; // CHANGED
-            return _db.ExecuteDataTable(sql, CommandType.Text,
-                _db.P("@Id", SqlDbType.NVarChar, id, 50));                                       // CHANGED
+            // CHANGED: Dùng SELECT_ALL
+            const string sql = SELECT_ALL + " WHERE ID = @Id";
+            var dt = _db.ExecuteDataTable(sql, CommandType.Text,
+                _db.P("@Id", SqlDbType.NVarChar, id, 50));
+            _table = dt; // NEW: đồng bộ
+            return dt;
         }
 
         // Tìm theo địa chỉ (LIKE)
         public DataTable TimDiaChi(string diachi)
         {
-            string sql = $"SELECT ID, HO_TEN, DIEN_THOAI, DIA_CHI FROM {TABLE} WHERE DIA_CHI LIKE @DiaChi"; // CHANGED
-            var pattern = $"%{diachi ?? string.Empty}%";                                                     // NEW
-            return _db.ExecuteDataTable(sql, CommandType.Text,
-                _db.P("@DiaChi", SqlDbType.NVarChar, pattern, 255));                                        // CHANGED
+            // CHANGED: Dùng SELECT_ALL
+            const string sql = SELECT_ALL + " WHERE DIA_CHI LIKE @DiaChi";
+            var pattern = $"%{diachi ?? string.Empty}%";
+            var dt = _db.ExecuteDataTable(sql, CommandType.Text,
+                _db.P("@DiaChi", SqlDbType.NVarChar, pattern, 255));
+            _table = dt; // NEW: đồng bộ
+            return dt;
         }
 
         // Tìm theo họ tên (LIKE)
         public DataTable TimHoTen(string hoten)
         {
-            string sql = $"SELECT ID, HO_TEN, DIEN_THOAI, DIA_CHI FROM {TABLE} WHERE HO_TEN LIKE @HoTen"; // CHANGED
-            var pattern = $"%{hoten ?? string.Empty}%";                                                   // NEW
-            return _db.ExecuteDataTable(sql, CommandType.Text,
-                _db.P("@HoTen", SqlDbType.NVarChar, pattern, 200));                                      // CHANGED
+            // CHANGED: Dùng SELECT_ALL
+            const string sql = SELECT_ALL + " WHERE HO_TEN LIKE @HoTen";
+            var pattern = $"%{hoten ?? string.Empty}%";
+            var dt = _db.ExecuteDataTable(sql, CommandType.Text,
+                _db.P("@HoTen", SqlDbType.NVarChar, pattern, 200));
+            _table = dt; // NEW: đồng bộ
+            return dt;
         }
 
+        /* ==================== CRUD trực tiếp (Giữ lại) ==================== */
+
         // Thêm mới
-        public int Insert(BusinessObject.NhaCungCap ncc)
+        // CHANGED: Đổi return int -> bool
+        public bool Insert(NhaCungCap ncc)
         {
-            string sql = $@"
-                INSERT INTO {TABLE}(ID, HO_TEN, DIEN_THOAI, DIA_CHI)     -- CHANGED
+            const string sql = @"
+                INSERT INTO NHA_CUNG_CAP(ID, HO_TEN, DIEN_THOAI, DIA_CHI)
                 VALUES (@Id, @HoTen, @DienThoai, @DiaChi)";
-            return _db.ExecuteNonQuery(sql, CommandType.Text,             // CHANGED
+            // CHANGED: return > 0
+            return _db.ExecuteNonQuery(sql, CommandType.Text,
                 _db.P("@Id", SqlDbType.NVarChar, ncc.Id, 50),
                 _db.P("@HoTen", SqlDbType.NVarChar, ncc.HoTen, 200),
                 _db.P("@DienThoai", SqlDbType.NVarChar, ncc.DienThoai, 50),
-                _db.P("@DiaChi", SqlDbType.NVarChar, ncc.DiaChi, 255));
+                _db.P("@DiaChi", SqlDbType.NVarChar, ncc.DiaChi, 255)) > 0;
         }
 
         // Cập nhật
-        public int Update(BusinessObject.NhaCungCap ncc)
+        // CHANGED: Đổi return int -> bool
+        public bool Update(NhaCungCap ncc)
         {
-            string sql = $@"
-                UPDATE {TABLE}                                         -- CHANGED
+            const string sql = @"
+                UPDATE NHA_CUNG_CAP
                    SET HO_TEN=@HoTen, DIEN_THOAI=@DienThoai, DIA_CHI=@DiaChi
                  WHERE ID=@Id";
-            return _db.ExecuteNonQuery(sql, CommandType.Text,           // CHANGED
+            // CHANGED: return > 0
+            return _db.ExecuteNonQuery(sql, CommandType.Text,
                 _db.P("@HoTen", SqlDbType.NVarChar, ncc.HoTen, 200),
                 _db.P("@DienThoai", SqlDbType.NVarChar, ncc.DienThoai, 50),
                 _db.P("@DiaChi", SqlDbType.NVarChar, ncc.DiaChi, 255),
-                _db.P("@Id", SqlDbType.NVarChar, ncc.Id, 50));
+                _db.P("@Id", SqlDbType.NVarChar, ncc.Id, 50)) > 0;
         }
 
         // Xóa
-        public int Delete(string id)
+        // CHANGED: Đổi return int -> bool
+        public bool Delete(string id)
         {
-            string sql = $"DELETE FROM {TABLE} WHERE ID=@Id";           // CHANGED
+            const string sql = "DELETE FROM NHA_CUNG_CAP WHERE ID=@Id";
+            // CHANGED: return > 0
             return _db.ExecuteNonQuery(sql, CommandType.Text,
-                _db.P("@Id", SqlDbType.NVarChar, id, 50));
+                _db.P("@Id", SqlDbType.NVarChar, id, 50)) > 0;
         }
+
+        /* ==================== DataTable pattern (NEW) ==================== */
+
+        public DataRow NewRow()
+        {
+            EnsureSchema();
+            return _table.NewRow();
+        }
+
+        public void Add(DataRow row)
+        {
+            EnsureSchema();
+            _table.Rows.Add(row);
+        }
+
+        public bool Save()
+        {
+            EnsureSchema();
+
+            // Gọi helper tĩnh để thực hiện logic Save
+            return DataAccessHelper.PerformSave(
+                _table,             // DataTable nội bộ
+                _nhaCungCapRules,   // Danh sách quy tắc
+                this.CreateAdapter, // Phương thức tạo Adapter
+                _db                 // Instance DbClient
+            );
+        }
+
+        /// <summary>
+        /// Danh sách các quy tắc kiểm tra hợp lệ cho bảng NHA_CUNG_CAP
+        /// </summary>
+        private static readonly List<ValidationRule> _nhaCungCapRules = new List<ValidationRule>
+        {
+            new ValidationRule("ID", ValidationType.NotEmpty, "Mã nhà cung cấp không được để trống."),
+            new ValidationRule("HO_TEN", ValidationType.NotEmpty, "Tên nhà cung cấp không được để trống.")
+            // Các cột DIEN_THOAI, DIA_CHI được phép trống
+        };
     }
 }

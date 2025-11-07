@@ -11,6 +11,7 @@ using CuahangNongduoc.BLL.Helpers;
 using CuahangNongduoc.UI.PhieuThuChi;
 using CuahangNongduoc.BLL.Controller;
 using System.Linq;
+using CuahangNongduoc.Utils;
 
 namespace CuahangNongduoc
 {
@@ -199,6 +200,7 @@ namespace CuahangNongduoc
 
             DataRow row = ctrlPhieuBan.NewRow();
             row["ID"] = txtMaPhieu.Text;
+            row["ID_NHAN_VIEN"] = Session.CurrentUser.Id;
             row["ID_KHACH_HANG"] = cmbKhachHang.SelectedValue;
             row["NGAY_BAN"] = dtNgayLapPhieu.Value.Date;
             row["TONG_TIEN"] = numTongTien.Value;
