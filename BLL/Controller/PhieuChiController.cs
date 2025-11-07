@@ -111,16 +111,12 @@ namespace CuahangNongduoc.Controller
         // DAL ADO.NET (SqlClient) đã viết ở bước trước
         private readonly PhieuChiFactory _dal = new PhieuChiFactory();
 
-        // Bảng hiện tại cho binding + add (thay cho DataService cũ)
-        private DataTable _currentTable;
-
         /* ===================== BINDING HIỂN THỊ ===================== */
         public void HienthiPhieuChi(BindingNavigator bn, DataGridView dg, ComboBox cmb, TextBox txtId, DateTimePicker dt, NumericUpDown numTongTien, TextBox txtGhichu)
         {
-            _currentTable = _dal.DanhsachPhieuChi();
             var bs = new BindingSource
             {
-                DataSource = _currentTable
+                DataSource = _dal.DanhsachPhieuChi()
             };
             bn.BindingSource = bs;
             dg.DataSource = bs;
@@ -143,10 +139,9 @@ namespace CuahangNongduoc.Controller
 
         public void TimPhieuChi(BindingNavigator bn, DataGridView dg, ComboBox cmb, TextBox txtId, DateTimePicker dt, NumericUpDown numTongTien, TextBox txtGhichu, int lydo, DateTime ngay)
         {
-            _currentTable = _dal.TimPhieuChi(lydo, ngay);
             var bs = new BindingSource
             {
-                DataSource = _currentTable
+                DataSource = _dal.TimPhieuChi(lydo, ngay)
             };
             bn.BindingSource = bs;
             dg.DataSource = bs;
@@ -170,37 +165,20 @@ namespace CuahangNongduoc.Controller
         /* ===================== API GIỮ NGUYÊN CHO UI ===================== */
         public DataRow NewRow()
         {
-            if (_currentTable == null)
-                throw new InvalidOperationException("Phải load dữ liệu trước bằng HienthiPhieuChi hoặc TimPhieuChi.");
-
-            return _currentTable.NewRow();
+            return _dal.NewRow();
         }
 
         public void Add(DataRow row)
         {
-            if (_currentTable == null)
-                throw new InvalidOperationException("Phải load dữ liệu trước bằng HienthiPhieuChi hoặc TimPhieuChi.");
-
             if (row == null)
                 throw new ArgumentNullException(nameof(row));
 
-            _currentTable.Rows.Add(row);
+            _dal.Add(row);
         }
 
         public bool Save()
         {
-            if (_currentTable == null)
-                throw new InvalidOperationException("Phải load dữ liệu trước bằng HienthiPhieuChi hoặc TimPhieuChi.");
-
-            // Chỉ ghi các row trạng thái Added → DAL sẽ Insert (transaction)
-            bool ok = _dal.SaveChanges(_currentTable);
-
-            if (ok)
-            {
-                _currentTable.AcceptChanges(); // reset RowState sau khi commit
-            }
-
-            return ok;
+            return _dal.Save();
         }
 
         /* ===================== TRẢ VỀ SINGLE DOMAIN OBJECT ===================== */

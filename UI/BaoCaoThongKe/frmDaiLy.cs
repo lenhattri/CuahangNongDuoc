@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CuahangNongduoc.Utils;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -18,7 +19,7 @@ namespace CuahangNongduoc
 
         private void frmKhachHang_Load(object sender, EventArgs e)
         {
-
+            AppTheme.ApplyTheme(this);
             ctrl.HienthiDaiLyDataGridview(dataGridView, bindingNavigator);
         }
 
@@ -30,11 +31,15 @@ namespace CuahangNongduoc
 
         private void bindingNavigatorAddNewItem_Click(object sender, EventArgs e)
         {
+            DataRow row = ctrl.NewRow();
             long maso = ThamSo.KhachHang;
             ThamSo.KhachHang = maso + 1;
 
-            DataRowView row = (DataRowView)bindingNavigator.BindingSource.AddNew();
             row["ID"] = maso;
+
+            ctrl.Add(row);
+            bindingNavigator.BindingSource.MoveLast();
+
         }
 
         private void toolThoat_Click(object sender, EventArgs e)

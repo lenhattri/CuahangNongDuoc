@@ -1,135 +1,30 @@
-
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Text;
-//using System.Data;
-//using System.Data.OleDb;
-
-//namespace CuahangNongduoc.DataLayer
-//{
-//    public class PhieuChiFactory
-//    {
-//        DataService m_Ds = new DataService();
-
-//        public DataTable TimPhieuChi(int lydo, DateTime ngay)
-//        {
-//            OleDbCommand cmd = new OleDbCommand("SELECT * FROM PHIEU_CHI WHERE ID_LY_DO_CHI = @lydo AND NGAY_CHI = @ngay");
-//            cmd.Parameters.Add("lydo", OleDbType.Integer).Value = lydo;
-//            cmd.Parameters.Add("ngay", OleDbType.Date).Value = ngay;
-
-//            m_Ds.Load(cmd);
-
-//            return m_Ds;
-//        }
-
-//        public DataTable DanhsachPhieuChi()
-//        {
-//            OleDbCommand cmd = new OleDbCommand("SELECT * FROM PHIEU_CHI ");
-//            m_Ds.Load(cmd);
-
-//            return m_Ds;
-//        }
-
-//        public DataTable LayPhieuChi(String id)
-//        {
-//            OleDbCommand cmd = new OleDbCommand("SELECT * FROM PHIEU_CHI WHERE ID = @id");
-//            cmd.Parameters.Add("id", OleDbType.VarChar,50).Value = id;
-//            m_Ds.Load(cmd);
-//            return m_Ds;
-//        }
-
-
-//        public static long LayTongTien(String lydo, int thang, int nam)
-//        {
-//            DataService ds = new DataService();
-//            OleDbCommand cmd = new OleDbCommand("SELECT SUM(TONG_TIEN) FROM PHIEU_CHI WHERE ID_LY_DO_CHI = @lydo AND MONTH(NGAY_CHI)=@thang AND YEAR(NGAY_CHI)= @nam");
-//            cmd.Parameters.Add("lydo", OleDbType.VarChar, 50).Value = lydo;
-//            cmd.Parameters.Add("thang", OleDbType.Integer).Value = thang;
-//            cmd.Parameters.Add("nam", OleDbType.Integer).Value = nam;
-
-//            object obj = ds.ExecuteScalar(cmd);
-
-//            if (obj == null)
-//                return 0;
-//            else
-//                return Convert.ToInt64(obj);
-//        }
-
-//        public DataRow NewRow()
-//        {
-//            return m_Ds.NewRow();
-//        }
-//        public void Add(DataRow row)
-//        {
-//            m_Ds.Rows.Add(row);
-//        }
-//       public bool Save()
-//        {
-
-//            return m_Ds.ExecuteNoneQuery() > 0;
-//        }
-//    }
-//}
-using System;
-using System.Configuration;
-using System.Data;
-using System.Data.SqlClient;
-
-﻿// DAL/DataLayer/PhieuChiFactory.cs
+// DAL/DataLayer/PhieuChiFactory.cs
 using System;
 using System.Data;
 using System.Data.SqlClient;
-using CuahangNongduoc.DAL.Infrastructure; 
+using CuahangNongduoc.DAL.Infrastructure;
+using System.Collections.Generic;      // NEW: Thêm để dùng List
+using CuahangNongduoc.Utils.Functions; // NEW: Thêm để dùng DataAccessHelper
+using System.Windows.Forms;             // NEW: Thêm để dùng ValidationRule
 
 namespace CuahangNongduoc.DataLayer
 {
     public class PhieuChiFactory
     {
+        // REMOVED: Bỏ _connectionString
 
-        private readonly string _connectionString = ConfigurationManager.ConnectionStrings["ConnStr"].ConnectionString;
-
-        /// <summary>
-        /// Retrieves payment vouchers filtered by reason ID and date.
-        /// </summary>
-        /// <param name="lydo">The ID of the reason for payment.</param>
-        /// <param name="ngay">The payment date.</param>
-        /// <returns>A DataTable containing the matching records.</returns>
-        //public DataTable TimPhieuChi(int lydo, DateTime ngay)
-        //{
-        //    var dataTable = new DataTable();
-        //    using (var connection = new SqlConnection(_connectionString))
-        //    using (var command = new SqlCommand("SELECT * FROM PHIEU_CHI WHERE ID_LY_DO_CHI = @lydo AND NGAY_CHI = @ngay", connection))
-        //    {
-        //        command.Parameters.Add(new SqlParameter("@lydo", SqlDbType.Int) { Value = lydo });
-        //        command.Parameters.Add(new SqlParameter("@ngay", SqlDbType.Date) { Value = ngay });
-
-        //        using (var adapter = new SqlDataAdapter(command))
-        //        {
-        //            adapter.Fill(dataTable);
-        //        }
-        //    }
-
-        //    return dataTable; 
-        //}
-
-        
-        private readonly DbClient _db = DbClient.Instance;   // CHANGED
-        private DataTable _table;                            // NEW: DataTable nội bộ cho pattern NewRow/Add/Save
-
-        private const string SELECT_ALL = "SELECT * FROM PHIEU_CHI"; // giữ nguyên SELECT * để CommandBuilder sinh CRUD
+        private readonly DbClient _db = DbClient.Instance;
+        private DataTable _table; // DataTable nội bộ cho pattern NewRow/Add/Save
+        private const string SELECT_ALL = "SELECT * FROM PHIEU_CHI";
 
         /* ===================== Helpers ===================== */
 
         private void EnsureSchema() // NEW
         {
             if (_table != null) return;
-            using (var cn = _db.Open())
-            using (var cmd = _db.Cmd(cn, SELECT_ALL + " WHERE 1=0", CommandType.Text))
-            using (var da = new SqlDataAdapter(cmd))
-            {
-                _table = new DataTable("PHIEU_CHI");
-                da.FillSchema(_table, SchemaType.Source); // CHANGED: lấy schema rỗng rõ ràng
-            }
+            // Dùng ExecuteDataTable với 1=0 để chỉ lấy schema
+            _table = _db.ExecuteDataTable(SELECT_ALL + " WHERE 1=0", CommandType.Text);
+            _table.TableName = "PHIEU_CHI";
         }
 
         private SqlDataAdapter CreateAdapter(SqlConnection cn) // NEW: phục vụ Save()
@@ -143,93 +38,48 @@ namespace CuahangNongduoc.DataLayer
             return da;
         }
 
-        /* ===================== SELECTs ===================== */
-
-        // Tìm theo lý do + NGAY_CHI (dùng range [@start,@end) để sargable)
-        public DataTable TimPhieuChi(int lydo, DateTime ngay)
-        {
-            var start = ngay.Date;              // NEW
-            var end = start.AddDays(1);       // NEW
-
-            const string sql = @"
-                SELECT * FROM PHIEU_CHI
-                WHERE ID_LY_DO_CHI = @lydo
-                  AND NGAY_CHI >= @start AND NGAY_CHI < @end";            // CHANGED
-
-            var dt = _db.ExecuteDataTable(sql, CommandType.Text,
-                _db.P("@lydo", SqlDbType.Int, lydo),                // CHANGED: đúng kiểu Int
-                _db.P("@start", SqlDbType.DateTime, start),
-                _db.P("@end", SqlDbType.DateTime, end));
-            _table = dt; // đồng bộ cho NewRow/Add/Save
-            return dt;
-
-        }
+        /* ===================== SELECTs (Refactored) ===================== */
 
         /// <summary>
-        /// Retrieves all payment vouchers.
+        /// Lấy tất cả phiếu chi.
         /// </summary>
-        /// <returns>A DataTable containing all records.</returns>
         public DataTable DanhsachPhieuChi()
         {
-
-            var dataTable = new DataTable();
-            using (var connection = new SqlConnection(_connectionString))
-            using (var command = new SqlCommand("SELECT * FROM PHIEU_CHI", connection))
-            using (var adapter = new SqlDataAdapter(command))
-            {
-                adapter.Fill(dataTable);
-            }
-
-            return dataTable;
+            // CHANGED: Dùng DbClient.ExecuteDataTable và đồng bộ _table
+            var dt = _db.ExecuteDataTable(SELECT_ALL, CommandType.Text);
+            dt.TableName = "PHIEU_CHI";
+            _table = dt;
+            return dt;
         }
 
         /// <summary>
-        /// Retrieves a specific payment voucher by ID.
+        /// Tìm phiếu chi theo lý do và ngày (chính xác trong ngày).
         /// </summary>
-        /// <param name="id">The ID of the payment voucher.</param>
-        /// <returns>A DataTable containing the matching record.</returns>
-        //public DataTable LayPhieuChi(string id)
-        //{
-        //    var dataTable = new DataTable();
-        //    using (var connection = new SqlConnection(_connectionString))
-        //    using (var command = new SqlCommand("SELECT * FROM PHIEU_CHI WHERE ID = @id", connection))
-        //    {
-        //        using (var adapter = new SqlDataAdapter(command))
-        //        {
-        //            command.Parameters.Add("@id", SqlDbType.VarChar, 50).Value = id;
-        //            adapter.Fill(dataTable);
-        //        }
-        //    }
+        public DataTable TimPhieuChi(int lydo, DateTime ngay)
+        {
+            // <<< SỬA LỖI: Dùng khoảng thời gian [start, end)
+            var start = ngay.Date;
+            var end = start.AddDays(1);
 
-        //    return dataTable;
-        //}
+            const string sql = @"
+                SELECT * FROM PHIEU_CHI 
+                WHERE ID_LY_DO_CHI = @lydo 
+                  AND NGAY_CHI >= @start 
+                  AND NGAY_CHI < @end";
+
+            // CHANGED: Dùng DbClient.ExecuteDataTable
+            var dt = _db.ExecuteDataTable(sql, CommandType.Text,
+                _db.P("@lydo", SqlDbType.Int, lydo),
+                _db.P("@start", SqlDbType.DateTime, start),
+                _db.P("@end", SqlDbType.DateTime, end));
+
+            dt.TableName = "PHIEU_CHI";
+            _table = dt; // Đồng bộ
+            return dt;
+        }
 
         /// <summary>
-        /// Calculates the total amount for a given reason, month, and year.
-        /// </summary>
-        /// <param name="lydo">The ID of the reason for payment (as string).</param>
-        /// <param name="thang">The month (1-12).</param>
-        /// <param name="nam">The year.</param>
-        /// <returns>The total amount as long.</returns>
-        //public static long LayTongTien(string lydo, int thang, int nam)
-        //{
-        //    string connectionString = ConfigurationManager.ConnectionStrings["ConnStr"].ConnectionString;
-        //    using (var connection = new SqlConnection(connectionString))
-        //    using (var command = new SqlCommand("SELECT SUM(TONG_TIEN) FROM PHIEU_CHI WHERE ID_LY_DO_CHI = @lydo AND MONTH(NGAY_CHI)=@thang AND YEAR(NGAY_CHI)= @nam", connection))
-        //    {
-        //        command.Parameters.Add("@lydo", SqlDbType.VarChar, 50).Value = lydo;
-        //        command.Parameters.Add("@thang", SqlDbType.Int).Value = thang;
-        //        command.Parameters.Add("@nam", SqlDbType.Int).Value = nam ;
-
-        //        connection.Open();
-        //        var result = command.ExecuteScalar();
-
-        //        return result == null || result == DBNull.Value ? 0L : Convert.ToInt64(result);
-        //    }
-        //}
-
-        /// <summary>
-        /// Creates a new DataRow for a payment voucher.
+        /// Lấy phiếu chi theo ID.
         /// </summary>
         /// <returns>A new DataRow with the schema of PHIEU_CHI table.</returns>
         //public DataRow NewRow()
@@ -291,109 +141,85 @@ namespace CuahangNongduoc.DataLayer
 
         public DataTable LayPhieuChi(string id)
         {
-            const string sql = "SELECT * FROM PHIEU_CHI WHERE ID = @id";
+            // CHANGED: Dùng DbClient.ExecuteDataTable
+            const string sql = SELECT_ALL + " WHERE ID = @id";
             var dt = _db.ExecuteDataTable(sql, CommandType.Text,
-                _db.P("@id", SqlDbType.NVarChar, id, 50));                 // CHANGED: tham số hoá, Unicode-safe
-            _table = dt;
+                _db.P("@id", SqlDbType.VarChar, id, 50)); // Giả định ID là VarChar(50)
+
+            dt.TableName = "PHIEU_CHI";
+            _table = dt; // Đồng bộ
             return dt;
         }
 
-        public static long LayTongTien(string lydo, int thang, int nam)
+        /// <summary>
+        /// Lấy tổng tiền chi theo lý do, tháng, năm.
+        /// </summary>
+        public static long LayTongTien(int lydo, int thang, int nam)
         {
-            var db = DbClient.Instance;                                     // CHANGED
+            // <<< SỬA LỖI: Nhất quán kiểu dữ liệu, dùng int cho lydo
+            var db = DbClient.Instance; // Lấy instance vì là hàm static
             const string sql = @"
-                SELECT SUM(TONG_TIEN)
-                FROM PHIEU_CHI
-                WHERE ID_LY_DO_CHI = @lydo
-                  AND MONTH(NGAY_CHI) = @thang
-                  AND YEAR(NGAY_CHI)  = @nam";
+                SELECT SUM(TONG_TIEN) FROM PHIEU_CHI 
+                WHERE ID_LY_DO_CHI = @lydo 
+                  AND MONTH(NGAY_CHI) = @thang 
+                  AND YEAR(NGAY_CHI) = @nam";
 
-            // Nếu ID_LY_DO_CHI là INT trong DB, có thể đổi sang SqlDbType.Int và Convert.ToInt32(lydo)
-            var obj = db.ExecuteScalar<object>(sql, CommandType.Text,
-                db.P("@lydo", SqlDbType.NVarChar, lydo, 50),              // CHANGED: giữ nguyên kiểu chuỗi 
+            var result = db.ExecuteScalar<object>(sql, CommandType.Text,
+                db.P("@lydo", SqlDbType.Int, lydo), // Sửa thành Int
                 db.P("@thang", SqlDbType.Int, thang),
                 db.P("@nam", SqlDbType.Int, nam));
-            return (obj == null || obj == DBNull.Value) ? 0L : Convert.ToInt64(obj);
+
+            return result == null || result == DBNull.Value ? 0L : Convert.ToInt64(result);
         }
 
+        /* ===================== DataTable pattern (Refactored) ===================== */
+
+        /// <summary>
+        /// Tạo một DataRow mới theo schema PHIEU_CHI.
+        /// </summary>
         public DataRow NewRow()
         {
-            EnsureSchema(); // CHANGED
+            // CHANGED: Chỉ lấy schema, không lấy data
+            EnsureSchema();
             return _table.NewRow();
         }
 
+        /// <summary>
+        /// Thêm một DataRow vào DataTable nội bộ.
+        /// </summary>
         public void Add(DataRow row)
         {
-            EnsureSchema(); // CHANGED
+            EnsureSchema();
             _table.Rows.Add(row);
         }
 
-        public bool Save()
+        /* ===================== SAVE (DataAccessHelper) ===================== */
+
+        // NEW: Danh sách quy tắc kiểm tra hợp lệ
+        private static readonly List<ValidationRule> _phieuChiRules = new List<ValidationRule>
         {
-            // thay m_Ds.ExecuteNoneQuery()
-            EnsureSchema();
-            using (var cn = _db.Open())
-            using (var da = CreateAdapter(cn))
-            {
-                return da.Update(_table) > 0;
-
-            }
-        }
-
-        public int Delete(string id, SqlTransaction tx = null)
-        {
-            const string sql = @"DELETE FROM PHIEU_CHI WHERE ID = @ID";
-
-            using (var cmd = new SqlCommand(sql, tx?.Connection, tx))
-            {
-                cmd.Parameters.Add("@ID", SqlDbType.VarChar, 50).Value = id;
-                return cmd.ExecuteNonQuery();
-            }
-        }
+            new ValidationRule("ID", ValidationType.NotEmpty, "Số phiếu chi không được để trống."),
+            new ValidationRule("ID_LY_DO_CHI", ValidationType.NotEmpty, "Lý do chi không được để trống."),
+            new ValidationRule("NGAY_CHI", ValidationType.NotEmpty, "Ngày chi không được để trống."),
+            new ValidationRule("TONG_TIEN", ValidationType.NotEmpty, "Tổng tiền không được để trống.")
+        };
 
         /// <summary>
-        /// Thay cho adapter.Update(): duyệt bảng, thêm records trong 1 transaction.
-        /// Chỉ xử lý các row trạng thái Added (giống code cũ).
+        /// Lưu tất cả thay đổi (Thêm, Sửa, Xóa) vào CSDL.
         /// </summary>
-        public bool SaveChanges(DataTable table)
+        public bool Save()
         {
-            using (var conn = new SqlConnection(_connectionString))
-            {
-                conn.Open();
-                using (var tx = conn.BeginTransaction())
-                {
-                    try
-                    {
-                        int totalAffected = 0;
-                        foreach (DataRow row in table.Rows)
-                        {
-                            switch (row.RowState)
-                            {
-                                case DataRowState.Added:
-                                    totalAffected += Insert(row, tx);
-                                    break;
-                                case DataRowState.Modified:
-                                    totalAffected += Update(row, tx);
-                                    break;
-                                case DataRowState.Deleted:
-                                    var originalId = row["ID", DataRowVersion.Original].ToString();
-                                    totalAffected += Delete(originalId, tx);
-                                    break;
-                            }
-                        }
+            // REMOVED: Toàn bộ logic Insert, Update, Delete, SaveChanges thủ công
+            // CHANGED: Thay bằng DataAccessHelper
+            EnsureSchema();
+            if (_table == null) return false;
 
-                        tx.Commit();
-                        return totalAffected > 0;
-                    }
-                    catch
-                    {
-                        tx.Rollback();
-                        throw; // cho BLL bắt và báo lỗi UI
-                    }
-                }
-            }
+            return DataAccessHelper.PerformSave(
+                _table,
+                _phieuChiRules,
+                this.CreateAdapter,
+                _db
+            );
         }
-
-
     }
 }

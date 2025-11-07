@@ -45,14 +45,17 @@ namespace CuahangNongduoc
             long maso = ThamSo.NhaCungCap;
             ThamSo.NhaCungCap = maso + 1;
 
-            DataRowView row = (DataRowView)bindingNavigator.BindingSource.AddNew();
+            DataRow row = ctrl.NewRow();
             row["ID"] = maso;
-            
+
+            ctrl.Add(row);
+            bindingNavigator.BindingSource.MoveLast();
         }
 
         private void toolLuu_Click(object sender, EventArgs e)
         {
             bindingNavigatorPositionItem.Focus();
+            ctrl.Save();
         }
 
         private void toolThoat_Click(object sender, EventArgs e)

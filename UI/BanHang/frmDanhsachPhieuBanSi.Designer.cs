@@ -45,6 +45,7 @@
             this.bindingNavigatorDeleteItem = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolIn = new System.Windows.Forms.ToolStripButton();
+            this.toolTimKiem = new System.Windows.Forms.ToolStripButton();
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.colId = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colKhachhang = new System.Windows.Forms.DataGridViewComboBoxColumn();
@@ -52,7 +53,6 @@
             this.colTongTien = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colDaTra = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colConNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.toolTimKiem = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.bindingNavigator)).BeginInit();
             this.bindingNavigator.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
@@ -124,6 +124,7 @@
             // 
             this.bindingNavigatorPositionItem.AccessibleName = "Position";
             this.bindingNavigatorPositionItem.AutoSize = false;
+            this.bindingNavigatorPositionItem.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.bindingNavigatorPositionItem.Name = "bindingNavigatorPositionItem";
             this.bindingNavigatorPositionItem.Size = new System.Drawing.Size(50, 23);
             this.bindingNavigatorPositionItem.Text = "0";
@@ -201,10 +202,21 @@
             this.toolIn.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.toolIn.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolIn.Name = "toolIn";
-            this.toolIn.Size = new System.Drawing.Size(55, 43);
+            this.toolIn.Size = new System.Drawing.Size(54, 43);
             this.toolIn.Text = "Trang in";
             this.toolIn.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.toolIn.Click += new System.EventHandler(this.toolIn_Click);
+            // 
+            // toolTimKiem
+            // 
+            this.toolTimKiem.Image = global::CuahangNongduoc.Properties.Resources.find;
+            this.toolTimKiem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.toolTimKiem.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolTimKiem.Name = "toolTimKiem";
+            this.toolTimKiem.Size = new System.Drawing.Size(61, 43);
+            this.toolTimKiem.Text = "Tìm kiếm";
+            this.toolTimKiem.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.toolTimKiem.Click += new System.EventHandler(this.toolTimKiem_Click);
             // 
             // dataGridView
             // 
@@ -269,17 +281,6 @@
             this.colConNo.Name = "colConNo";
             this.colConNo.ReadOnly = true;
             // 
-            // toolTimKiem
-            // 
-            this.toolTimKiem.Image = global::CuahangNongduoc.Properties.Resources.find;
-            this.toolTimKiem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.toolTimKiem.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolTimKiem.Name = "toolTimKiem";
-            this.toolTimKiem.Size = new System.Drawing.Size(61, 43);
-            this.toolTimKiem.Text = "Tìm kiếm";
-            this.toolTimKiem.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.toolTimKiem.Click += new System.EventHandler(this.toolTimKiem_Click);
-            // 
             // frmDanhsachPhieuBanSi
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -289,7 +290,7 @@
             this.Controls.Add(this.bindingNavigator);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmDanhsachPhieuBanSi";
-            this.Text = "DANH SACH PHIEU BAN SI";
+            this.Text = "DANH SÁCH PHIẾU BÁN SỈ";
             this.Load += new System.EventHandler(this.frmDanhsachPhieuNhap_Load);
             ((System.ComponentModel.ISupportInitialize)(this.bindingNavigator)).EndInit();
             this.bindingNavigator.ResumeLayout(false);

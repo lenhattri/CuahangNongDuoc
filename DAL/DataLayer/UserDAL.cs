@@ -1,10 +1,12 @@
 ﻿// DAL/DataLayer/UserDAL.cs
+using BCrypt.Net;                                        // CHANGED: BCrypt.Net-Next (nuget)
+using CuahangNongduoc.DAL.Infrastructure;                 // CHANGED: dùng DbClient
+using CuahangNongduoc.Utils.Functions;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Windows.Forms;
-using CuahangNongduoc.DAL.Infrastructure;                 // CHANGED: dùng DbClient
-using BCrypt.Net;                                        // CHANGED: BCrypt.Net-Next (nuget)
 
 namespace CuahangNongduoc.DAL.DataLayer
 {
@@ -97,6 +99,47 @@ namespace CuahangNongduoc.DAL.DataLayer
         {
             EnsureSchema();
             if (_dataTable.Rows.Count == 0) return false;
+
+            bool allRowsValid = true;
+
+            try
+            {
+                // Duyệt qua tất cả các dòng và kiểm tra
+                foreach (DataRow row in _dataTable.Rows)
+                {
+                    // Chỉ kiểm tra các hàng đã thay đổi
+                    if (row.RowState == DataRowState.Unchanged) continue;
+
+                    // 1. Kiểm tra các quy tắc chung (Họ tên, Tên ĐN, Quyền)
+                    if(ValidationRule.ValidateRow(row, _userRules) == false)
+                    {
+                        allRowsValid = false; 
+                        break;
+                    }
+
+                    // 2. <<< THÊM LẠI: Kiểm tra quy tắc đặc biệt (Mật khẩu) >>>
+                    if (row.RowState == DataRowState.Added)
+                    {
+                        var passValue = row["MAT_KHAU"];
+                        if (passValue == DBNull.Value || string.IsNullOrWhiteSpace(passValue.ToString()))
+                        {
+                            // Đây là lỗi bị thiếu mà code của bạn không bắt được
+                            throw new Exception("Mật khẩu là bắt buộc khi tạo người dùng mới.");
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Hiển thị lỗi validation và dừng lại
+                MessageBox.Show(ex.Message, "Lỗi Dữ Liệu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
+
+            if(!allRowsValid)
+            {
+                return false;
+            }
 
             return _db.InTx((cn, tx) =>
             {
@@ -212,6 +255,30 @@ namespace CuahangNongduoc.DAL.DataLayer
             if (rowToUpdate == null)
                 throw new InvalidOperationException($"Không tìm thấy người dùng với ID = {id} để cập nhật.");
 
+            bool allRowsValid = true;
+
+            try
+            {
+                // 1. Chỉ kiểm tra các quy tắc chung TRÊN 'rowToUpdate'
+                // (Không cần lặp lại _dataTable)
+                if(ValidationRule.ValidateRow(rowToUpdate, _userRules) == false)
+                    allRowsValid = false;
+
+                // 2. Khi SỬA, chúng ta không cần kiểm tra mật khẩu
+                // (logic "passChanged" bên dưới đã xử lý việc này)
+                // Nếu bạn muốn bắt buộc người dùng phải nhập lại mật khẩu khi sửa,
+                // hãy thêm logic đó vào đây.
+            }
+            catch (Exception ex)
+            {
+                // Hiển thị lỗi validation và dừng lại
+                MessageBox.Show(ex.Message, "Lỗi Dữ Liệu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return; // Dừng, không lưu
+            }
+
+            if (!allRowsValid)
+                return;
+
             _db.InTx((cn, tx) =>
             {
                 // NV
@@ -290,5 +357,43 @@ namespace CuahangNongduoc.DAL.DataLayer
                 return 2;
             });
         }
+
+        private static readonly List<ValidationRule> _userRules = new List<ValidationRule>
+        {
+            new ValidationRule("HO_TEN", ValidationType.NotEmpty, "Họ tên không được để trống."),
+            new ValidationRule("TEN_DANG_NHAP", ValidationType.NotEmpty, "Tên đăng nhập không được để trống."),
+            new ValidationRule("QUYEN", ValidationType.NotEmpty, "Quyền người dùng không được để trống.")
+            // Mật khẩu sẽ được kiểm tra riêng bên dưới
+        };
+
+        // NEW: Hàm helper để chạy validation cho một hàng
+        //private void ValidateRow(DataRow row)
+        //{
+        //    // Chỉ kiểm tra các hàng đã thay đổi
+        //    if (row.RowState != DataRowState.Added && row.RowState != DataRowState.Modified)
+        //        return;
+
+        //    foreach (var rule in _userRules)
+        //    {
+        //        if (rule.Type == ValidationType.NotEmpty)
+        //        {
+        //            var value = row[rule.ColumnName];
+        //            if (value == DBNull.Value || string.IsNullOrWhiteSpace(value.ToString()))
+        //            {
+        //                throw new Exception(rule.ErrorMessage);
+        //            }
+        //        }
+        //    }
+
+        //    // Kiểm tra đặc biệt: Mật khẩu là bắt buộc KHI THÊM MỚI
+        //    if (row.RowState == DataRowState.Added)
+        //    {
+        //        var passValue = row["MAT_KHAU"];
+        //        if (passValue == DBNull.Value || string.IsNullOrWhiteSpace(passValue.ToString()))
+        //        {
+        //            throw new Exception("Mật khẩu là bắt buộc khi tạo người dùng mới.");
+        //        }
+        //    }
+        //}
     }
 }

@@ -66,22 +66,46 @@ namespace CuahangNongduoc.DataLayer
         public DataTable LayDanhSachMaTheoSanPham(string idSanPham)
         {
             const string sql = @"
-            SELECT ID, SO_LUONG, GIA_NHAP, NGAY_HET_HAN
+            SELECT ID, SO_LUONG, DON_GIA_NHAP, NGAY_HET_HAN
             FROM MA_SAN_PHAM
-            WHERE ID_SAN_PHAM = @idSanPham AND SO_LUONG_TON > 0
+            WHERE ID_SAN_PHAM = @idSanPham AND SO_LUONG > 0
             ORDER BY NGAY_HET_HAN ASC";
 
             return _db.ExecuteDataTable(sql, CommandType.Text,
                 _db.P("@idSanPham", SqlDbType.VarChar, idSanPham, 50));
         }
+        public string LayIdSanPhamTuMaSanPham(string idMaSanPham)
+        {
+            const string sql = @"
+            SELECT ID_SAN_PHAM
+            FROM MA_SAN_PHAM
+            WHERE ID = @idMaSanPham";
+            DataTable dt =_db.ExecuteDataTable(sql, CommandType.Text,
+                _db.P("@idMaSanPham", SqlDbType.VarChar, idMaSanPham, 50)
+                );
+            if (dt.Rows.Count > 0)
+                return Convert.ToString(dt.Rows[0]["ID_SAN_PHAM"]);
+            else
+                return string.Empty;
+        }
         public DataTable LayThongTinMotLo(string idMaSanPham)
         {
             const string sql = @"
-            SELECT ID, ID_SAN_PHAM, SO_LUONG, GIA_NHAP, NGAY_HET_HAN
+            SELECT ID, ID_SAN_PHAM, SO_LUONG, DON_GIA_NHAP, NGAY_HET_HAN
             FROM MA_SAN_PHAM
             WHERE ID = @idMaSanPham";
             return _db.ExecuteDataTable(sql, CommandType.Text,
                 _db.P("@idMaSanPham", SqlDbType.VarChar, idMaSanPham, 50));
+        }
+        public decimal TinhTongThanhTienTheoPhieu(string maPhieuBan)
+        {
+            const string sql = @"
+            SELECT SUM(THANH_TIEN)
+            FROM CHI_TIET_PHIEU_BAN
+            WHERE ID_PHIEU_BAN = @maPhieuBan";
+            decimal? result = _db.ExecuteScalar<decimal>(sql, CommandType.Text,
+                _db.P("@maPhieuBan", SqlDbType.VarChar, maPhieuBan, 50));
+            return result ?? 0;
         }
         //Tính giá của sản phẩm theo phương pháp bình quân gia quyền
         public decimal TinhGiaBinhQuanGiaQuyen(string idSanPham)
@@ -100,7 +124,7 @@ namespace CuahangNongduoc.DataLayer
             const string sql = @"
             SELECT TOP 1 GIA_NHAP
             FROM MA_SAN_PHAM
-            WHERE ID_SAN_PHAM = @idSanPham AND SO_LUONG > 0
+            WHERE ID_MA_SAN_PHAM = @idSanPham AND SO_LUONG > 0
             ORDER BY NGAY_NHAP ASC";
             decimal? result = _db.ExecuteScalar<decimal>(sql, CommandType.Text,
                 _db.P("@idSanPham", SqlDbType.VarChar, idSanPham, 50));
@@ -108,9 +132,15 @@ namespace CuahangNongduoc.DataLayer
         }
         public void XuatTheoFIFO(DataRow row, SqlTransaction tx, string idPhieuBan)
         {
-            string idSanPham = Convert.ToString(row["ID_SAN_PHAM"]);
+          
+          //duplicate
+            string idMaSanPham = Convert.ToString(row["ID_MA_SAN_PHAM"]);
+            //string idSanPham = Convert.ToString(row["ID_MA_SAN_PHAM"]);
+          
             int soLuongConPhaiXuat = Convert.ToInt32(row["SO_LUONG"]);
             decimal donGia = Convert.ToDecimal(row["DON_GIA"]);
+
+            string idSanPham = LayIdSanPhamTuMaSanPham(idMaSanPham);
             DataTable loSanPhams = LayDanhSachMaTheoSanPham(idSanPham);
 
             foreach (DataRow lo in loSanPhams.Rows)
@@ -118,11 +148,11 @@ namespace CuahangNongduoc.DataLayer
                 if (soLuongConPhaiXuat <= 0)
                     break;
                 // Lấy thông tin của Lô
-                string idMaSanPham = lo["ID_MA_SAN_PHAM"].ToString();
+                string idMaLoHienTai = lo["ID_MA_SAN_PHAM"].ToString();
                 int soLuongTon = Convert.ToInt32(lo["SO_LUONG"]);
                 int soLuongXuatTuLo = Math.Min(soLuongConPhaiXuat, soLuongTon);
                 // Cập nhật số lượng tồn kho của Lô
-                UpdateTonKho(idMaSanPham, -soLuongXuatTuLo, tx);
+                UpdateTonKho(idMaLoHienTai, -soLuongXuatTuLo, tx);
                 // Cập nhật tổng số lượng tồn kho của Sản phẩm
                 UpdateTongTonKhoSanPham(idSanPham, -soLuongXuatTuLo, tx);
                 // Ghi chi tiết phiếu bán cho Lô
@@ -130,7 +160,7 @@ namespace CuahangNongduoc.DataLayer
                 chiTietPhieuBan["ID_PHIEU_BAN"] = idPhieuBan;
                 chiTietPhieuBan["ID_MA_SAN_PHAM"] = idMaSanPham;
                 chiTietPhieuBan["SO_LUONG"] = soLuongXuatTuLo;
-                chiTietPhieuBan["DON_GIA"] = donGia;
+                chiTietPhieuBan["DON_GIA_NHAP"] = donGia;
                 chiTietPhieuBan["THANH_TIEN"] = donGia * soLuongXuatTuLo;
                 Insert(chiTietPhieuBan, tx);
                 // Cập nhật số lượng còn phải xuất
@@ -146,12 +176,12 @@ namespace CuahangNongduoc.DataLayer
         public void XuatTheoChonLo(DataRow row, SqlTransaction tx, string idPhieuBan)
         {
 
-            string idMaSanPham = Convert.ToString(row["ID"]);
+            string idMaSanPham = Convert.ToString(row["ID_MA_SAN_PHAM"]);
             int soLuongCanXuat = Convert.ToInt32(row["SO_LUONG"]);
             decimal donGia = Convert.ToDecimal(row["DON_GIA"]);
             DataTable loSanPhams = LayThongTinMotLo(idMaSanPham);
 
-            string idSanPham = Convert.ToString(loSanPhams.Rows[0]["ID_SAN_PHAM"]);
+            string idSanPham = LayIdSanPhamTuMaSanPham(idMaSanPham);
             int soLuongTon = Convert.ToInt32(loSanPhams.Rows[0]["SO_LUONG"]);
             if (soLuongTon < soLuongCanXuat)
             {

@@ -327,8 +327,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "frmDanhsachPhieuBanLe";
-            this.Text = "DANH SACH PHIEU BAN LE";
-            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.Text = "DANH SÁCH PHIẾU BÁN LẺ";
             this.Load += new System.EventHandler(this.frmDanhsachPhieuNhap_Load);
             ((System.ComponentModel.ISupportInitialize)(this.bindingNavigator)).EndInit();
             this.bindingNavigator.ResumeLayout(false);
