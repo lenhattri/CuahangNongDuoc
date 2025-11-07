@@ -135,7 +135,6 @@ namespace CuahangNongduoc
                 ds.ExecuteNoneQuery(new SqlCommand("UPDATE THAM_SO SET NHA_CUNG_CAP = " + value));
             }
         }
-
         public static long KhachHang
         {
             get

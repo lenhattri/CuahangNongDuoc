@@ -30,7 +30,6 @@ namespace CuahangNongduoc.Controller
         }
         public void Update()
         {
-            bs.MoveNext();
             factory.Save();
         }
         public void Save()

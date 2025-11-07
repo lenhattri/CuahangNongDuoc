@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using CuahangNongduoc.Controller;
+using CuahangNongduoc.Utils;
 
 namespace CuahangNongduoc
 {
@@ -25,6 +26,8 @@ namespace CuahangNongduoc
             dataGridView.Columns.Add(ctrlDVT.HienthiDataGridViewComboBoxColumn());
             ctrl.HienthiDataGridview(dataGridView, bindingNavigator,
                  txtMaSanPham, txtTenSanPham, cmbDVT, numSoLuong, numDonGiaNhap, numGiaBanSi, numGiaBanLe);
+            AppTheme.ApplyTheme(this);
+
         }
 
         private void toolLuu_Click(object sender, EventArgs e)
@@ -107,23 +110,26 @@ namespace CuahangNongduoc
 
         void TimSanPham()
         {
-            if (toolTimMaSanPham.Checked == true)
+            DataTable dt;
+
+            if (toolTimMaSanPham.Checked)
             {
-                ctrl.TimMaSanPham(toolTimSanPham.Text);
+                dt = ctrl.TimMaSanPham(toolTimSanPham.Text);
             }
             else
             {
-                ctrl.TimTenSanPham(toolTimSanPham.Text);
+                dt = ctrl.TimTenSanPham(toolTimSanPham.Text);
             }
+
+            // ✅ Cập nhật hiển thị
+            dataGridView.DataSource = dt;
         }
+
 
         private void toolTimSanPham_Enter(object sender, EventArgs e)
         {
             toolTimSanPham.Text = "";
             toolTimSanPham.ForeColor = Color.Black;
         }
-      
-
-
     }
 }

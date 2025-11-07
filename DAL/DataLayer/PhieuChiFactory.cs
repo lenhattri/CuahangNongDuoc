@@ -81,6 +81,64 @@ namespace CuahangNongduoc.DataLayer
         /// <summary>
         /// Lấy phiếu chi theo ID.
         /// </summary>
+        /// <returns>A new DataRow with the schema of PHIEU_CHI table.</returns>
+        //public DataRow NewRow()
+        //{
+        //    var dataTable = new DataTable();
+        //    using (var connection = new SqlConnection(_connectionString))
+        //    using (var command = new SqlCommand("SELECT * FROM PHIEU_CHI WHERE 1=0", connection))
+        //    using (var adapter = new SqlDataAdapter(command))
+        //    {
+        //        adapter.FillSchema(dataTable, SchemaType.Source);
+        //    }
+
+        //    return dataTable.NewRow();
+        //}
+
+        /* ===================== INSERT/UPDATE/DELETE ===================== */
+        // Gợi ý: dùng theo kiểu “row-based” cho nhanh; nếu team muốn DTO, mình viết thêm class DTO.
+
+        public int Insert(DataRow row, SqlTransaction tx = null)
+        {
+            // Giả định các cột đã tồn tại trong row
+            const string sql =
+                @"INSERT INTO PHIEU_CHI
+                    (ID, ID_LY_DO_CHI, NGAY_CHI, TONG_TIEN, GHI_CHU)
+                  VALUES(@ID, @ID_LY_DO_CHI, @NGAY_CHI, @TONG_TIEN, @GHI_CHU)";
+
+            using (var cmd = new SqlCommand(sql, tx?.Connection, tx))
+            {
+                cmd.Parameters.Add("@ID", SqlDbType.VarChar, 50).Value = row["ID"];
+                cmd.Parameters.Add("@ID_LY_DO_CHI", SqlDbType.Int).Value = row["ID_LY_DO_CHI"];
+                cmd.Parameters.Add("@NGAY_CHI", SqlDbType.DateTime).Value = row["NGAY_CHI"];
+                cmd.Parameters.Add("@TONG_TIEN", SqlDbType.BigInt).Value = row["TONG_TIEN"];
+                cmd.Parameters.Add("@GHI_CHU", SqlDbType.VarChar, 255).Value = row["GHI_CHU"] ?? (object)DBNull.Value; // Assuming max length 255, adjust as needed
+                return cmd.ExecuteNonQuery();
+            }
+        }
+        public int Update(DataRow row, SqlTransaction tx = null)
+        {
+            // Giả định các cột đã tồn tại trong row
+            const string sql =
+                @"UPDATE PHIEU_CHI 
+                  SET ID_LY_DO_CHI = @ID_LY_DO_CHI, NGAY_CHI = @NGAY_CHI, TONG_TIEN = @TONG_TIEN, GHI_CHU = @GHI_CHU
+                  WHERE ID = @ID";
+
+            using (var cmd = new SqlCommand(sql, tx?.Connection, tx))
+            {
+                cmd.Parameters.Add("@ID_LY_DO_CHI", SqlDbType.VarChar, 50).Value = row["ID_LY_DO_CHI"];
+                cmd.Parameters.Add("@NGAY_CHI", SqlDbType.DateTime).Value = row["NGAY_CHI"];
+                cmd.Parameters.Add("@TONG_TIEN", SqlDbType.BigInt).Value = row["TONG_TIEN"];
+                cmd.Parameters.Add("@GHI_CHU", SqlDbType.VarChar, 255).Value = row["GHI_CHU"] ?? (object)DBNull.Value;
+                cmd.Parameters.Add("@ID", SqlDbType.VarChar, 50).Value = row["ID"];
+                return cmd.ExecuteNonQuery();
+
+            //    var dt = _db.ExecuteDataTable(SELECT_ALL, CommandType.Text);   // CHANGED
+            //_table = dt;
+            //return dt;
+            }
+        }
+
         public DataTable LayPhieuChi(string id)
         {
             // CHANGED: Dùng DbClient.ExecuteDataTable

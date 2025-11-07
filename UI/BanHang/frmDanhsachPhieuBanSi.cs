@@ -15,7 +15,9 @@ namespace CuahangNongduoc
         public frmDanhsachPhieuBanSi()
         {
             InitializeComponent();
+            dataGridView.AutoGenerateColumns = false;
         }
+
 
         PhieuBanController ctrl = new PhieuBanController();
         KhachHangController ctrlKH = new KhachHangController();

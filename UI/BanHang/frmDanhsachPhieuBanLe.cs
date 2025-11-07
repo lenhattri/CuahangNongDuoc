@@ -15,10 +15,12 @@ namespace CuahangNongduoc
         public frmDanhsachPhieuBanLe()
         {
             InitializeComponent();
+            dataGridView.AutoGenerateColumns = false;
         }
 
         PhieuBanController ctrl = new PhieuBanController();
         KhachHangController ctrlKH = new KhachHangController();
+        
         private void frmDanhsachPhieuNhap_Load(object sender, EventArgs e)
         {
             ctrlKH.HienthiKhachHangDataGridviewComboBox(colKhachhang);
@@ -71,7 +73,6 @@ namespace CuahangNongduoc
              DataRowView view =  (DataRowView)bindingNavigator.BindingSource.Current;
              if (view != null)
              {
-
                  if (MessageBox.Show("Bạn có chắc chắn xóa không?", "Phieu Ban Le", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                  {
                      ChiTietPhieuBanController ctrl = new ChiTietPhieuBanController();

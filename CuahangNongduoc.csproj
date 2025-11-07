@@ -102,14 +102,20 @@
     <Reference Include="XPExplorerBar, Version=3.3.0.0, Culture=neutral, PublicKeyToken=26272737b5f33015" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BLL\Controller\ChiPhiPhatSinhController.cs" />
+    <Compile Include="BLL\Controller\PhieuBanChiPhiController.cs" />
     <Compile Include="BLL\Controller\UserController.cs" />
     <Compile Include="BLL\Helpers\CauHinhCuaHang.cs" />
+    <Compile Include="DAL\DataLayer\ChiPhiPhatSinhFactory.cs" />
+    <Compile Include="DAL\DataLayer\PhieuBanChiPhiFactory.cs" />
     <Compile Include="DAL\DataLayer\UserDAL.cs" />
     <Compile Include="DAL\Infrastructure\DbClient.cs" />
     <Compile Include="BLL\Controller\ChiTietPhieuNhapController.cs" />
+    <Compile Include="Domain\Entities\ChiPhiPhatSinh.cs" />
     <Compile Include="Domain\Entities\ChiTietPhieuBan.cs" />
     <Compile Include="Domain\Entities\ChiTietPhieuNhap.cs" />
     <Compile Include="Domain\Entities\NhanVien.cs" />
+    <Compile Include="Domain\Entities\PhieuBanChiPhi.cs" />
     <Compile Include="Domain\Entities\PhieuChi.cs" />
     <Compile Include="Domain\Entities\LyDoChi.cs" />
     <Compile Include="Domain\Entities\NhaCungCap.cs" />
@@ -182,6 +188,12 @@
     </Compile>
     <Compile Include="UI\In\frmInPhieuChi.Designer.cs">
       <DependentUpon>frmInPhieuChi.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\PhieuThuChi\frmChiPhiPhatSinh.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\PhieuThuChi\frmChiPhiPhatSinh.Designer.cs">
+      <DependentUpon>frmChiPhiPhatSinh.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\PhieuThuChi\frmPhieuChi.cs">
       <SubType>Form</SubType>
@@ -354,6 +366,12 @@
     <Compile Include="UI\HeThong\frmThongtinLienhe.Designer.cs">
       <DependentUpon>frmThongtinLienhe.cs</DependentUpon>
     </Compile>
+    <Compile Include="UI\PhieuThuChi\frmPhieuBanChiPhi.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\PhieuThuChi\frmPhieuBanChiPhi.Designer.cs">
+      <DependentUpon>frmPhieuBanChiPhi.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\TimKiem\frmTimPhieuBanLe.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -408,6 +426,9 @@
     <EmbeddedResource Include="UI\In\frmInPhieuChi.resx">
       <SubType>Designer</SubType>
       <DependentUpon>frmInPhieuChi.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\PhieuThuChi\frmChiPhiPhatSinh.resx">
+      <DependentUpon>frmChiPhiPhatSinh.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\PhieuThuChi\frmPhieuChi.resx">
       <DependentUpon>frmPhieuChi.cs</DependentUpon>
@@ -512,6 +533,9 @@
     <EmbeddedResource Include="UI\HeThong\frmThongtinLienhe.resx">
       <SubType>Designer</SubType>
       <DependentUpon>frmThongtinLienhe.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\PhieuThuChi\frmPhieuBanChiPhi.resx">
+      <DependentUpon>frmPhieuBanChiPhi.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\TimKiem\frmTimPhieuBanLe.resx">
       <SubType>Designer</SubType>
@@ -634,6 +658,7 @@
     <Content Include="lib\Microsoft.ReportViewer.Common.dll" />
     <Content Include="lib\Microsoft.ReportViewer.WinForms.dll" />
     <Content Include="lib\XPExplorerBar.dll" />
+    <None Include="Resources\search.png" />
     <None Include="Resources\password.png" />
     <None Include="Resources\username.png" />
     <None Include="Resources\HeroImages.jpg" />
