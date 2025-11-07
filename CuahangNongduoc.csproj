@@ -110,6 +110,7 @@
     <Reference Include="XPExplorerBar, Version=3.3.0.0, Culture=neutral, PublicKeyToken=26272737b5f33015" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Authenticatin\Session.cs" />
     <Compile Include="BLL\Controller\UserController.cs" />
     <Compile Include="BLL\Helpers\CauHinhCuaHang.cs" />
     <Compile Include="DAL\DataLayer\IChiTietPhieuNhapFactory.cs" />
@@ -127,6 +128,7 @@
     <Compile Include="DAL\DataLayer\IUserDAL.cs" />
     <Compile Include="DAL\DataLayer\UserDAL.cs" />
     <Compile Include="BLL\Controller\ChiTietPhieuNhapController.cs" />
+    <Compile Include="DAL\Infrastructure\DbClient.cs" />
     <Compile Include="Domain\Entities\ChiTietPhieuBan.cs" />
     <Compile Include="Domain\Entities\PhieuChi.cs" />
     <Compile Include="Domain\Entities\LyDoChi.cs" />
@@ -154,6 +156,34 @@
     <Compile Include="BLL\Controller\SanPhamController.cs" />
     <Compile Include="BLL\Controller\DonViTinhController.cs" />
     <Compile Include="DAL\DataLayer\PhieuChiFactory.cs" />
+    <Compile Include="UI\HeThong\frmCauHinh.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\HeThong\frmCauHinh.Designer.cs" />
+    <Compile Include="UI\HeThong\frmChiTietNguoiDung.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\HeThong\frmChiTietNguoiDung.Designer.cs" />
+    <Compile Include="UI\HeThong\frmDangNhap.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\HeThong\frmDangNhap.Designer.cs" />
+    <Compile Include="UI\HeThong\frmMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\HeThong\frmMain.Designer.cs" />
+    <Compile Include="UI\HeThong\frmNguoiDung.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\HeThong\frmNguoiDung.Designer.cs" />
+    <Compile Include="UI\HeThong\frmThongtinCuahang.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\HeThong\frmThongtinCuahang.Designer.cs" />
+    <Compile Include="UI\HeThong\frmThongtinLienhe.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\HeThong\frmThongtinLienhe.Designer.cs" />
     <Compile Include="UI\In\frmInPhieuChi.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -264,12 +294,6 @@
     <Compile Include="UI\DanhMuc\frmKhachHang.Designer.cs">
       <DependentUpon>frmKhachHang.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\HeThong\frmMain.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UI\HeThong\frmMain.Designer.cs">
-      <DependentUpon>frmMain.cs</DependentUpon>
-    </Compile>
     <Compile Include="UI\DanhMuc\frmNhaCungCap.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -318,18 +342,6 @@
     <Compile Include="UI\BanHang\frmThanhToan.Designer.cs">
       <DependentUpon>frmThanhToan.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\HeThong\frmThongtinCuahang.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UI\HeThong\frmThongtinCuahang.Designer.cs">
-      <DependentUpon>frmThongtinCuahang.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UI\HeThong\frmThongtinLienhe.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UI\HeThong\frmThongtinLienhe.Designer.cs">
-      <DependentUpon>frmThongtinLienhe.cs</DependentUpon>
-    </Compile>
     <Compile Include="UI\TimKiem\frmTimPhieuBanLe.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -354,24 +366,21 @@
     <Compile Include="UI\TimKiem\frmTimPhieuThu.Designer.cs">
       <DependentUpon>frmTimPhieuThu.cs</DependentUpon>
     </Compile>
+    <Compile Include="Utils\Functions\DataTableHelper.cs" />
+    <Compile Include="Utils\Functions\LogHelper.cs" />
     <Compile Include="Utils\Functions\Num2Str.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\Functions\ReportHanler.cs" />
     <Compile Include="Utils\Functions\SafeExecutor.cs" />
     <Compile Include="Utils\Functions\SqlHelper.cs" />
-    <EmbeddedResource Include="UI\HeThong\frmCauHinh.resx">
-      <DependentUpon>frmCauHinh.cs</DependentUpon>
-    </EmbeddedResource>
-    <Compile Include="Authenticatin\Session.cs" />
-    <EmbeddedResource Include="UI\HeThong\frmChiTietNguoiDung.resx">
-      <DependentUpon>frmChiTietNguoiDung.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UI\HeThong\frmDangNhap.resx">
-      <DependentUpon>frmDangNhap.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UI\HeThong\frmNguoiDung.resx">
-      <DependentUpon>frmNguoiDung.cs</DependentUpon>
-    </EmbeddedResource>
+    <EmbeddedResource Include="UI\HeThong\frmCauHinh.resx" />
+    <EmbeddedResource Include="UI\HeThong\frmChiTietNguoiDung.resx" />
+    <EmbeddedResource Include="UI\HeThong\frmDangNhap.resx" />
+    <EmbeddedResource Include="UI\HeThong\frmMain.resx" />
+    <EmbeddedResource Include="UI\HeThong\frmNguoiDung.resx" />
+    <EmbeddedResource Include="UI\HeThong\frmThongtinCuahang.resx" />
+    <EmbeddedResource Include="UI\HeThong\frmThongtinLienhe.resx" />
     <EmbeddedResource Include="UI\In\frmInPhieuChi.resx">
       <SubType>Designer</SubType>
       <DependentUpon>frmInPhieuChi.cs</DependentUpon>
@@ -436,10 +445,6 @@
       <SubType>Designer</SubType>
       <DependentUpon>frmKhachHang.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\HeThong\frmMain.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>frmMain.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="UI\DanhMuc\frmNhaCungCap.resx">
       <SubType>Designer</SubType>
       <DependentUpon>frmNhaCungCap.cs</DependentUpon>
@@ -471,14 +476,6 @@
     <EmbeddedResource Include="UI\BanHang\frmThanhToan.resx">
       <SubType>Designer</SubType>
       <DependentUpon>frmThanhToan.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UI\HeThong\frmThongtinCuahang.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>frmThongtinCuahang.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UI\HeThong\frmThongtinLienhe.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>frmThongtinLienhe.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\TimKiem\frmTimPhieuBanLe.resx">
       <SubType>Designer</SubType>
@@ -632,7 +629,6 @@
     <Folder Include="BLL\DTOs\" />
     <Folder Include="BLL\Interfaces\" />
     <Folder Include="BLL\Services\" />
-    <Folder Include="DAL\Infrastructure\" />
     <Folder Include="DAL\Repositories\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

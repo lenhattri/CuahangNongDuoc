@@ -1,11 +1,16 @@
-﻿using System;
+﻿using CuahangNongduoc.Domain.Entities;
+using CuahangNongduoc.UI.HeThong;
+using CuahangNongduoc.Utils;
+using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.IO;
 using System.Text;
 using System.Windows.Forms;
-using Microsoft.Win32;
 
 namespace CuahangNongduoc
 {
@@ -14,9 +19,49 @@ namespace CuahangNongduoc
         public frmMain()
         {
             InitializeComponent();
+            SetMdiBackground();
         }
-        frmDonViTinh DonViTinh = null;
 
+        private void SetMdiBackground()
+        {
+            foreach (Control ctrl in this.Controls)
+            {
+                if (ctrl is MdiClient client)
+                {
+                    try
+                    {
+                        string imagePath = Path.Combine(Application.StartupPath, "../../images", "background.jpg");
+
+                        if (File.Exists(imagePath))
+                        {
+                            // 🖼️ Set ảnh nền
+                            client.BackgroundImage = Image.FromFile(imagePath);
+
+                            // 💡 FIX QUAN TRỌNG: Stretch = căng toàn khung, không bị lặp
+                            client.BackgroundImageLayout = ImageLayout.Center;
+
+                            // 🎨 Màu nền phụ nhẹ nếu ảnh nhỏ hơn form
+                            client.BackColor = Color.FromArgb(235, 255, 235);
+                        }
+                        else
+                        {
+                            // fallback nếu ảnh không tồn tại
+                            client.BackColor = Color.FromArgb(235, 255, 235);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Lỗi khi tải ảnh nền: " + ex.Message,
+                            "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                }
+            }
+        }
+
+
+
+
+        frmDonViTinh DonViTinh = null;
         private void mnuDonViTinh_Click(object sender, EventArgs e)
         {
             if (DonViTinh == null || DonViTinh.IsDisposed)
@@ -58,6 +103,16 @@ namespace CuahangNongduoc
             //    MessageBox.Show("Không thể kết nối dữ liệu!", "Cua hang Nong duoc", MessageBoxButtons.OK, MessageBoxIcon.Error);
             //    this.Close();
             //}
+
+            ChuaDangNhap();
+
+            frmDangNhap frmDangNhap = new frmDangNhap();
+            //DangNhap.MdiParent = this;
+            if (frmDangNhap.ShowDialog() == DialogResult.OK)
+            {
+                PhanQuyen();
+            }
+
 
             DataService.OpenConnection();
             

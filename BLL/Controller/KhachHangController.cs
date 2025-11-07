@@ -4,6 +4,7 @@ using System.Text;
 using System.Data;
 using CuahangNongduoc.BusinessObject;
 using CuahangNongduoc.DataLayer;
+using System.Windows.Forms;
 
 
 namespace CuahangNongduoc.Controller
@@ -66,7 +67,6 @@ namespace CuahangNongduoc.Controller
         }
         public void HienthiDaiLyDataGridviewComboBox(System.Windows.Forms.DataGridViewComboBoxColumn cmb)
         {
-
         public void HienthiDaiLyDataGridviewComboBox(DataGridViewComboBoxColumn cmb)
         {
             cmb.DataSource = _factory.DanhsachKhachHang(true);
