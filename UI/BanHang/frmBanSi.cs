@@ -264,7 +264,6 @@ namespace CuahangNongduoc
             {
                 BindingSource bs = ((BindingSource)dgvDanhsachSP.DataSource);
                 DataRowView row = (DataRowView)bs.Current;
-                numTongTien.Value -= Convert.ToInt64(row["THANH_TIEN"]);
                 deleted.Add(new MaSanPham(Convert.ToString( row["ID_MA_SAN_PHAM"]), Convert.ToInt32(row["SO_LUONG"])) );
             }
         }
