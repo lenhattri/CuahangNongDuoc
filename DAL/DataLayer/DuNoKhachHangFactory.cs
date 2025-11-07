@@ -7,7 +7,7 @@ using CuahangNongduoc.DAL.Infrastructure;   // CHANGED: dùng DbClient (singleto
 
 namespace CuahangNongduoc.DataLayer
 {
-    public class DuNoKhachHangDAL
+    public class DuNoKhachHangDAL : IDuNoKhachHangDAL
     {
         // private readonly string _cs = ConfigurationManager.ConnectionStrings["ConnStr"].ConnectionString;
         // CHANGED: bỏ chuỗi kết nối rải rác, dùng DbClient

@@ -9,7 +9,7 @@ using System.Data.SqlClient;
 
 namespace CuahangNongduoc.DataLayer
 {
-    public class SanPhamFactory
+    public class SanPhamFactory : ISanPhamFactory
     {
         private readonly DbClient _db = DbClient.Instance;  // CHANGED:
         private DataTable _table;                           // NEW: DataTable nội bộ cho pattern NewRow/Add/Save

@@ -6,7 +6,7 @@ using CuahangNongduoc.DAL.Infrastructure;
 namespace CuahangNongduoc.DataLayer
 {
 
-    public class PhieuNhapFactory
+    public class PhieuNhapFactory : IPhieuNhapFactory
     {
         private readonly DbClient _db = DbClient.Instance;
         private readonly DataTable _buffer;

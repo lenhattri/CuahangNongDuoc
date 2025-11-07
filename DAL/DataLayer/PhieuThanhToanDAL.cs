@@ -9,7 +9,7 @@ using CuahangNongduoc.Utils.Functions; // NEW: Thêm để dùng DataAccessHelpe
 
 namespace CuahangNongduoc.DataLayer
 {
-    public class PhieuThanhToanDAL
+    public class PhieuThanhToanDAL : IPhieuThanhToanDAL
     {
         private DataTable _dataTable; // CHANGED: đổi tên từ m_DataTable
         private readonly DbClient _db = DbClient.Instance;

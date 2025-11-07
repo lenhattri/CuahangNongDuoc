@@ -9,7 +9,7 @@ using System.Windows.Forms;             // NEW: Thêm để dùng ValidationRule
 
 namespace CuahangNongduoc.DataLayer
 {
-    public class DonViTinhDAL
+    public class DonViTinhDAL : IDonViTinhDAL
     {
         private readonly DbClient _db = DbClient.Instance;
         private DataTable _table; // DataTable nội bộ

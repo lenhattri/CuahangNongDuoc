@@ -12,7 +12,7 @@ namespace CuahangNongduoc.DataLayer
     /// <summary>
     /// DAL cho CHI_TIET_PHIEU_BAN – bản ADO.NET (SqlClient) qua DbClient
     /// </summary>
-    public class ChiTietPhieuBanDAL
+    public class ChiTietPhieuBanDAL : IChiTietPhieuBanDAL
     {
         private readonly DbClient _db = DbClient.Instance; // CHANGED
 
@@ -80,7 +80,7 @@ namespace CuahangNongduoc.DataLayer
             SELECT ID_SAN_PHAM
             FROM MA_SAN_PHAM
             WHERE ID = @idMaSanPham";
-            DataTable dt =_db.ExecuteDataTable(sql, CommandType.Text,
+            DataTable dt = _db.ExecuteDataTable(sql, CommandType.Text,
                 _db.P("@idMaSanPham", SqlDbType.VarChar, idMaSanPham, 50)
                 );
             if (dt.Rows.Count > 0)
@@ -132,11 +132,11 @@ namespace CuahangNongduoc.DataLayer
         }
         public void XuatTheoFIFO(DataRow row, SqlTransaction tx, string idPhieuBan)
         {
-          
-          //duplicate
+
+            //duplicate
             string idMaSanPham = Convert.ToString(row["ID_MA_SAN_PHAM"]);
             string idSanPham = Convert.ToString(row["ID_MA_SAN_PHAM"]);
-          
+
             int soLuongConPhaiXuat = Convert.ToInt32(row["SO_LUONG"]);
             decimal donGia = Convert.ToDecimal(row["DON_GIA"]);
 

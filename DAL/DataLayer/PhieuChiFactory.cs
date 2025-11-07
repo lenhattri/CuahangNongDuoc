@@ -9,7 +9,7 @@ using System.Windows.Forms;             // NEW: Thêm để dùng ValidationRule
 
 namespace CuahangNongduoc.DataLayer
 {
-    public class PhieuChiFactory
+    public class PhieuChiFactory : IPhieuChiFactory
     {
         // REMOVED: Bỏ _connectionString
 
@@ -133,9 +133,9 @@ namespace CuahangNongduoc.DataLayer
                 cmd.Parameters.Add("@ID", SqlDbType.VarChar, 50).Value = row["ID"];
                 return cmd.ExecuteNonQuery();
 
-            //    var dt = _db.ExecuteDataTable(SELECT_ALL, CommandType.Text);   // CHANGED
-            //_table = dt;
-            //return dt;
+                //    var dt = _db.ExecuteDataTable(SELECT_ALL, CommandType.Text);   // CHANGED
+                //_table = dt;
+                //return dt;
             }
         }
 
