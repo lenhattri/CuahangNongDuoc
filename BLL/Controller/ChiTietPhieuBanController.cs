@@ -181,6 +181,10 @@ namespace CuahangNongduoc.Controller
         }
 
         /* ===================== HELPERS ===================== */
+        public decimal TinhTongTienBanTheoPhieuBan(string maPhieuBan)
+        {
+            return _dal.TinhTongThanhTienTheoPhieu(maPhieuBan);
+        }
         // Tính giá bình quân gia quyền của sản phẩm
         public decimal TinhGiaBinhQuanGiaQuyen(string idSanPham)
         {

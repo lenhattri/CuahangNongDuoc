@@ -1,5 +1,6 @@
 ﻿using CuahangNongduoc.Domain.Entities;
 using CuahangNongduoc.UI.HeThong;
+using CuahangNongduoc.UI.PhieuThuChi;
 using CuahangNongduoc.Utils;
 using Microsoft.Win32;
 using System;
@@ -442,6 +443,20 @@ namespace CuahangNongduoc
                 QuyenNhanVien();
             }
             toolstlb_StatusLogin.Text = "Người dùng: " + Session.CurrentUser.HoTen + " - Quyền: " + Session.CurrentUser.Quyen;
+        }
+        frmChiPhiPhatSinh ChiPhiPhatSinh = null;
+        private void mnuChiPhiPhatSinh_Click(object sender, EventArgs e)
+        {
+            if (ChiPhiPhatSinh == null || ChiPhiPhatSinh.IsDisposed)
+            {
+                ChiPhiPhatSinh = new frmChiPhiPhatSinh();
+                ChiPhiPhatSinh.MdiParent = this;
+                ChiPhiPhatSinh.Show();
+            }
+            else
+            {
+                ChiPhiPhatSinh.Activate();
+            }
         }
     }
 }

@@ -8,6 +8,9 @@ using System.Windows.Forms;
 using CuahangNongduoc.Controller;
 using CuahangNongduoc.BusinessObject;
 using CuahangNongduoc.BLL.Helpers;
+using CuahangNongduoc.UI.PhieuThuChi;
+using CuahangNongduoc.BLL.Controller;
+using System.Linq;
 
 namespace CuahangNongduoc
 {
@@ -18,22 +21,21 @@ namespace CuahangNongduoc
         MaSanPhamController ctrlMaSanPham = new MaSanPhamController();
         PhieuBanController ctrlPhieuBan = new PhieuBanController();
         ChiTietPhieuBanController ctrlChiTiet = new ChiTietPhieuBanController();
+        PhieuBanChiPhiController ctrlPhieuBanChiPhi = new PhieuBanChiPhiController();
         IList<MaSanPham> deleted = new List<MaSanPham>();
+        private List<ChiPhiPhatSinh> _dsChiPhiDaChon = new List<ChiPhiPhatSinh>();
         Controll status = Controll.Normal;
 
         public frmBanLe()
         {
             InitializeComponent();
             status = Controll.AddNew;
-            numPhiVanChuyen.ValueChanged += PhiHoacGiamGia_ValueChanged;
-            numPhiDichVu.ValueChanged += PhiHoacGiamGia_ValueChanged;
-            numGiamGia.ValueChanged += PhiHoacGiamGia_ValueChanged;
         }
 
      
         public frmBanLe(PhieuBanController ctrlPB)
-            : this()
         {
+            InitializeComponent();
             this.ctrlPhieuBan = ctrlPB;
             status = Controll.Normal;
         }
@@ -53,9 +55,6 @@ namespace CuahangNongduoc
             bindingNavigator.BindingSource.CurrentChanged -= new EventHandler(BindingSource_CurrentChanged);
             bindingNavigator.BindingSource.CurrentChanged += new EventHandler(BindingSource_CurrentChanged);
             
-            ctrlChiTiet.HienThiChiTiet(dgvDanhsachSP, txtMaPhieu.Text);
-
-
             if (status == Controll.AddNew)
             {
                 txtMaPhieu.Text = ThamSo.LayMaPhieuBan().ToString();
@@ -64,7 +63,7 @@ namespace CuahangNongduoc
             {
                 this.Allow(false);
             }
-
+            
 
         }
 
@@ -72,7 +71,10 @@ namespace CuahangNongduoc
         {
             if (status == Controll.Normal)
             {
+
                 ctrlChiTiet.HienThiChiTiet(dgvDanhsachSP, txtMaPhieu.Text);
+                _dsChiPhiDaChon = ctrlPhieuBanChiPhi.LayDanhSachTheoPB(txtMaPhieu.Text).ToList();
+                TinhTongTien(_dsChiPhiDaChon);
             }
         }
 
@@ -143,32 +145,8 @@ namespace CuahangNongduoc
             }
 
         }
-        public void TinhTongTien()
-        {
-            decimal tongSanPham = 0;
+ 
 
-            // Duyệt tất cả các dòng sản phẩm trong phiếu
-            foreach (DataRow row in ctrlChiTiet.Buffer.Rows)
-            {
-                tongSanPham += Convert.ToDecimal(row["THANH_TIEN"]);
-            }
-            numTongTien.Value = (numThanhTien.Value + numPhiVanChuyen.Value + numPhiDichVu.Value) - (numGiamGia.Value);
-            numConNo.Value = numTongTien.Value - numDaTra.Value;
-        }
-
-        private void PhiHoacGiamGia_ValueChanged(object sender, EventArgs e)
-        {
-            if(numGiamGia.Value > numTongTien.Value)
-            {
-                MessageBox.Show("Giảm giá không được lớn hơn Tổng tiền!", "Phieu Nhap", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                numGiamGia.Value = 0;
-                numGiamGia.Focus();
-            }
-            else
-            {
-                TinhTongTien();
-            }
-        }
         private void numDonGia_ValueChanged(object sender, EventArgs e)
         {
             numThanhTien.Value = numDonGia.Value * numSoLuong.Value;
@@ -177,12 +155,11 @@ namespace CuahangNongduoc
        
         private void numTongTien_ValueChanged(object sender, EventArgs e)
         {
-            TinhTongTien();
+            numConNo.Value = numTongTien.Value - numDaTra.Value;
         }
 
         private void toolLuu_Click(object sender, EventArgs e)
         {
-            bindingNavigatorPositionItem.Focus();
             this.Luu();
             status = Controll.Normal;
             this.Allow(false);
@@ -202,6 +179,7 @@ namespace CuahangNongduoc
 
         void CapNhat()
         {
+            
             foreach (MaSanPham masp in deleted)
             {
                 CuahangNongduoc.DataLayer.MaSanPhanFactory.CapNhatSoLuong(masp.Id, masp.SoLuong);
@@ -211,6 +189,9 @@ namespace CuahangNongduoc
             ctrlChiTiet.Save();
 
             ctrlPhieuBan.Update();
+
+            ctrlPhieuBanChiPhi.CapNhatChiPhiPhatSinh(txtMaPhieu.Text, _dsChiPhiDaChon);
+            
 
         }
         void ThemMoi()
@@ -223,9 +204,6 @@ namespace CuahangNongduoc
             row["TONG_TIEN"] = numTongTien.Value;
             row["DA_TRA"] = numDaTra.Value;
             row["CON_NO"] = numConNo.Value;
-            row["CHI_PHI_VAN_CHUYEN"] = numPhiVanChuyen.Value;
-            row["PHI_DICH_VU"] = numPhiDichVu.Value;
-            row["GIAM_GIA"] = numGiamGia.Value;
             ctrlPhieuBan.Add(row);
 
             PhieuBanController ctrl = new PhieuBanController();
@@ -247,6 +225,8 @@ namespace CuahangNongduoc
             ctrlPhieuBan.Save();
 
             ctrlChiTiet.Save();
+
+            ctrlPhieuBanChiPhi.LuuChiPhiPhatSinh(txtMaPhieu.Text, _dsChiPhiDaChon);
 
         }
 
@@ -382,6 +362,35 @@ namespace CuahangNongduoc
             ctrlSanPham.HienthiAutoComboBox(cmbSanPham);
         }
 
-        
+        private void btnThemChiPhi_Click(object sender, EventArgs e)
+        {
+            if (status == Controll.AddNew)
+            {
+                MessageBox.Show("Vui lòng lưu phiếu bán trước khi chọn chi phí!",
+                                "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            using (frmPhieuBanChiPhi ChiPhi = new frmPhieuBanChiPhi(txtMaPhieu.Text,_dsChiPhiDaChon))
+            {
+                if(ChiPhi.ShowDialog() == DialogResult.OK)
+                {
+                   _dsChiPhiDaChon = ChiPhi.LayDanhSachChiPhiDaChon();
+                    TinhTongTien(_dsChiPhiDaChon);
+                }
+            }
+
+        }
+        private void TinhTongTien(IList<ChiPhiPhatSinh> chiPhis)
+        {
+            long tongChiPhi = 0;
+            foreach (var chiPhi in chiPhis)
+            {
+                tongChiPhi += (long)chiPhi.SoTien;
+            }
+            
+            decimal tongHang = ctrlChiTiet.TinhTongTienBanTheoPhieuBan(txtMaPhieu.Text);
+            numTongTien.Value = tongChiPhi + tongHang;
+        }
     }
 }
