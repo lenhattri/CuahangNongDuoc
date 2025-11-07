@@ -273,7 +273,7 @@
             this.toolIn.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.toolIn.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolIn.Name = "toolIn";
-            this.toolIn.Size = new System.Drawing.Size(78, 53);
+            this.toolIn.Size = new System.Drawing.Size(54, 43);
             this.toolIn.Text = "Trang in";
             this.toolIn.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.toolIn.Click += new System.EventHandler(this.toolLuuIn_Click);
@@ -432,10 +432,9 @@
             // btnThemSanPham
             // 
             this.btnThemSanPham.Image = global::CuahangNongduoc.Properties.Resources.add_16;
-            this.btnThemSanPham.Location = new System.Drawing.Point(309, 26);
-            this.btnThemSanPham.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.btnThemSanPham.Location = new System.Drawing.Point(206, 17);
             this.btnThemSanPham.Name = "btnThemSanPham";
-            this.btnThemSanPham.Size = new System.Drawing.Size(36, 37);
+            this.btnThemSanPham.Size = new System.Drawing.Size(24, 24);
             this.btnThemSanPham.TabIndex = 63;
             this.btnThemSanPham.UseVisualStyleBackColor = true;
             this.btnThemSanPham.Click += new System.EventHandler(this.btnThemSanPham_Click);
@@ -916,7 +915,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "frmBanLe";
-            this.Text = "BAN LE";
+            this.Text = "BÁN LẺ";
             this.Load += new System.EventHandler(this.frmNhapHang_Load);
             ((System.ComponentModel.ISupportInitialize)(this.bindingNavigator)).EndInit();
             this.bindingNavigator.ResumeLayout(false);

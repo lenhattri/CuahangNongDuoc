@@ -26,6 +26,7 @@ namespace CuahangNongduoc
             ctrl.HienthiPhieuThanhToan(bindingNavigator, dataGridView, cmbKhachHang, txtMaPhieu, dtNgayThanhToan, numTongTien, txtGhiChu);
             bindingNavigator.BindingSource.AddingNew += new AddingNewEventHandler(BindingSource_AddingNew);
             dataGridView.AllowUserToAddRows = false;
+            AppTheme.ApplyTheme(this);
         }
 
         void BindingSource_AddingNew(object sender, AddingNewEventArgs e)

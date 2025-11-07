@@ -64,8 +64,8 @@ namespace CuahangNongduoc
             {
                 this.Allow(false);
             }
-            
 
+            AppTheme.ApplyTheme(this);
         }
 
         void BindingSource_CurrentChanged(object sender, EventArgs e)

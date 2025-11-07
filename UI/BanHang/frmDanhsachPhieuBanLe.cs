@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using CuahangNongduoc.BusinessObject;
 using CuahangNongduoc.Controller;
+using CuahangNongduoc.Utils;
 
 namespace CuahangNongduoc
 {
@@ -25,6 +26,7 @@ namespace CuahangNongduoc
         {
             ctrlKH.HienthiKhachHangDataGridviewComboBox(colKhachhang);
             ctrl.HienthiPhieuBanLe(bindingNavigator, dataGridView);
+            AppTheme.ApplyTheme(this);
         }
         frmBanLe BanLe = null;
         private void dataGridView_DoubleClick(object sender, EventArgs e)

@@ -744,6 +744,16 @@
             this.btnThemDaiLy.UseVisualStyleBackColor = true;
             this.btnThemDaiLy.Click += new System.EventHandler(this.btnThemDaiLy_Click);
             // 
+            // btnThemDaiLy
+            // 
+            this.btnThemDaiLy.Image = global::CuahangNongduoc.Properties.Resources.add_16;
+            this.btnThemDaiLy.Location = new System.Drawing.Point(212, 66);
+            this.btnThemDaiLy.Name = "btnThemDaiLy";
+            this.btnThemDaiLy.Size = new System.Drawing.Size(24, 24);
+            this.btnThemDaiLy.TabIndex = 58;
+            this.btnThemDaiLy.UseVisualStyleBackColor = true;
+            this.btnThemDaiLy.Click += new System.EventHandler(this.btnThemDaiLy_Click);
+            // 
             // label2
             // 
             this.label2.AutoSize = true;
@@ -929,7 +939,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "frmBanSi";
-            this.Text = "BAN SI";
+            this.Text = "BÁN SỈ";
             this.Load += new System.EventHandler(this.frmNhapHang_Load);
             ((System.ComponentModel.ISupportInitialize)(this.bindingNavigator)).EndInit();
             this.bindingNavigator.ResumeLayout(false);

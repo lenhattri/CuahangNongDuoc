@@ -11,6 +11,7 @@ using System.Text;
 using System.Windows.Forms;
 using CuahangNongduoc.Controller;
 using CuahangNongduoc.BusinessObject;
+using CuahangNongduoc.Utils;
 using CuahangNongduoc.BLL.Helpers;
 using CuahangNongduoc.BLL.Controller;
 using System.Linq;
@@ -70,8 +71,8 @@ namespace CuahangNongduoc
             {
                 this.Allow(false);
             }
-                
 
+            AppTheme.ApplyTheme(this);
         }
 
         void BindingSource_CurrentChanged(object sender, EventArgs e)
