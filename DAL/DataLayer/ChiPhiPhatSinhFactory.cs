@@ -4,7 +4,7 @@ using CuahangNongduoc.DAL.Infrastructure;
 
 namespace CuahangNongduoc.DataLayer
 {
-    public class ChiPhiPhatSinhFactory
+    public class ChiPhiPhatSinhFactory : IChiPhiPhatSinhFactory
     {
         private readonly DbClient _db = DbClient.Instance;
         private const string TABLE = "[dbo].[CHI_PHI_PHAT_SINH]";

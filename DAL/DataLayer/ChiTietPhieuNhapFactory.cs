@@ -6,7 +6,7 @@ using CuahangNongduoc.DAL.Infrastructure; // CHANGED: dùng DbClient thay cho Da
 
 namespace CuahangNongduoc.DataLayer
 {
-    public class ChiTietPhieuNhapFactory
+    public class ChiTietPhieuNhapFactory : IChiTietPhieuNhapFactory
     {
         private readonly DbClient _db = DbClient.Instance;   // NEW
         private DataTable _table;                             // NEW: thay cho DataService m_Ds

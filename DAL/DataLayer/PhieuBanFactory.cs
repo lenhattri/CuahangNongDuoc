@@ -6,7 +6,7 @@ using CuahangNongduoc.DAL.Infrastructure;             // CHANGED: dùng DbClient
 
 namespace CuahangNongduoc.DataLayer
 {
-    public class PhieuBanFactory
+    public class PhieuBanFactory : IPhieuBanFactory
     {
         // DataService m_Ds = new DataService();
         private readonly DbClient _db = DbClient.Instance; // CHANGED: bỏ DataService, dùng DbClient
@@ -94,9 +94,9 @@ namespace CuahangNongduoc.DataLayer
         {
             const string sql =
                 "SELECT PB.* FROM PHIEU_BAN PB INNER JOIN KHACH_HANG KH ON PB.ID_KHACH_HANG = KH.ID";
-            using (var cn = _db.Open())                                  
-            using (var cmd = _db.Cmd(cn, sql, CommandType.Text))   
-            using (var da = new SqlDataAdapter(cmd))                         
+            using (var cn = _db.Open())
+            using (var cmd = _db.Cmd(cn, sql, CommandType.Text))
+            using (var da = new SqlDataAdapter(cmd))
             {
                 var dtRes = new DataTable("PHIEU_BAN");
                 da.Fill(dtRes);

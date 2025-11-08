@@ -8,7 +8,7 @@ using System.Data.SqlClient;
 
 namespace CuahangNongduoc.DataLayer
 {
-    public class KhachHangFactory
+    public class KhachHangFactory : IKhachHangFactory
     {
         // private readonly string _cs = ConfigurationManager.ConnectionStrings["ConnStr"].ConnectionString;
         private readonly DbClient _db = DbClient.Instance; // CHANGED: bỏ _cs rải rác, dùng DbClient thống nhất
