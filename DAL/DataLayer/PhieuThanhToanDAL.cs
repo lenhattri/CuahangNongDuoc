@@ -92,7 +92,7 @@ namespace CuahangNongduoc.DataLayer
 
         /* ===================== AGGREGATE: SUM(TONG_TIEN) ===================== */
         // Phương thức này là static và đã dùng DbClient, giữ nguyên
-        public static long LayTongTien(string kh, int thang, int nam)
+        public long LayTongTien(string kh, int thang, int nam)
         {
             var db = DbClient.Instance;
             const string sql = @"

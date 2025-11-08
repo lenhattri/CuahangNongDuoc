@@ -154,7 +154,7 @@ namespace CuahangNongduoc.DataLayer
         /// <summary>
         /// Lấy tổng tiền chi theo lý do, tháng, năm.
         /// </summary>
-        public static long LayTongTien(int lydo, int thang, int nam)
+        public long LayTongTien(int lydo, int thang, int nam)
         {
             // <<< SỬA LỖI: Nhất quán kiểu dữ liệu, dùng int cho lydo
             var db = DbClient.Instance; // Lấy instance vì là hàm static

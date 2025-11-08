@@ -6,8 +6,8 @@ namespace CuahangNongduoc.DataLayer
 {
     public interface IPhieuBanFactory
     {
-        static abstract long LayConNo(string kh, int thang, int nam);
-        static abstract int LaySoPhieu();
+        long LayConNo(string kh, int thang, int nam);
+         int LaySoPhieu();
         void Add(DataRow row);
         DataTable DanhsachPhieu();
         DataTable DanhsachPhieuBanLe();

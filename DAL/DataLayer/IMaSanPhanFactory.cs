@@ -6,7 +6,7 @@ namespace CuahangNongduoc.DataLayer
 {
     public interface IMaSanPhanFactory
     {
-        static abstract void CapNhatSoLuong(string masp, int so_luong);
+         void CapNhatSoLuong(string masp, int so_luong);
         void Add(DataRow row);
         DataTable DanhsachChiTiet(string sp);
         DataTable DanhsachMaSanPham();

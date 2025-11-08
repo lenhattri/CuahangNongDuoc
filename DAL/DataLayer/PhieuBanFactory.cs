@@ -136,7 +136,7 @@ namespace CuahangNongduoc.DataLayer
             }
         }
 
-        public static long LayConNo(string kh, int thang, int nam)
+        public long LayConNo(string kh, int thang, int nam)
         {
             // CHANGED: bỏ DataService, dùng DbClient + tham số đúng kiểu
             var db = DbClient.Instance;
@@ -150,7 +150,7 @@ namespace CuahangNongduoc.DataLayer
             return (val == null || val == DBNull.Value) ? 0L : Convert.ToInt64(val);
         }
 
-        public static int LaySoPhieu()
+        public int LaySoPhieu()
         {
             var db = DbClient.Instance;                                      // CHANGED
             const string sql = "SELECT COUNT(*) FROM PHIEU_BAN";

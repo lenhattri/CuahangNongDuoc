@@ -91,7 +91,7 @@ namespace CuahangNongduoc.DataLayer
             }
         }
 
-        public static long LayDuNo(string kh, int thang, int nam)
+        public long LayDuNo(string kh, int thang, int nam)
         {
             // CHANGED: dùng DbClient thay vì tự mở SqlConnection/ConfigurationManager
             var db = DbClient.Instance;                                                     // CHANGED

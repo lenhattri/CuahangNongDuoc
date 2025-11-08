@@ -7,7 +7,7 @@ namespace CuahangNongduoc.DataLayer
 {
     public interface IPhieuChiFactory
     {
-        static abstract long LayTongTien(int lydo, int thang, int nam);
+        long LayTongTien(int lydo, int thang, int nam);
         void Add(DataRow row);
         DataTable DanhsachPhieuChi();
         int Insert(DataRow row, SqlTransaction tx = null);

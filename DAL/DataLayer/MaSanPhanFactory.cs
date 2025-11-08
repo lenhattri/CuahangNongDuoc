@@ -99,7 +99,7 @@ namespace CuahangNongduoc.DataLayer
             return dt;
         }
 
-        public static void CapNhatSoLuong(string masp, int so_luong)
+        public void CapNhatSoLuong(string masp, int so_luong)
         {
             // CHANGED: bỏ OleDb & DataService; dùng DbClient.ExecuteNonQuery
             var db = DbClient.Instance;
