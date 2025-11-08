@@ -135,7 +135,7 @@ namespace CuahangNongduoc.DataLayer
 
             //duplicate
             string idMaSanPham = Convert.ToString(row["ID_MA_SAN_PHAM"]);
-            string idSanPham = Convert.ToString(row["ID_MA_SAN_PHAM"]);
+            //string idSanPham = Convert.ToString(row["ID_MA_SAN_PHAM"]);
 
             int soLuongConPhaiXuat = Convert.ToInt32(row["SO_LUONG"]);
             decimal donGia = Convert.ToDecimal(row["DON_GIA"]);

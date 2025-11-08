@@ -103,6 +103,8 @@ namespace CuahangNongduoc
             this.toolstlb_StatusLogin = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.mnuChiPhiPhatSinh = new System.Windows.Forms.ToolStripMenuItem();
+            // Add near other initializations at top of InitializeComponent()
+            this.mnuChiPhiKhuyenMai = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.toolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.taskPane)).BeginInit();
@@ -1071,5 +1073,6 @@ namespace CuahangNongduoc
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
         private System.Windows.Forms.ToolStripMenuItem mnuTuyChinhCauHinh;
         private System.Windows.Forms.ToolStripMenuItem mnuChiPhiPhatSinh;
+        private System.Windows.Forms.ToolStripMenuItem mnuChiPhiKhuyenMai;
     }
 }
