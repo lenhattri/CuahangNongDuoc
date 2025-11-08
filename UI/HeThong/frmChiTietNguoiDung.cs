@@ -1,4 +1,5 @@
 ﻿using CuahangNongduoc.Domain.Entities;
+using CuahangNongduoc.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -93,6 +94,7 @@ namespace CuahangNongduoc.UI.HeThong
                 btnAction.Text = "Lưu";
                 this.Text = "Sửa người dùng";
             }
+            AppTheme.ApplyTheme(this);
         }
 
         private void textBox3_TextChanged(object sender, EventArgs e)

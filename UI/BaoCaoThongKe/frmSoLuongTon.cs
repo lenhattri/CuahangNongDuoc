@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using CuahangNongduoc.DTO;
+using CuahangNongduoc.Utils;
 namespace CuahangNongduoc
 {
     public partial class frmSoLuongTon : Form
@@ -43,7 +44,9 @@ namespace CuahangNongduoc
                 new ReportDataSource("SoLuongTonView", view)
             );
 
+            
             reportViewer.RefreshReport();
+            AppTheme.ApplyTheme(this);
         }
 
         private void SoLuongTonBindingSource_CurrentChanged(object sender, EventArgs e)

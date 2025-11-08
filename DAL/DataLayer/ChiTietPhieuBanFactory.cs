@@ -98,7 +98,7 @@ namespace CuahangNongduoc.DataLayer
             SELECT ID_SAN_PHAM
             FROM MA_SAN_PHAM
             WHERE ID = @idMaSanPham";
-            DataTable dt = _db.ExecuteDataTable(sql, CommandType.Text,
+            DataTable dt =_db.ExecuteDataTable(sql, CommandType.Text,
                 _db.P("@idMaSanPham", SqlDbType.VarChar, idMaSanPham, 50)
                 );
             if (dt.Rows.Count > 0)
@@ -114,6 +114,16 @@ namespace CuahangNongduoc.DataLayer
             WHERE ID = @idMaSanPham";
             return _db.ExecuteDataTable(sql, CommandType.Text,
                 _db.P("@idMaSanPham", SqlDbType.VarChar, idMaSanPham, 50));
+        }
+        public decimal TinhTongThanhTienTheoPhieu(string maPhieuBan)
+        {
+            const string sql = @"
+            SELECT SUM(THANH_TIEN)
+            FROM CHI_TIET_PHIEU_BAN
+            WHERE ID_PHIEU_BAN = @maPhieuBan";
+            decimal? result = _db.ExecuteScalar<decimal>(sql, CommandType.Text,
+                _db.P("@maPhieuBan", SqlDbType.VarChar, maPhieuBan, 50));
+            return result ?? 0;
         }
         //Tính giá của sản phẩm theo phương pháp bình quân gia quyền
         public decimal TinhGiaBinhQuanGiaQuyen(string idSanPham)
@@ -157,11 +167,15 @@ namespace CuahangNongduoc.DataLayer
 
         public void XuatTheoFIFO(DataRow row, SqlTransaction tx, string idPhieuBan)
         {
-            string idSanPham = Convert.ToString(row["ID_MA_SAN_PHAM"]); // SỬA TẠM
+          
+          //duplicate
+            string idMaSanPham = Convert.ToString(row["ID_MA_SAN_PHAM"]);
+            //string idSanPham = Convert.ToString(row["ID_MA_SAN_PHAM"]);
+          
             int soLuongConPhaiXuat = Convert.ToInt32(row["SO_LUONG"]);
             decimal donGia = Convert.ToDecimal(row["DON_GIA"]);
 
-            // string idSanPham = LayIdSanPhamTuMaSanPham(idMaSanPham); // Bỏ đi nếu giả định trên là đúng
+            string idSanPham = LayIdSanPhamTuMaSanPham(idMaSanPham);
             DataTable loSanPhams = LayDanhSachMaTheoSanPham(idSanPham);
 
             foreach (DataRow lo in loSanPhams.Rows)
@@ -169,7 +183,7 @@ namespace CuahangNongduoc.DataLayer
                 if (soLuongConPhaiXuat <= 0)
                     break;
                 // Lấy thông tin của Lô
-                string idMaLoHienTai = lo["ID"].ToString(); // Sửa: Cột ID trong LayDanhSachMaTheoSanPham
+                string idMaLoHienTai = lo["ID"].ToString();
                 int soLuongTon = Convert.ToInt32(lo["SO_LUONG"]);
                 int soLuongXuatTuLo = Math.Min(soLuongConPhaiXuat, soLuongTon);
 
@@ -177,7 +191,7 @@ namespace CuahangNongduoc.DataLayer
                 decimal donGiaNhapCuaLo = Convert.ToDecimal(lo["DON_GIA_NHAP"]);
 
                 // Cập nhật số lượng tồn kho của Lô
-                UpdateTonKho(idMaSanPham, -soLuongXuatTuLo, tx);
+                UpdateTonKho(idMaLoHienTai, -soLuongXuatTuLo, tx);
                 // Cập nhật tổng số lượng tồn kho của Sản phẩm
                 UpdateTongTonKhoSanPham(idSanPham, -soLuongXuatTuLo, tx);
 
@@ -212,15 +226,10 @@ namespace CuahangNongduoc.DataLayer
         public void XuatTheoChonLo(DataRow row, SqlTransaction tx, string idPhieuBan)
         {
 
-            string idMaSanPham = Convert.ToString(row["ID"]);
+            string idMaSanPham = Convert.ToString(row["ID_MA_SAN_PHAM"]);
             int soLuongCanXuat = Convert.ToInt32(row["SO_LUONG"]);
             decimal donGia = Convert.ToDecimal(row["DON_GIA"]);
             DataTable loSanPhams = LayThongTinMotLo(idMaSanPham);
-
-            if (loSanPhams.Rows.Count == 0)
-            {
-                throw new Exception($"Không tìm thấy Lô {idMaSanPham}.");
-            }
 
             string idSanPham = LayIdSanPhamTuMaSanPham(idMaSanPham);
             int soLuongTon = Convert.ToInt32(loSanPhams.Rows[0]["SO_LUONG"]);

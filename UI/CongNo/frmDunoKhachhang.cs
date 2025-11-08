@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using CuahangNongduoc.BusinessObject;
 using CuahangNongduoc.Controller;
+using CuahangNongduoc.Utils;
 
 
 namespace CuahangNongduoc
@@ -25,6 +26,7 @@ namespace CuahangNongduoc
             this.toolThang.SelectedIndex = DateTime.Now.Month - 1;
             this.toolNam.Text = DateTime.Now.Year.ToString();
             ctrlKH.HienthiKhachHangChungDataGridviewComboBox(colKhachHang);
+            AppTheme.ApplyTheme(this);
 
         }
 

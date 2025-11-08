@@ -128,6 +128,7 @@
             // 
             this.bindingNavigatorPositionItem.AccessibleName = "Position";
             this.bindingNavigatorPositionItem.AutoSize = false;
+            this.bindingNavigatorPositionItem.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.bindingNavigatorPositionItem.Name = "bindingNavigatorPositionItem";
             this.bindingNavigatorPositionItem.Size = new System.Drawing.Size(50, 23);
             this.bindingNavigatorPositionItem.Text = "0";
@@ -240,12 +241,13 @@
             // 
             // toolTimKhachHang
             // 
+            this.toolTimKhachHang.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.toolTimKhachHang.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.toolTimKhachHang.Name = "toolTimKhachHang";
             this.toolTimKhachHang.Size = new System.Drawing.Size(150, 46);
             this.toolTimKhachHang.Text = "Tìm theo Đại lý";
-            this.toolTimKhachHang.Leave += new System.EventHandler(this.toolTimKhachHang_Leave);
             this.toolTimKhachHang.Enter += new System.EventHandler(this.toolTimKhachHang_Enter);
+            this.toolTimKhachHang.Leave += new System.EventHandler(this.toolTimKhachHang_Leave);
             this.toolTimKhachHang.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.toolTimKhachHang_KeyPress);
             // 
             // dataGridView
@@ -312,7 +314,7 @@
             this.Controls.Add(this.bindingNavigator);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmDaiLy";
-            this.Text = "DAI LY";
+            this.Text = "ĐẠI LÝ";
             this.Load += new System.EventHandler(this.frmKhachHang_Load);
             ((System.ComponentModel.ISupportInitialize)(this.bindingNavigator)).EndInit();
             this.bindingNavigator.ResumeLayout(false);

@@ -1,4 +1,4 @@
-namespace CuahangNongduoc
+Ôªønamespace CuahangNongduoc
 {
     partial class frmSoLuongBan
     {
@@ -31,6 +31,7 @@ namespace CuahangNongduoc
             this.components = new System.ComponentModel.Container();
             Microsoft.Reporting.WinForms.ReportDataSource reportDataSource1 = new Microsoft.Reporting.WinForms.ReportDataSource();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmSoLuongBan));
+            this.ChiTietPhieuBanBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.panel1 = new System.Windows.Forms.Panel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.numNam = new System.Windows.Forms.NumericUpDown();
@@ -44,14 +45,17 @@ namespace CuahangNongduoc
             this.label1 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.reportViewer = new Microsoft.Reporting.WinForms.ReportViewer();
-            this.ChiTietPhieuBanBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            ((System.ComponentModel.ISupportInitialize)(this.ChiTietPhieuBanBindingSource)).BeginInit();
             this.panel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numNam)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.panel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ChiTietPhieuBanBindingSource)).BeginInit();
             this.SuspendLayout();
+            // 
+            // ChiTietPhieuBanBindingSource
+            // 
+            this.ChiTietPhieuBanBindingSource.DataSource = typeof(CuahangNongduoc.BusinessObject.ChiTietPhieuBan);
             // 
             // panel1
             // 
@@ -75,7 +79,7 @@ namespace CuahangNongduoc
             this.groupBox1.Size = new System.Drawing.Size(217, 95);
             this.groupBox1.TabIndex = 7;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Xem theo th·ng/n„m";
+            this.groupBox1.Text = "Xem theo th√°ng/n√£m";
             // 
             // numNam
             // 
@@ -106,7 +110,7 @@ namespace CuahangNongduoc
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(29, 13);
             this.label3.TabIndex = 12;
-            this.label3.Text = "N„m";
+            this.label3.Text = "N√£m";
             // 
             // cmbThang
             // 
@@ -138,7 +142,7 @@ namespace CuahangNongduoc
             this.btnXemThang.Name = "btnXemThang";
             this.btnXemThang.Size = new System.Drawing.Size(97, 24);
             this.btnXemThang.TabIndex = 10;
-            this.btnXemThang.Text = "Xem th·ng";
+            this.btnXemThang.Text = "Xem th√°ng";
             this.btnXemThang.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnXemThang.UseVisualStyleBackColor = true;
             this.btnXemThang.Click += new System.EventHandler(this.btnXemThang_Click);
@@ -150,7 +154,7 @@ namespace CuahangNongduoc
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(38, 13);
             this.label2.TabIndex = 9;
-            this.label2.Text = "Th·ng";
+            this.label2.Text = "Th√°ng";
             // 
             // groupBox2
             // 
@@ -162,7 +166,7 @@ namespace CuahangNongduoc
             this.groupBox2.Size = new System.Drawing.Size(190, 95);
             this.groupBox2.TabIndex = 6;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Xem theo ng‡y";
+            this.groupBox2.Text = "Xem theo ng√†y";
             // 
             // dtNgay
             // 
@@ -193,7 +197,7 @@ namespace CuahangNongduoc
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(32, 13);
             this.label1.TabIndex = 5;
-            this.label1.Text = "Ng‡y";
+            this.label1.Text = "Ng√†y";
             // 
             // panel2
             // 
@@ -213,12 +217,9 @@ namespace CuahangNongduoc
             this.reportViewer.LocalReport.ReportEmbeddedResource = "CuahangNongduoc.Report.rptSoLuongBan.rdlc";
             this.reportViewer.Location = new System.Drawing.Point(0, 0);
             this.reportViewer.Name = "reportViewer";
+            this.reportViewer.ServerReport.BearerToken = null;
             this.reportViewer.Size = new System.Drawing.Size(860, 436);
             this.reportViewer.TabIndex = 0;
-            // 
-            // ChiTietPhieuBanBindingSource
-            // 
-            this.ChiTietPhieuBanBindingSource.DataSource = typeof(CuahangNongduoc.BusinessObject.ChiTietPhieuBan);
             // 
             // frmSoLuongBan
             // 
@@ -229,8 +230,9 @@ namespace CuahangNongduoc
             this.Controls.Add(this.panel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmSoLuongBan";
-            this.Text = "SO LUONG BAN";
+            this.Text = "S·ªê L∆Ø·ª¢NG B√ÅN";
             this.Load += new System.EventHandler(this.frmSoLuongBan_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.ChiTietPhieuBanBindingSource)).EndInit();
             this.panel1.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
@@ -238,7 +240,6 @@ namespace CuahangNongduoc
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.ChiTietPhieuBanBindingSource)).EndInit();
             this.ResumeLayout(false);
 
         }

@@ -1,11 +1,12 @@
-﻿using System;
+﻿using CuahangNongduoc.Controller;
+using CuahangNongduoc.Utils;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using CuahangNongduoc.Controller;
 
 namespace CuahangNongduoc
 {
@@ -20,6 +21,8 @@ namespace CuahangNongduoc
         private void frmDonViTinh_Load(object sender, EventArgs e)
         {
             ctrl.HienthiDataGridview(dataGridView, bindingNavigator);
+            AppTheme.ApplyTheme(this);
+            this.Refresh();
         }
 
         private void toolLuu_Click(object sender, EventArgs e)

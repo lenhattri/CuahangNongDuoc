@@ -1,3 +1,4 @@
+using CuahangNongduoc.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -18,6 +19,11 @@ namespace CuahangNongduoc
         private void btnOK_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void frmThongtinLienhe_Load(object sender, EventArgs e)
+        {
+            
         }
     }
 }

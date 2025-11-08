@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using CuahangNongduoc.BusinessObject;
 using CuahangNongduoc.Controller;
+using CuahangNongduoc.Utils;
 
 namespace CuahangNongduoc
 {
@@ -15,7 +16,9 @@ namespace CuahangNongduoc
         public frmDanhsachPhieuBanSi()
         {
             InitializeComponent();
+            dataGridView.AutoGenerateColumns = false;
         }
+
 
         PhieuBanController ctrl = new PhieuBanController();
         KhachHangController ctrlKH = new KhachHangController();
@@ -23,6 +26,7 @@ namespace CuahangNongduoc
         {
             ctrlKH.HienthiDaiLyDataGridviewComboBox(colKhachhang);
             ctrl.HienthiPhieuBanSi(bindingNavigator, dataGridView);
+            AppTheme.ApplyTheme(this);
         }
         frmBanSi BanLe = null;
         private void dataGridView_DoubleClick(object sender, EventArgs e)

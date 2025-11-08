@@ -1,6 +1,6 @@
-﻿namespace CuahangNongduoc.UI.HeThong
+﻿namespace CuahangNongduoc.UI.PhieuThuChi
 {
-    partial class frmNguoiDung
+    partial class frmChiPhiPhatSinh
     {
         /// <summary>
         /// Required designer variable.
@@ -29,16 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmNguoiDung));
-            this.dataGridView = new System.Windows.Forms.DataGridView();
-            this.colID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colHoTen = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.TEN_DANG_NHAP = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Quyen = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colDiaChi = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colDienThoai = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.MAT_KHAU = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.toolTimNhanVien = new System.Windows.Forms.ToolStripTextBox();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmChiPhiPhatSinh));
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.bindingNavigatorSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.bindingNavigatorSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -54,109 +45,30 @@
             this.bindingNavigatorDeleteItem = new System.Windows.Forms.ToolStripButton();
             this.toolLuu = new System.Windows.Forms.ToolStripButton();
             this.toolThoat = new System.Windows.Forms.ToolStripButton();
-            this.toolTimKiem = new System.Windows.Forms.ToolStripDropDownButton();
-            this.toolTimHoTen = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolTimTenDangNhap = new System.Windows.Forms.ToolStripMenuItem();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
+            this.dataGridView = new System.Windows.Forms.DataGridView();
+            this.ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.TEN_CHI_PHI = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.LOAI_CHI_PHI = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SO_TIEN = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.bindingNavigator)).BeginInit();
             this.bindingNavigator.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
-            // 
-            // dataGridView
-            // 
-            this.dataGridView.AllowUserToAddRows = false;
-            this.dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.dataGridView.BackgroundColor = System.Drawing.SystemColors.Control;
-            this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.colID,
-            this.colHoTen,
-            this.TEN_DANG_NHAP,
-            this.Quyen,
-            this.colDiaChi,
-            this.colDienThoai,
-            this.MAT_KHAU});
-            this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridView.Location = new System.Drawing.Point(0, 46);
-            this.dataGridView.Name = "dataGridView";
-            this.dataGridView.RowHeadersWidth = 51;
-            this.dataGridView.Size = new System.Drawing.Size(600, 320);
-            this.dataGridView.TabIndex = 3;
-            this.dataGridView.DoubleClick += new System.EventHandler(this.dataGridView_DoubleClick);
-            // 
-            // colID
-            // 
-            this.colID.DataPropertyName = "ID";
-            this.colID.HeaderText = "Mã số";
-            this.colID.MinimumWidth = 6;
-            this.colID.Name = "colID";
-            // 
-            // colHoTen
-            // 
-            this.colHoTen.DataPropertyName = "HO_TEN";
-            this.colHoTen.HeaderText = "Họ tên";
-            this.colHoTen.MinimumWidth = 6;
-            this.colHoTen.Name = "colHoTen";
-            // 
-            // TEN_DANG_NHAP
-            // 
-            this.TEN_DANG_NHAP.DataPropertyName = "TEN_DANG_NHAP";
-            this.TEN_DANG_NHAP.HeaderText = "Tên tài khoản";
-            this.TEN_DANG_NHAP.MinimumWidth = 6;
-            this.TEN_DANG_NHAP.Name = "TEN_DANG_NHAP";
-            // 
-            // Quyen
-            // 
-            this.Quyen.DataPropertyName = "QUYEN";
-            this.Quyen.HeaderText = "Quyền";
-            this.Quyen.MinimumWidth = 6;
-            this.Quyen.Name = "Quyen";
-            // 
-            // colDiaChi
-            // 
-            this.colDiaChi.DataPropertyName = "DIA_CHI";
-            this.colDiaChi.HeaderText = "Địa chỉ";
-            this.colDiaChi.MinimumWidth = 6;
-            this.colDiaChi.Name = "colDiaChi";
-            // 
-            // colDienThoai
-            // 
-            this.colDienThoai.DataPropertyName = "DIEN_THOAI";
-            this.colDienThoai.HeaderText = "Điện thoại";
-            this.colDienThoai.MinimumWidth = 6;
-            this.colDienThoai.Name = "colDienThoai";
-            // 
-            // MAT_KHAU
-            // 
-            this.MAT_KHAU.DataPropertyName = "MAT_KHAU";
-            this.MAT_KHAU.HeaderText = "Mật khẩu";
-            this.MAT_KHAU.MinimumWidth = 6;
-            this.MAT_KHAU.Name = "MAT_KHAU";
-            this.MAT_KHAU.Visible = false;
-            // 
-            // toolTimNhanVien
-            // 
-            this.toolTimNhanVien.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.toolTimNhanVien.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.toolTimNhanVien.Name = "toolTimNhanVien";
-            this.toolTimNhanVien.Size = new System.Drawing.Size(114, 46);
-            this.toolTimNhanVien.Text = "Tìm theo Họ tên";
-            this.toolTimNhanVien.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.toolTimNhanVien_KeyPress);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 46);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 58);
             // 
             // bindingNavigatorSeparator2
             // 
             this.bindingNavigatorSeparator2.Name = "bindingNavigatorSeparator2";
-            this.bindingNavigatorSeparator2.Size = new System.Drawing.Size(6, 46);
+            this.bindingNavigatorSeparator2.Size = new System.Drawing.Size(6, 58);
             // 
             // bindingNavigatorSeparator1
             // 
             this.bindingNavigatorSeparator1.Name = "bindingNavigatorSeparator1";
-            this.bindingNavigatorSeparator1.Size = new System.Drawing.Size(6, 46);
+            this.bindingNavigatorSeparator1.Size = new System.Drawing.Size(6, 58);
             // 
             // bindingNavigatorPositionItem
             // 
@@ -164,19 +76,19 @@
             this.bindingNavigatorPositionItem.AutoSize = false;
             this.bindingNavigatorPositionItem.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.bindingNavigatorPositionItem.Name = "bindingNavigatorPositionItem";
-            this.bindingNavigatorPositionItem.Size = new System.Drawing.Size(50, 23);
+            this.bindingNavigatorPositionItem.Size = new System.Drawing.Size(73, 31);
             this.bindingNavigatorPositionItem.Text = "0";
             this.bindingNavigatorPositionItem.ToolTipText = "Current position";
             // 
             // bindingNavigatorSeparator
             // 
             this.bindingNavigatorSeparator.Name = "bindingNavigatorSeparator";
-            this.bindingNavigatorSeparator.Size = new System.Drawing.Size(6, 46);
+            this.bindingNavigatorSeparator.Size = new System.Drawing.Size(6, 58);
             // 
             // bindingNavigatorCountItem
             // 
             this.bindingNavigatorCountItem.Name = "bindingNavigatorCountItem";
-            this.bindingNavigatorCountItem.Size = new System.Drawing.Size(35, 43);
+            this.bindingNavigatorCountItem.Size = new System.Drawing.Size(54, 53);
             this.bindingNavigatorCountItem.Text = "of {0}";
             this.bindingNavigatorCountItem.ToolTipText = "Total number of items";
             // 
@@ -200,18 +112,17 @@
             this.bindingNavigatorDeleteItem,
             this.toolLuu,
             this.toolThoat,
-            this.toolStripSeparator1,
-            this.toolTimKiem,
-            this.toolTimNhanVien});
+            this.toolStripSeparator1});
             this.bindingNavigator.Location = new System.Drawing.Point(0, 0);
             this.bindingNavigator.MoveFirstItem = this.bindingNavigatorMoveFirstItem;
             this.bindingNavigator.MoveLastItem = this.bindingNavigatorMoveLastItem;
             this.bindingNavigator.MoveNextItem = this.bindingNavigatorMoveNextItem;
             this.bindingNavigator.MovePreviousItem = this.bindingNavigatorMovePreviousItem;
             this.bindingNavigator.Name = "bindingNavigator";
+            this.bindingNavigator.Padding = new System.Windows.Forms.Padding(0, 0, 3, 0);
             this.bindingNavigator.PositionItem = this.bindingNavigatorPositionItem;
-            this.bindingNavigator.Size = new System.Drawing.Size(600, 46);
-            this.bindingNavigator.TabIndex = 2;
+            this.bindingNavigator.Size = new System.Drawing.Size(982, 58);
+            this.bindingNavigator.TabIndex = 4;
             this.bindingNavigator.Text = "bindingNavigator1";
             // 
             // bindingNavigatorMoveFirstItem
@@ -220,7 +131,7 @@
             this.bindingNavigatorMoveFirstItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorMoveFirstItem.Image")));
             this.bindingNavigatorMoveFirstItem.Name = "bindingNavigatorMoveFirstItem";
             this.bindingNavigatorMoveFirstItem.RightToLeftAutoMirrorImage = true;
-            this.bindingNavigatorMoveFirstItem.Size = new System.Drawing.Size(24, 43);
+            this.bindingNavigatorMoveFirstItem.Size = new System.Drawing.Size(34, 53);
             this.bindingNavigatorMoveFirstItem.Text = "Move first";
             // 
             // bindingNavigatorMovePreviousItem
@@ -229,7 +140,7 @@
             this.bindingNavigatorMovePreviousItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorMovePreviousItem.Image")));
             this.bindingNavigatorMovePreviousItem.Name = "bindingNavigatorMovePreviousItem";
             this.bindingNavigatorMovePreviousItem.RightToLeftAutoMirrorImage = true;
-            this.bindingNavigatorMovePreviousItem.Size = new System.Drawing.Size(24, 43);
+            this.bindingNavigatorMovePreviousItem.Size = new System.Drawing.Size(34, 53);
             this.bindingNavigatorMovePreviousItem.Text = "Move previous";
             // 
             // bindingNavigatorMoveNextItem
@@ -238,7 +149,7 @@
             this.bindingNavigatorMoveNextItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorMoveNextItem.Image")));
             this.bindingNavigatorMoveNextItem.Name = "bindingNavigatorMoveNextItem";
             this.bindingNavigatorMoveNextItem.RightToLeftAutoMirrorImage = true;
-            this.bindingNavigatorMoveNextItem.Size = new System.Drawing.Size(24, 43);
+            this.bindingNavigatorMoveNextItem.Size = new System.Drawing.Size(34, 53);
             this.bindingNavigatorMoveNextItem.Text = "Move next";
             // 
             // bindingNavigatorMoveLastItem
@@ -247,7 +158,7 @@
             this.bindingNavigatorMoveLastItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorMoveLastItem.Image")));
             this.bindingNavigatorMoveLastItem.Name = "bindingNavigatorMoveLastItem";
             this.bindingNavigatorMoveLastItem.RightToLeftAutoMirrorImage = true;
-            this.bindingNavigatorMoveLastItem.Size = new System.Drawing.Size(24, 43);
+            this.bindingNavigatorMoveLastItem.Size = new System.Drawing.Size(34, 53);
             this.bindingNavigatorMoveLastItem.Text = "Move last";
             // 
             // bindingNavigatorAddNewItem
@@ -256,7 +167,7 @@
             this.bindingNavigatorAddNewItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.bindingNavigatorAddNewItem.Name = "bindingNavigatorAddNewItem";
             this.bindingNavigatorAddNewItem.RightToLeftAutoMirrorImage = true;
-            this.bindingNavigatorAddNewItem.Size = new System.Drawing.Size(42, 43);
+            this.bindingNavigatorAddNewItem.Size = new System.Drawing.Size(60, 53);
             this.bindingNavigatorAddNewItem.Text = "Thêm";
             this.bindingNavigatorAddNewItem.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.bindingNavigatorAddNewItem.Click += new System.EventHandler(this.bindingNavigatorAddNewItem_Click);
@@ -267,7 +178,7 @@
             this.bindingNavigatorDeleteItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.bindingNavigatorDeleteItem.Name = "bindingNavigatorDeleteItem";
             this.bindingNavigatorDeleteItem.RightToLeftAutoMirrorImage = true;
-            this.bindingNavigatorDeleteItem.Size = new System.Drawing.Size(43, 43);
+            this.bindingNavigatorDeleteItem.Size = new System.Drawing.Size(67, 53);
             this.bindingNavigatorDeleteItem.Text = "  Xóa  ";
             this.bindingNavigatorDeleteItem.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.bindingNavigatorDeleteItem.Click += new System.EventHandler(this.bindingNavigatorDeleteItem_Click);
@@ -278,10 +189,10 @@
             this.toolLuu.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.toolLuu.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolLuu.Name = "toolLuu";
-            this.toolLuu.Size = new System.Drawing.Size(43, 43);
+            this.toolLuu.Size = new System.Drawing.Size(65, 53);
             this.toolLuu.Text = "  Lưu  ";
             this.toolLuu.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.toolLuu.Click += new System.EventHandler(this.toolLuu_Click_1);
+            this.toolLuu.Click += new System.EventHandler(this.toolLuu_Click);
             // 
             // toolThoat
             // 
@@ -289,69 +200,83 @@
             this.toolThoat.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.toolThoat.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolThoat.Name = "toolThoat";
-            this.toolThoat.Size = new System.Drawing.Size(42, 43);
-            this.toolThoat.Text = "Thoát";
+            this.toolThoat.Size = new System.Drawing.Size(66, 53);
+            this.toolThoat.Text = " Thoát";
             this.toolThoat.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.toolThoat.Click += new System.EventHandler(this.toolThoat_Click);
             // 
-            // toolTimKiem
+            // dataGridView
             // 
-            this.toolTimKiem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolTimHoTen,
-            this.toolTimTenDangNhap});
-            this.toolTimKiem.Image = global::CuahangNongduoc.Properties.Resources.find;
-            this.toolTimKiem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.toolTimKiem.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolTimKiem.Name = "toolTimKiem";
-            this.toolTimKiem.Size = new System.Drawing.Size(37, 43);
-            this.toolTimKiem.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.dataGridView.AllowUserToAddRows = false;
+            this.dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dataGridView.BackgroundColor = System.Drawing.SystemColors.Control;
+            this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.ID,
+            this.TEN_CHI_PHI,
+            this.LOAI_CHI_PHI,
+            this.SO_TIEN});
+            this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridView.Location = new System.Drawing.Point(0, 58);
+            this.dataGridView.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.dataGridView.Name = "dataGridView";
+            this.dataGridView.RowHeadersWidth = 51;
+            this.dataGridView.Size = new System.Drawing.Size(982, 554);
+            this.dataGridView.TabIndex = 5;
+            this.dataGridView.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.dataGridView_UserDeletingRow);
             // 
-            // toolTimHoTen
+            // ID
             // 
-            this.toolTimHoTen.Checked = true;
-            this.toolTimHoTen.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.toolTimHoTen.Name = "toolTimHoTen";
-            this.toolTimHoTen.Size = new System.Drawing.Size(153, 22);
-            this.toolTimHoTen.Text = "Họ tên";
-            this.toolTimHoTen.Click += new System.EventHandler(this.toolTimHoTen_Click);
+            this.ID.DataPropertyName = "ID";
+            this.ID.HeaderText = "Mã số";
+            this.ID.MinimumWidth = 6;
+            this.ID.Name = "ID";
             // 
-            // toolTimTenDangNhap
+            // TEN_CHI_PHI
             // 
-            this.toolTimTenDangNhap.Name = "toolTimTenDangNhap";
-            this.toolTimTenDangNhap.Size = new System.Drawing.Size(153, 22);
-            this.toolTimTenDangNhap.Text = "Tên đăng nhập";
-            this.toolTimTenDangNhap.Click += new System.EventHandler(this.toolTimTenDangNhap_Click);
+            this.TEN_CHI_PHI.DataPropertyName = "TEN_CHI_PHI";
+            this.TEN_CHI_PHI.HeaderText = "Tên chi phí";
+            this.TEN_CHI_PHI.MinimumWidth = 6;
+            this.TEN_CHI_PHI.Name = "TEN_CHI_PHI";
             // 
-            // frmNguoiDung
+            // LOAI_CHI_PHI
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.LOAI_CHI_PHI.DataPropertyName = "LOAI_CHI_PHI";
+            this.LOAI_CHI_PHI.HeaderText = "Loại chi phí";
+            this.LOAI_CHI_PHI.MinimumWidth = 6;
+            this.LOAI_CHI_PHI.Name = "LOAI_CHI_PHI";
+            // 
+            // SO_TIEN
+            // 
+            this.SO_TIEN.DataPropertyName = "SO_TIEN";
+            this.SO_TIEN.HeaderText = "Số tiền";
+            this.SO_TIEN.MinimumWidth = 6;
+            this.SO_TIEN.Name = "SO_TIEN";
+            // 
+            // frmChiPhiPhatSinh
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(600, 366);
+            this.ClientSize = new System.Drawing.Size(982, 612);
             this.Controls.Add(this.dataGridView);
             this.Controls.Add(this.bindingNavigator);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.Name = "frmNguoiDung";
-            this.Text = "NHÂN VIÊN";
-            this.Load += new System.EventHandler(this.frmNguoiDung_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
+            this.Name = "frmChiPhiPhatSinh";
+            this.Text = "Chi phí phát sinh";
+            this.Load += new System.EventHandler(this.frmChiPhiPhatSinh_Load);
             ((System.ComponentModel.ISupportInitialize)(this.bindingNavigator)).EndInit();
             this.bindingNavigator.ResumeLayout(false);
             this.bindingNavigator.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.DataGridView dataGridView;
-        private System.Windows.Forms.ToolStripTextBox toolTimNhanVien;
-        private System.Windows.Forms.ToolStripMenuItem toolTimTenDangNhap;
-        private System.Windows.Forms.ToolStripMenuItem toolTimHoTen;
-        private System.Windows.Forms.ToolStripDropDownButton toolTimKiem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripButton toolThoat;
         private System.Windows.Forms.ToolStripButton toolLuu;
+        private System.Windows.Forms.ToolStripButton bindingNavigatorDeleteItem;
         private System.Windows.Forms.ToolStripButton bindingNavigatorAddNewItem;
         private System.Windows.Forms.ToolStripSeparator bindingNavigatorSeparator2;
         private System.Windows.Forms.ToolStripButton bindingNavigatorMoveLastItem;
@@ -362,14 +287,11 @@
         private System.Windows.Forms.ToolStripButton bindingNavigatorMovePreviousItem;
         private System.Windows.Forms.ToolStripButton bindingNavigatorMoveFirstItem;
         private System.Windows.Forms.ToolStripLabel bindingNavigatorCountItem;
-        private System.Windows.Forms.ToolStripButton bindingNavigatorDeleteItem;
         private System.Windows.Forms.BindingNavigator bindingNavigator;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colID;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colHoTen;
-        private System.Windows.Forms.DataGridViewTextBoxColumn TEN_DANG_NHAP;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Quyen;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colDiaChi;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colDienThoai;
-        private System.Windows.Forms.DataGridViewTextBoxColumn MAT_KHAU;
+        private System.Windows.Forms.DataGridView dataGridView;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn TEN_CHI_PHI;
+        private System.Windows.Forms.DataGridViewTextBoxColumn LOAI_CHI_PHI;
+        private System.Windows.Forms.DataGridViewTextBoxColumn SO_TIEN;
     }
 }

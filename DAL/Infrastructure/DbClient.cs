@@ -7,11 +7,13 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace CuahangNongduoc.DAL.Infrastructure
 {
     public sealed class DbClient
     {
+        // test commit
         private static readonly Lazy<DbClient> _lazy = new Lazy<DbClient>(() => new DbClient());
         public static DbClient Instance => _lazy.Value;
         private readonly string _cs;
