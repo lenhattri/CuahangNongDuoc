@@ -1,13 +1,14 @@
-﻿using System;
+﻿using CuahangNongduoc.BusinessObject;
+using CuahangNongduoc.Controller;
+using CuahangNongduoc.DataLayer;
+using CuahangNongduoc.Utils;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using CuahangNongduoc.BusinessObject;
-using CuahangNongduoc.Controller;
-using CuahangNongduoc.Utils;
 
 namespace CuahangNongduoc
 {
@@ -20,7 +21,9 @@ namespace CuahangNongduoc
         }
 
 
-        PhieuBanController ctrl = new PhieuBanController();
+        PhieuBanController ctrl = new PhieuBanController(
+            new PhieuBanFactory(),
+    new KhachHangController());
         KhachHangController ctrlKH = new KhachHangController();
         private void frmDanhsachPhieuNhap_Load(object sender, EventArgs e)
         {
@@ -62,13 +65,19 @@ namespace CuahangNongduoc
                 DataRowView view = (DataRowView)bindingNavigator.BindingSource.Current;
                 ChiTietPhieuBanController ctrl = new ChiTietPhieuBanController();
                 IList<ChiTietPhieuBan> ds = ctrl.ChiTietPhieuBan(view["ID"].ToString());
+
+                // Tạo instance của MaSanPhanFactory
+                MaSanPhanFactory factory = new MaSanPhanFactory();
+
                 foreach (ChiTietPhieuBan ct in ds)
                 {
-                    CuahangNongduoc.DataLayer.MaSanPhanFactory.CapNhatSoLuong(ct.MaSanPham.Id, ct.SoLuong);
+                    factory.CapNhatSoLuong(ct.MaSanPham.Id, ct.SoLuong); // gọi qua object
                 }
+
                 ctrl.Save();
             }
         }
+
 
         private void bindingNavigatorDeleteItem_Click(object sender, EventArgs e)
         {
@@ -79,9 +88,10 @@ namespace CuahangNongduoc
                  {
                      ChiTietPhieuBanController ctrl = new ChiTietPhieuBanController();
                      IList<ChiTietPhieuBan> ds = ctrl.ChiTietPhieuBan(view["ID"].ToString());
-                     foreach (ChiTietPhieuBan ct in ds)
+                    MaSanPhanFactory factory = new MaSanPhanFactory();
+                    foreach (ChiTietPhieuBan ct in ds)
                      {
-                         CuahangNongduoc.DataLayer.MaSanPhanFactory.CapNhatSoLuong(ct.MaSanPham.Id, ct.SoLuong);
+                         factory.CapNhatSoLuong(ct.MaSanPham.Id, ct.SoLuong);
                      }
                      bindingNavigator.BindingSource.RemoveCurrent();
                      ctrl.Save();
@@ -94,7 +104,9 @@ namespace CuahangNongduoc
             DataRowView row = (DataRowView)bindingNavigator.BindingSource.Current;
             if (row != null)
             {
-                PhieuBanController ctrlPB = new PhieuBanController();
+                PhieuBanController ctrlPB = new PhieuBanController(
+                    new PhieuBanFactory(),
+    new KhachHangController());
                 String ma_phieu = row["ID"].ToString();
                 CuahangNongduoc.BusinessObject.PhieuBan ph = ctrlPB.LayPhieuBan(ma_phieu);
                 frmInPhieuBan PhieuBan = new frmInPhieuBan(ph);

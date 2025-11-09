@@ -1,17 +1,18 @@
-﻿using System;
+﻿using CuahangNongduoc.BLL.Controller;
+using CuahangNongduoc.BLL.Helpers;
+using CuahangNongduoc.BusinessObject;
+using CuahangNongduoc.Controller;
+using CuahangNongduoc.DataLayer;
+using CuahangNongduoc.UI.PhieuThuChi;
+using CuahangNongduoc.Utils;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using CuahangNongduoc.Controller;
-using CuahangNongduoc.BusinessObject;
-using CuahangNongduoc.BLL.Helpers;
-using CuahangNongduoc.UI.PhieuThuChi;
-using CuahangNongduoc.BLL.Controller;
-using System.Linq;
-using CuahangNongduoc.Utils;
 
 namespace CuahangNongduoc
 {
@@ -20,7 +21,10 @@ namespace CuahangNongduoc
         SanPhamController ctrlSanPham = new SanPhamController();
         KhachHangController ctrlKhachHang = new KhachHangController();
         MaSanPhamController ctrlMaSanPham = new MaSanPhamController();
-        PhieuBanController ctrlPhieuBan = new PhieuBanController();
+        PhieuBanController ctrlPhieuBan = new PhieuBanController(
+            new PhieuBanFactory(),
+            new KhachHangController()
+            );
         ChiTietPhieuBanController ctrlChiTiet = new ChiTietPhieuBanController();
         PhieuBanChiPhiController ctrlPhieuBanChiPhi = new PhieuBanChiPhiController();
         IList<MaSanPham> deleted = new List<MaSanPham>();
@@ -180,10 +184,10 @@ namespace CuahangNongduoc
 
         void CapNhat()
         {
-            
+            MaSanPhanFactory factory = new MaSanPhanFactory();
             foreach (MaSanPham masp in deleted)
             {
-                CuahangNongduoc.DataLayer.MaSanPhanFactory.CapNhatSoLuong(masp.Id, masp.SoLuong);
+                factory.CapNhatSoLuong(masp.Id, masp.SoLuong);
             }
             deleted.Clear();
 
@@ -208,7 +212,10 @@ namespace CuahangNongduoc
             row["CON_NO"] = numConNo.Value;
             ctrlPhieuBan.Add(row);
 
-            PhieuBanController ctrl = new PhieuBanController();
+            PhieuBanController ctrl = new PhieuBanController(
+                new PhieuBanFactory(),
+                new KhachHangController()
+                );
 
             if (ctrl.LayPhieuBan(txtMaPhieu.Text) != null)
             {
@@ -234,7 +241,10 @@ namespace CuahangNongduoc
 
         private void toolLuu_Them_Click(object sender, EventArgs e)
         {
-            ctrlPhieuBan = new PhieuBanController();
+            ctrlPhieuBan = new PhieuBanController(
+                new PhieuBanFactory(),
+                new KhachHangController()
+                );
             status = Controll.AddNew;
             txtMaPhieu.Text = ThamSo.LayMaPhieuBan().ToString();
             numTongTien.Value = 0;
@@ -281,7 +291,10 @@ namespace CuahangNongduoc
             {
                 String ma_phieu = txtMaPhieu.Text;
 
-                PhieuBanController ctrlPB = new PhieuBanController();
+                PhieuBanController ctrlPB = new PhieuBanController(
+                    new PhieuBanFactory(),
+                    new KhachHangController()
+                    );
 
                 CuahangNongduoc.BusinessObject.PhieuBan ph = ctrlPB.LayPhieuBan(ma_phieu);
 
@@ -340,9 +353,10 @@ namespace CuahangNongduoc
                 {
                     ChiTietPhieuBanController ctrl = new ChiTietPhieuBanController();
                     IList<ChiTietPhieuBan> ds = ctrl.ChiTietPhieuBan(view["ID"].ToString());
+                    MaSanPhanFactory factory = new MaSanPhanFactory();
                     foreach (ChiTietPhieuBan ct in ds)
                     {
-                        CuahangNongduoc.DataLayer.MaSanPhanFactory.CapNhatSoLuong(ct.MaSanPham.Id, ct.SoLuong);
+                        factory.CapNhatSoLuong(ct.MaSanPham.Id, ct.SoLuong);
                     }
                     bindingNavigator.BindingSource.RemoveCurrent();
                     ctrlPhieuBan.Save();

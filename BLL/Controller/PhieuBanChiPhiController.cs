@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace CuahangNongduoc.BLL.Controller
 {
-    class PhieuBanChiPhiController
+    public class PhieuBanChiPhiController
     {
         PhieuBanChiPhiFactory dal = new PhieuBanChiPhiFactory();
         public DataTable LayDanhSachTheoPhieuBan(string maPhieuBan)

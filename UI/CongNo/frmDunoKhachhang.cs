@@ -1,61 +1,38 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using CuahangNongduoc.BusinessObject;
 using CuahangNongduoc.Controller;
+using CuahangNongduoc.DataLayer;
 using CuahangNongduoc.Utils;
-
 
 namespace CuahangNongduoc
 {
     public partial class frmDunoKhachhang : Form
     {
+        private readonly DuNoKhachHangController ctrl;
+        private readonly KhachHangController ctrlKH = new KhachHangController();
+
         public frmDunoKhachhang()
         {
             InitializeComponent();
+
+            // ✅ Inject dependency theo đúng mô hình DI
+            ctrl = new DuNoKhachHangController(
+                new DuNoKhachHangDAL(),
+                new KhachHangFactory(),
+                new PhieuBanFactory(),
+                new PhieuThanhToanDAL()
+            );
         }
-        DuNoKhachHangController ctrl = new DuNoKhachHangController();
-        KhachHangController ctrlKH = new KhachHangController();
+
         private void frmDunoKhachhang_Load(object sender, EventArgs e)
         {
-
             this.toolThang.SelectedIndex = DateTime.Now.Month - 1;
             this.toolNam.Text = DateTime.Now.Year.ToString();
             ctrlKH.HienthiKhachHangChungDataGridviewComboBox(colKhachHang);
             AppTheme.ApplyTheme(this);
-
-        }
-
-        private void btnTongHop_Click(object sender, EventArgs e)
-        {
-            
-            
-        }
-
-        private void toolNam_Validating(object sender, CancelEventArgs e)
-        {
-            bool ok = true;
-            try
-            {
-                long nam = Convert.ToInt32(toolNam.Text);
-                if (nam < 2000 || nam > 9999)
-                {
-                    ok = false;
-                }
-            }
-            catch
-            {
-                ok = false;
-            }
-            if (!ok)
-            {
-                MessageBox.Show("Thông tin năm không hợp lệ!", "Tong Hop Du No", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                e.Cancel = true;
-            }
         }
 
         private void toolTongHop_Click(object sender, EventArgs e)
@@ -92,6 +69,24 @@ namespace CuahangNongduoc
 
             frmInDunoKhachHang InDuNo = new frmInDunoKhachHang(dn);
             InDuNo.Show();
+        }
+
+        private void toolNam_Validating(object sender, CancelEventArgs e)
+        {
+            bool ok = true;
+            try
+            {
+                long nam = Convert.ToInt32(toolNam.Text);
+                if (nam < 2000 || nam > 9999)
+                    ok = false;
+            }
+            catch { ok = false; }
+
+            if (!ok)
+            {
+                MessageBox.Show("Thông tin năm không hợp lệ!", "Tổng hợp Dư Nợ", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                e.Cancel = true;
+            }
         }
     }
 }

@@ -1,21 +1,22 @@
-﻿using CuahangNongduoc.BLL.Helpers;
+﻿using CuahangNongduoc.BLL.Controller;
+using CuahangNongduoc.BLL.Helpers;
+using CuahangNongduoc.BLL.Helpers;
+using CuahangNongduoc.BusinessObject;
 using CuahangNongduoc.BusinessObject;
 using CuahangNongduoc.Controller;
+using CuahangNongduoc.Controller;
+using CuahangNongduoc.DataLayer;
+using CuahangNongduoc.UI.PhieuThuChi;
+using CuahangNongduoc.Utils;
 using CuahangNongduoc.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using CuahangNongduoc.Controller;
-using CuahangNongduoc.BusinessObject;
-using CuahangNongduoc.Utils;
-using CuahangNongduoc.BLL.Helpers;
-using CuahangNongduoc.BLL.Controller;
-using System.Linq;
-using CuahangNongduoc.UI.PhieuThuChi;
 
 namespace CuahangNongduoc
 {
@@ -24,18 +25,21 @@ namespace CuahangNongduoc
         SanPhamController ctrlSanPham = new SanPhamController();
         KhachHangController ctrlKhachHang = new KhachHangController();
         MaSanPhamController ctrlMaSanPham = new MaSanPhamController();
-        PhieuBanController ctrlPhieuBan = new PhieuBanController();
+        PhieuBanController ctrlPhieuBan = new PhieuBanController(
+             new PhieuBanFactory(),        // inject DAL
+                    new KhachHangController()
+            );
         ChiTietPhieuBanController ctrlChiTiet = new ChiTietPhieuBanController();
         PhieuBanChiPhiController ctrlPhieuBanChiPhi = new PhieuBanChiPhiController();
         IList<MaSanPham> deleted = new List<MaSanPham>();
         private List<ChiPhiPhatSinh> _dsChiPhiDaChon = new List<ChiPhiPhatSinh>();
 
         Controll status = Controll.Normal;
-
+        private readonly IMaSanPhanFactory _maSpDal;
         public frmBanSi()
         {
             InitializeComponent();
-            
+            _maSpDal = new MaSanPhanFactory();
             status = Controll.AddNew;
         }
 
@@ -185,7 +189,7 @@ namespace CuahangNongduoc
 
             foreach (MaSanPham masp in deleted)
             {
-                CuahangNongduoc.DataLayer.MaSanPhanFactory.CapNhatSoLuong(masp.Id, masp.SoLuong);
+                _maSpDal.CapNhatSoLuong(masp.Id, masp.SoLuong);
             }
             deleted.Clear();
 
@@ -208,7 +212,10 @@ namespace CuahangNongduoc
             row["CON_NO"] = numConNo.Value;
             ctrlPhieuBan.Add(row);
 
-            PhieuBanController ctrl = new PhieuBanController();
+            PhieuBanController ctrl = new PhieuBanController(
+                new PhieuBanFactory(),
+                new KhachHangController()
+                );
 
             if (ctrl.LayPhieuBan(txtMaPhieu.Text) != null)
             {
@@ -233,7 +240,10 @@ namespace CuahangNongduoc
 
         private void toolLuu_Them_Click(object sender, EventArgs e)
         {
-            ctrlPhieuBan = new PhieuBanController();
+            ctrlPhieuBan = new PhieuBanController(
+                new PhieuBanFactory(),
+                new KhachHangController()
+                );
             status = Controll.AddNew;
             txtMaPhieu.Text = ThamSo.LayMaPhieuBan().ToString();
             numTongTien.Value = 0;
@@ -273,21 +283,26 @@ namespace CuahangNongduoc
             if (status != Controll.Normal)
             {
                 MessageBox.Show("Vui lòng lưu lại Phiếu bán hiện tại!", "Phieu Ban Le", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return; // dừng hàm nếu chưa lưu
             }
-            else
-            {
-                String ma_phieu = txtMaPhieu.Text;
 
-                PhieuBanController ctrlPB = new PhieuBanController();
+            string ma_phieu = txtMaPhieu.Text;
 
-                CuahangNongduoc.BusinessObject.PhieuBan ph = ctrlPB.LayPhieuBan(ma_phieu);
+            // ✅ Khởi tạo các dependency cần thiết cho PhieuBanController
+            IPhieuBanFactory phieuBanDal = new PhieuBanFactory(); // lớp DAL của bạn
+            KhachHangController khachHangCtrl = new KhachHangController(); // controller khách hàng
 
-                frmInPhieuBan InPhieuBan = new frmInPhieuBan(ph);
+            // ✅ Khởi tạo controller với tham số
+            PhieuBanController ctrlPB = new PhieuBanController(phieuBanDal, khachHangCtrl);
 
-                InPhieuBan.Show();
+            // Lấy phiếu bán từ controller
+            CuahangNongduoc.BusinessObject.PhieuBan ph = ctrlPB.LayPhieuBan(ma_phieu);
 
-            }
+            // Mở form in phiếu bán
+            frmInPhieuBan InPhieuBan = new frmInPhieuBan(ph);
+            InPhieuBan.Show();
         }
+
 
         private void dgvDanhsachSP_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
@@ -335,7 +350,7 @@ namespace CuahangNongduoc
                      IList<ChiTietPhieuBan> ds = ctrl.ChiTietPhieuBan(view["ID"].ToString());
                      foreach (ChiTietPhieuBan ct in ds)
                      {
-                         CuahangNongduoc.DataLayer.MaSanPhanFactory.CapNhatSoLuong(ct.MaSanPham.Id, ct.SoLuong);
+                         _maSpDal.CapNhatSoLuong(ct.MaSanPham.Id, ct.SoLuong);
                      }
                      bindingNavigator.BindingSource.RemoveCurrent();
                      ctrlPhieuBan.Save();
