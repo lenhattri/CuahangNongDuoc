@@ -9,7 +9,7 @@ using System.Windows.Forms;       // NEW: Thêm để dùng ValidationRule
 
 namespace CuahangNongduoc.DataLayer
 {
-    public class LyDoChiFactory
+    public class LyDoChiFactory : ILyDoChiFactory
     {
         // REMOVED: Bỏ _connectionString và DataService m_Ds
         private readonly DbClient _db = DbClient.Instance;

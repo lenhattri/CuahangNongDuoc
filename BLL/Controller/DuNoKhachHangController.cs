@@ -70,32 +70,48 @@
 using System;
 using System.Data;
 using System.Windows.Forms;
-using CuahangNongduoc.DataLayer; // DuNoKhachHangDAL + các Factory cũ
+using CuahangNongduoc.DataLayer;
 
 namespace CuahangNongduoc.Controller
 {
     public class DuNoKhachHangController
     {
-        private readonly DuNoKhachHangDAL _duNoDal = new DuNoKhachHangDAL();
-        private readonly KhachHangFactory _khFactory = new KhachHangFactory();
+        private readonly IDuNoKhachHangDAL _duNoDal;
+        private readonly KhachHangFactory _khFactory;
+        private readonly PhieuBanFactory _phieuBanFactory;
+        private readonly IPhieuThanhToanDAL _phieuThanhToanDal;
 
+        // ✅ Constructor Injection (chuẩn DI)
+        public DuNoKhachHangController(
+            IDuNoKhachHangDAL duNoDal,
+            KhachHangFactory khFactory,
+            PhieuBanFactory phieuBanFactory,
+            IPhieuThanhToanDAL phieuThanhToanDal)
+        {
+            _duNoDal = duNoDal ?? throw new ArgumentNullException(nameof(duNoDal));
+            _khFactory = khFactory ?? throw new ArgumentNullException(nameof(khFactory));
+            _phieuBanFactory = phieuBanFactory ?? throw new ArgumentNullException(nameof(phieuBanFactory));
+            _phieuThanhToanDal = phieuThanhToanDal ?? throw new ArgumentNullException(nameof(phieuThanhToanDal));
+        }
+
+        // ✅ Tổng hợp dữ liệu công nợ khách hàng
         public void Tonghop(int thang, int nam,
             ToolStripProgressBar bar, DataGridView dg, BindingNavigator bn)
         {
             int thangTruoc = 0, namTruoc = 0;
             ThamSo.PreMonth(ref thangTruoc, ref namTruoc, thang, nam);
 
-            // 1) Xoá dữ liệu tổng hợp kỳ hiện tại
+            // Xoá dữ liệu kỳ hiện tại
             _duNoDal.Clear(thang, nam);
 
-            // 2) Lấy bảng rỗng đúng schema để bind và để DAL giữ _table nội bộ
-            var dtBind = _duNoDal.DanhsachDuNo(thang, nam);
+            // Lấy DataTable rỗng đúng schema để bind
+            DataTable dtBind = _duNoDal.DanhsachDuNo(thang, nam);
+            BindingSource bs = new BindingSource { DataSource = dtBind };
 
-            var bs = new BindingSource { DataSource = dtBind };
             if (bn != null) bn.BindingSource = bs;
             if (dg != null) dg.DataSource = bs;
 
-            var tblKh = _khFactory.DanhsachKhachHang();
+            DataTable tblKh = _khFactory.DanhsachKhachHang();
 
             if (bar != null)
             {
@@ -108,9 +124,9 @@ namespace CuahangNongduoc.Controller
             {
                 string kh = Convert.ToString(row["ID"]);
 
-                long dauky = DuNoKhachHangDAL.LayDuNo(kh, thangTruoc, namTruoc);
-                long phatsinh = PhieuBanFactory.LayConNo(kh, thang, nam);          // Factory cũ
-                long datra = PhieuThanhToanDAL.LayTongTien(kh, thang, nam); // Factory cũ
+                long dauky = _duNoDal.LayDuNo(kh, thangTruoc, namTruoc);
+                long phatsinh = _phieuBanFactory.LayConNo(kh, thang, nam);
+                long datra = _phieuThanhToanDal.LayTongTien(kh, thang, nam);
                 long cuoiky = dauky + phatsinh - datra;
 
                 DataRow r = _duNoDal.NewRow();
@@ -128,9 +144,7 @@ namespace CuahangNongduoc.Controller
             }
         }
 
-        public bool Save()
-        {
-            return _duNoDal.Save();
-        }
+        public bool Save() => _duNoDal.Save();
     }
 }
+

@@ -9,7 +9,7 @@ using CuahangNongduoc.Utils.Functions; // NEW: Thêm để dùng DataAccessHelpe
 
 namespace CuahangNongduoc.DataLayer
 {
-    public class PhieuThanhToanDAL
+    public class PhieuThanhToanDAL : IPhieuThanhToanDAL
     {
         private DataTable _dataTable; // CHANGED: đổi tên từ m_DataTable
         private readonly DbClient _db = DbClient.Instance;
@@ -92,7 +92,7 @@ namespace CuahangNongduoc.DataLayer
 
         /* ===================== AGGREGATE: SUM(TONG_TIEN) ===================== */
         // Phương thức này là static và đã dùng DbClient, giữ nguyên
-        public static long LayTongTien(string kh, int thang, int nam)
+        public long LayTongTien(string kh, int thang, int nam)
         {
             var db = DbClient.Instance;
             const string sql = @"

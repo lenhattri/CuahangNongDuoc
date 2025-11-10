@@ -10,12 +10,12 @@ using System.Windows.Forms;
 
 namespace CuahangNongduoc.DAL.DataLayer
 {
-    public class UserDAL
+    public class UserDAL : IUserDAL
     {
         private readonly DbClient _db = DbClient.Instance; // CHANGED: thay vì ConfigurationManager + SqlConnection
         private DataTable _dataTable;                      // giữ bảng đang bind/sửa
 
-          // NEW: schema DataTable hợp nhất 2 bảng để NewRow/Add/Save giữ được cột
+        // NEW: schema DataTable hợp nhất 2 bảng để NewRow/Add/Save giữ được cột
         private void EnsureSchema()
         {
             if (_dataTable != null) return;
@@ -111,9 +111,9 @@ namespace CuahangNongduoc.DAL.DataLayer
                     if (row.RowState == DataRowState.Unchanged) continue;
 
                     // 1. Kiểm tra các quy tắc chung (Họ tên, Tên ĐN, Quyền)
-                    if(ValidationRule.ValidateRow(row, _userRules) == false)
+                    if (ValidationRule.ValidateRow(row, _userRules) == false)
                     {
-                        allRowsValid = false; 
+                        allRowsValid = false;
                         break;
                     }
 
@@ -136,7 +136,7 @@ namespace CuahangNongduoc.DAL.DataLayer
                 return false;
             }
 
-            if(!allRowsValid)
+            if (!allRowsValid)
             {
                 return false;
             }
@@ -261,7 +261,7 @@ namespace CuahangNongduoc.DAL.DataLayer
             {
                 // 1. Chỉ kiểm tra các quy tắc chung TRÊN 'rowToUpdate'
                 // (Không cần lặp lại _dataTable)
-                if(ValidationRule.ValidateRow(rowToUpdate, _userRules) == false)
+                if (ValidationRule.ValidateRow(rowToUpdate, _userRules) == false)
                     allRowsValid = false;
 
                 // 2. Khi SỬA, chúng ta không cần kiểm tra mật khẩu

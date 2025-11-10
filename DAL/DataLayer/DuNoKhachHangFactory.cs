@@ -7,7 +7,7 @@ using CuahangNongduoc.DAL.Infrastructure;   // CHANGED: dùng DbClient (singleto
 
 namespace CuahangNongduoc.DataLayer
 {
-    public class DuNoKhachHangDAL
+    public class DuNoKhachHangDAL : IDuNoKhachHangDAL
     {
         // private readonly string _cs = ConfigurationManager.ConnectionStrings["ConnStr"].ConnectionString;
         // CHANGED: bỏ chuỗi kết nối rải rác, dùng DbClient
@@ -91,7 +91,7 @@ namespace CuahangNongduoc.DataLayer
             }
         }
 
-        public static long LayDuNo(string kh, int thang, int nam)
+        public long LayDuNo(string kh, int thang, int nam)
         {
             // CHANGED: dùng DbClient thay vì tự mở SqlConnection/ConfigurationManager
             var db = DbClient.Instance;                                                     // CHANGED

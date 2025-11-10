@@ -6,7 +6,7 @@ using CuahangNongduoc.DAL.Infrastructure;             // CHANGED: dùng DbClient
 
 namespace CuahangNongduoc.DataLayer
 {
-    public class PhieuBanFactory
+    public class PhieuBanFactory : IPhieuBanFactory
     {
         // DataService m_Ds = new DataService();
         private readonly DbClient _db = DbClient.Instance; // CHANGED: bỏ DataService, dùng DbClient
@@ -94,9 +94,9 @@ namespace CuahangNongduoc.DataLayer
         {
             const string sql =
                 "SELECT PB.* FROM PHIEU_BAN PB INNER JOIN KHACH_HANG KH ON PB.ID_KHACH_HANG = KH.ID";
-            using (var cn = _db.Open())                                  
-            using (var cmd = _db.Cmd(cn, sql, CommandType.Text))   
-            using (var da = new SqlDataAdapter(cmd))                         
+            using (var cn = _db.Open())
+            using (var cmd = _db.Cmd(cn, sql, CommandType.Text))
+            using (var da = new SqlDataAdapter(cmd))
             {
                 var dtRes = new DataTable("PHIEU_BAN");
                 da.Fill(dtRes);
@@ -136,7 +136,7 @@ namespace CuahangNongduoc.DataLayer
             }
         }
 
-        public static long LayConNo(string kh, int thang, int nam)
+        public long LayConNo(string kh, int thang, int nam)
         {
             // CHANGED: bỏ DataService, dùng DbClient + tham số đúng kiểu
             var db = DbClient.Instance;
@@ -150,7 +150,7 @@ namespace CuahangNongduoc.DataLayer
             return (val == null || val == DBNull.Value) ? 0L : Convert.ToInt64(val);
         }
 
-        public static int LaySoPhieu()
+        public int LaySoPhieu()
         {
             var db = DbClient.Instance;                                      // CHANGED
             const string sql = "SELECT COUNT(*) FROM PHIEU_BAN";

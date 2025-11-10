@@ -1,17 +1,18 @@
-﻿using System;
+﻿using CuahangNongduoc.BLL.Controller;
+using CuahangNongduoc.BLL.Helpers;
+using CuahangNongduoc.BusinessObject;
+using CuahangNongduoc.Controller;
+using CuahangNongduoc.DataLayer;
+using CuahangNongduoc.UI.PhieuThuChi;
+using CuahangNongduoc.Utils;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using CuahangNongduoc.Controller;
-using CuahangNongduoc.BusinessObject;
-using CuahangNongduoc.BLL.Helpers;
-using CuahangNongduoc.UI.PhieuThuChi;
-using CuahangNongduoc.BLL.Controller;
-using System.Linq;
-using CuahangNongduoc.Utils;
 
 namespace CuahangNongduoc
 {
@@ -20,10 +21,12 @@ namespace CuahangNongduoc
         SanPhamController ctrlSanPham = new SanPhamController();
         KhachHangController ctrlKhachHang = new KhachHangController();
         MaSanPhamController ctrlMaSanPham = new MaSanPhamController();
-        PhieuBanController ctrlPhieuBan = new PhieuBanController();
+        PhieuBanController ctrlPhieuBan = new PhieuBanController(
+            new PhieuBanFactory(),
+            new KhachHangController()
+            );
         ChiTietPhieuBanController ctrlChiTiet = new ChiTietPhieuBanController();
         PhieuBanChiPhiController ctrlPhieuBanChiPhi = new PhieuBanChiPhiController();
-        ChiPhiPhatSinhController ctrlChiPhiPhatSinh = new ChiPhiPhatSinhController();
         IList<MaSanPham> deleted = new List<MaSanPham>();
         private List<ChiPhiPhatSinh> _dsChiPhiDaChon = new List<ChiPhiPhatSinh>();
         Controll status = Controll.Normal;
@@ -46,8 +49,6 @@ namespace CuahangNongduoc
         {
 
             ctrlSanPham.HienthiAutoComboBox(cmbSanPham);
-            ctrlChiPhiPhatSinh.HienThiComboBox(cbb_ChiPhiPhatSinh);
-
             ctrlMaSanPham.HienThiDataGridViewComboBox(colMaSanPham);
 
             cmbSanPham.SelectedIndexChanged += new EventHandler(cmbSanPham_SelectedIndexChanged);
@@ -67,6 +68,11 @@ namespace CuahangNongduoc
             else
             {
                 this.Allow(false);
+
+                if (bindingNavigator.BindingSource.Current != null)
+                {
+                    BindingSource_CurrentChanged(bindingNavigator.BindingSource, EventArgs.Empty);
+                }
             }
 
             AppTheme.ApplyTheme(this);
@@ -82,7 +88,6 @@ namespace CuahangNongduoc
                 TinhTongTien(_dsChiPhiDaChon);
             }
         }
-
 
         void cmbSanPham_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -146,7 +151,9 @@ namespace CuahangNongduoc
                 row["SO_LUONG"] = numSoLuong.Value;
                 row["THANH_TIEN"] = numThanhTien.Value;
                 ctrlChiTiet.Add(row);
+
             }
+
         }
 
 
@@ -182,10 +189,10 @@ namespace CuahangNongduoc
 
         void CapNhat()
         {
-
+            MaSanPhanFactory factory = new MaSanPhanFactory();
             foreach (MaSanPham masp in deleted)
             {
-                CuahangNongduoc.DataLayer.MaSanPhanFactory.CapNhatSoLuong(masp.Id, masp.SoLuong);
+                factory.CapNhatSoLuong(masp.Id, masp.SoLuong);
             }
             deleted.Clear();
 
@@ -210,7 +217,10 @@ namespace CuahangNongduoc
             row["CON_NO"] = numConNo.Value;
             ctrlPhieuBan.Add(row);
 
-            PhieuBanController ctrl = new PhieuBanController();
+            PhieuBanController ctrl = new PhieuBanController(
+                new PhieuBanFactory(),
+                new KhachHangController()
+                );
 
             if (ctrl.LayPhieuBan(txtMaPhieu.Text) != null)
             {
@@ -236,7 +246,10 @@ namespace CuahangNongduoc
 
         private void toolLuu_Them_Click(object sender, EventArgs e)
         {
-            ctrlPhieuBan = new PhieuBanController();
+            ctrlPhieuBan = new PhieuBanController(
+                new PhieuBanFactory(),
+                new KhachHangController()
+                );
             status = Controll.AddNew;
             txtMaPhieu.Text = ThamSo.LayMaPhieuBan().ToString();
             numTongTien.Value = 0;
@@ -283,7 +296,10 @@ namespace CuahangNongduoc
             {
                 String ma_phieu = txtMaPhieu.Text;
 
-                PhieuBanController ctrlPB = new PhieuBanController();
+                PhieuBanController ctrlPB = new PhieuBanController(
+                    new PhieuBanFactory(),
+                    new KhachHangController()
+                    );
 
                 CuahangNongduoc.BusinessObject.PhieuBan ph = ctrlPB.LayPhieuBan(ma_phieu);
 
@@ -342,9 +358,10 @@ namespace CuahangNongduoc
                 {
                     ChiTietPhieuBanController ctrl = new ChiTietPhieuBanController();
                     IList<ChiTietPhieuBan> ds = ctrl.ChiTietPhieuBan(view["ID"].ToString());
+                    MaSanPhanFactory factory = new MaSanPhanFactory();
                     foreach (ChiTietPhieuBan ct in ds)
                     {
-                        CuahangNongduoc.DataLayer.MaSanPhanFactory.CapNhatSoLuong(ct.MaSanPham.Id, ct.SoLuong);
+                        factory.CapNhatSoLuong(ct.MaSanPham.Id, ct.SoLuong);
                     }
                     bindingNavigator.BindingSource.RemoveCurrent();
                     ctrlPhieuBan.Save();
@@ -366,7 +383,6 @@ namespace CuahangNongduoc
             ctrlSanPham.HienthiAutoComboBox(cmbSanPham);
         }
 
-        //TODO: sửa lại cho chọn chi phí phát sinh khi thêm mới phiếu bán
         private void btnThemChiPhi_Click(object sender, EventArgs e)
         {
             //if (status == Controll.AddNew)
@@ -384,89 +400,18 @@ namespace CuahangNongduoc
                     TinhTongTien(_dsChiPhiDaChon);
                 }
             }
+
         }
         private void TinhTongTien(IList<ChiPhiPhatSinh> chiPhis)
         {
             long tongChiPhi = 0;
             foreach (var chiPhi in chiPhis)
             {
-                //tongChiPhi += (long)chiPhi.SoTien;
+                tongChiPhi += (long)chiPhi.SoTien;
             }
 
             decimal tongHang = ctrlChiTiet.TinhTongTienBanTheoPhieuBan(txtMaPhieu.Text);
             numTongTien.Value = tongChiPhi + tongHang;
-        }
-
-        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (tabControl1.SelectedIndex == 0)
-            {
-                ctrlPhieuBan.HienthiPhieuBan(bindingNavigator, cmbKhachHang, txtMaPhieu, dtNgayLapPhieu, numTongTien, numDaTra, numConNo);
-            }
-            else if (tabControl1.SelectedIndex == 1)
-            {
-                ctrlChiPhiPhatSinh.HienThiDataGridView(dgv_DS_ChiPhiPhatSinh, bindingNavigator);
-
-                DataGridViewButtonColumn colSua = new DataGridViewButtonColumn();
-                colSua.Name = "colSua";
-                colSua.HeaderText = "Sửa";
-                colSua.Text = "Sửa";
-                colSua.UseColumnTextForButtonValue = true;
-                colSua.Width = 60;
-                dgv_DS_ChiPhiPhatSinh.Columns.Add(colSua);
-
-                DataGridViewButtonColumn colXoa = new DataGridViewButtonColumn();
-                colXoa.Name = "colXoa";
-                colXoa.HeaderText = "Xóa";
-                colXoa.Text = "Xóa";
-                colXoa.UseColumnTextForButtonValue = true;
-                colXoa.Width = 60;
-                dgv_DS_ChiPhiPhatSinh.Columns.Add(colXoa);
-            }
-        }
-
-        private void dgv_DS_ChiPhiPhatSinh_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-            // Bỏ qua nếu bấm vào tiêu đề
-            if (e.RowIndex < 0) return;
-
-            // Lấy ID của dòng được chọn (giả sử cột ID tên là "ID")
-            string id = dgv_DS_ChiPhiPhatSinh.Rows[e.RowIndex].Cells["ID"].Value.ToString();
-
-            // 1. Xử lý bấm nút "Xóa"
-            if (dgv_DS_ChiPhiPhatSinh.Columns[e.ColumnIndex].Name == "colXoa")
-            {
-                if (MessageBox.Show("Bạn có chắc chắn muốn xóa?", "Xác nhận", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                {
-                    try
-                    {
-                        // Gọi hàm Xóa bên Controller (bạn phải tự viết hàm này)
-
-
-                        // Tải lại dữ liệu sau khi xóa
-                        ctrlChiPhiPhatSinh.HienThiDataGridView(dgv_DS_ChiPhiPhatSinh, bindingNavigator);
-                        MessageBox.Show("Xóa thành công!");
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Xóa thất bại: " + ex.Message);
-                    }
-                }
-            }
-
-            // 2. Xử lý bấm nút "Sửa"
-            if (dgv_DS_ChiPhiPhatSinh.Columns[e.ColumnIndex].Name == "colSua")
-            {
-                // Mở một form mới (frmSuaChiPhi) để sửa, truyền ID qua
-
-                // Tải lại dữ liệu sau khi form Sửa đóng lại
-                ctrlChiPhiPhatSinh.HienThiDataGridView(dgv_DS_ChiPhiPhatSinh, bindingNavigator);
-            }
-        }
-
-        private void btnAdd_ChiPhiPhatSinh_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }

@@ -10,7 +10,7 @@ using System.Data.SqlClient;
 namespace CuahangNongduoc.DataLayer
 {
     // CHANGED: Đổi tên class
-    public class NhaCungCapDAL
+    public class NhaCungCapDAL : INhaCungCapDAL
     {
         private readonly DbClient _db = DbClient.Instance;
         private DataTable _table;                           // NEW: DataTable nội bộ

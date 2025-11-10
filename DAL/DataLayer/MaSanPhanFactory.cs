@@ -6,12 +6,12 @@ using CuahangNongduoc.DAL.Infrastructure;
 
 namespace CuahangNongduoc.DataLayer
 {
-    public class MaSanPhanFactory
+    public class MaSanPhanFactory : IMaSanPhanFactory
     {
         private readonly DbClient _db = DbClient.Instance;   // CHANGED: thay thế DataService
         private DataTable _table;                             // NEW: giữ DataTable đang thao tác để Save()
 
-         public void LoadSchema()
+        public void LoadSchema()
         {
             // CHANGED: lấy schema rỗng bằng DbClient
             using (var cn = _db.Open())
@@ -99,7 +99,7 @@ namespace CuahangNongduoc.DataLayer
             return dt;
         }
 
-        public static void CapNhatSoLuong(string masp, int so_luong)
+        public void CapNhatSoLuong(string masp, int so_luong)
         {
             // CHANGED: bỏ OleDb & DataService; dùng DbClient.ExecuteNonQuery
             var db = DbClient.Instance;

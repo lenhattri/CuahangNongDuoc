@@ -10,7 +10,7 @@ namespace CuahangNongduoc.BusinessObject
     public class ChiPhiPhatSinh
     {
         public ChiPhiPhatSinh() { }
-       
+
         private String m_Id;
         public String Id
         {
@@ -29,5 +29,12 @@ namespace CuahangNongduoc.BusinessObject
             get { return m_LoaiChiPhi; }
             set { m_LoaiChiPhi = value; }
         }
+        private Decimal m_SoTien;
+        public Decimal SoTien
+        {
+            get { return m_SoTien; }
+            set { m_SoTien = value; }
+        }
+
     }
 }
