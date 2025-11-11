@@ -48,7 +48,7 @@
             this.panel2.Controls.Add(this.reportViewer);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(0, 0);
-            this.panel2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.panel2.Margin = new System.Windows.Forms.Padding(4);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(1035, 575);
             this.panel2.TabIndex = 1;
@@ -61,7 +61,7 @@
             this.reportViewer.LocalReport.DataSources.Add(reportDataSource1);
             this.reportViewer.LocalReport.ReportEmbeddedResource = "CuahangNongduoc.Report.rptSoLuongTon.rdlc";
             this.reportViewer.Location = new System.Drawing.Point(0, 0);
-            this.reportViewer.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.reportViewer.Margin = new System.Windows.Forms.Padding(4);
             this.reportViewer.Name = "reportViewer";
             this.reportViewer.ServerReport.BearerToken = null;
             this.reportViewer.Size = new System.Drawing.Size(1035, 575);
@@ -74,9 +74,9 @@
             this.ClientSize = new System.Drawing.Size(1035, 575);
             this.Controls.Add(this.panel2);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "frmSoLuongTon";
-            this.Text = "SO LUONG TON";
+            this.Text = "SỐ LƯỢNG TỒN";
             this.Load += new System.EventHandler(this.frmSoLuongTon_Load);
             ((System.ComponentModel.ISupportInitialize)(this.SoLuongTonBindingSource)).EndInit();
             this.panel2.ResumeLayout(false);

@@ -42,7 +42,7 @@
             this.dtNgayNhap.CustomFormat = "dd/MM/yyyy";
             this.dtNgayNhap.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.dtNgayNhap.Location = new System.Drawing.Point(137, 60);
-            this.dtNgayNhap.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.dtNgayNhap.Margin = new System.Windows.Forms.Padding(4);
             this.dtNgayNhap.Name = "dtNgayNhap";
             this.dtNgayNhap.Size = new System.Drawing.Size(139, 22);
             this.dtNgayNhap.TabIndex = 9;
@@ -61,7 +61,7 @@
             // 
             this.cmbNCC.FormattingEnabled = true;
             this.cmbNCC.Location = new System.Drawing.Point(136, 15);
-            this.cmbNCC.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cmbNCC.Margin = new System.Windows.Forms.Padding(4);
             this.cmbNCC.Name = "cmbNCC";
             this.cmbNCC.Size = new System.Drawing.Size(249, 24);
             this.cmbNCC.TabIndex = 7;
@@ -82,7 +82,7 @@
             this.btnCancel.Image = global::CuahangNongduoc.Properties.Resources.stop;
             this.btnCancel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnCancel.Location = new System.Drawing.Point(220, 117);
-            this.btnCancel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnCancel.Margin = new System.Windows.Forms.Padding(4);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(100, 43);
             this.btnCancel.TabIndex = 11;
@@ -96,7 +96,7 @@
             this.btnOK.Image = global::CuahangNongduoc.Properties.Resources.Ok;
             this.btnOK.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnOK.Location = new System.Drawing.Point(112, 117);
-            this.btnOK.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnOK.Margin = new System.Windows.Forms.Padding(4);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(100, 43);
             this.btnOK.TabIndex = 10;
@@ -119,10 +119,10 @@
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "frmTimPhieuBanLe";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
-            this.Text = "Tim Phieu Ban Le";
+            this.Text = "Tìm Phiếu Bán Lẻ";
             this.Load += new System.EventHandler(this.frmTimPhieuBanLe_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

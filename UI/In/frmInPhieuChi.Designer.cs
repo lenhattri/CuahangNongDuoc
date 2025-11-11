@@ -1,4 +1,4 @@
-namespace CuahangNongduoc
+﻿namespace CuahangNongduoc
 {
     partial class frmInPhieuChi
     {
@@ -30,10 +30,14 @@ namespace CuahangNongduoc
         {
             this.components = new System.ComponentModel.Container();
             Microsoft.Reporting.WinForms.ReportDataSource reportDataSource1 = new Microsoft.Reporting.WinForms.ReportDataSource();
-            this.reportViewer = new Microsoft.Reporting.WinForms.ReportViewer();
             this.PhieuChiBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.reportViewer = new Microsoft.Reporting.WinForms.ReportViewer();
             ((System.ComponentModel.ISupportInitialize)(this.PhieuChiBindingSource)).BeginInit();
             this.SuspendLayout();
+            // 
+            // PhieuChiBindingSource
+            // 
+            this.PhieuChiBindingSource.DataSource = typeof(CuahangNongduoc.BusinessObject.PhieuChi);
             // 
             // reportViewer
             // 
@@ -49,10 +53,6 @@ namespace CuahangNongduoc
             this.reportViewer.Size = new System.Drawing.Size(961, 588);
             this.reportViewer.TabIndex = 0;
             // 
-            // PhieuChiBindingSource
-            // 
-            this.PhieuChiBindingSource.DataSource = typeof(CuahangNongduoc.BusinessObject.PhieuChi);
-            // 
             // frmInPhieuChi
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -61,7 +61,7 @@ namespace CuahangNongduoc
             this.Controls.Add(this.reportViewer);
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "frmInPhieuChi";
-            this.Text = "In Phieu Chi";
+            this.Text = "Phiếu Chi";
             this.Load += new System.EventHandler(this.frmInPhieuChi_Load);
             ((System.ComponentModel.ISupportInitialize)(this.PhieuChiBindingSource)).EndInit();
             this.ResumeLayout(false);

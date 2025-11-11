@@ -125,7 +125,7 @@
             this.chkNhoMatKhau.AutoSize = true;
             this.chkNhoMatKhau.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.chkNhoMatKhau.Location = new System.Drawing.Point(368, 249);
-            this.chkNhoMatKhau.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.chkNhoMatKhau.Margin = new System.Windows.Forms.Padding(4);
             this.chkNhoMatKhau.Name = "chkNhoMatKhau";
             this.chkNhoMatKhau.Size = new System.Drawing.Size(162, 24);
             this.chkNhoMatKhau.TabIndex = 8;
@@ -137,7 +137,7 @@
             // 
             this.pictureBox3.Image = global::CuahangNongduoc.Properties.Resources.password;
             this.pictureBox3.Location = new System.Drawing.Point(368, 199);
-            this.pictureBox3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.pictureBox3.Margin = new System.Windows.Forms.Padding(4);
             this.pictureBox3.Name = "pictureBox3";
             this.pictureBox3.Size = new System.Drawing.Size(35, 32);
             this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
@@ -148,7 +148,7 @@
             // 
             this.pictureBox2.Image = global::CuahangNongduoc.Properties.Resources.username;
             this.pictureBox2.Location = new System.Drawing.Point(368, 113);
-            this.pictureBox2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.pictureBox2.Margin = new System.Windows.Forms.Padding(4);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(35, 32);
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
@@ -159,7 +159,7 @@
             // 
             this.pictureBox1.Image = global::CuahangNongduoc.Properties.Resources.HeroImages;
             this.pictureBox1.Location = new System.Drawing.Point(-99, -329);
-            this.pictureBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.pictureBox1.Margin = new System.Windows.Forms.Padding(4);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(437, 785);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -199,7 +199,7 @@
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "frmDangNhap";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Trang Đăng Nhập";
+            this.Text = "Đăng Nhập";
             this.Load += new System.EventHandler(this.frmDangNhap_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
