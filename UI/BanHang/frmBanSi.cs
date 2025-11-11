@@ -48,7 +48,8 @@ namespace CuahangNongduoc
             var maSpCtrl = new MaSanPhamController();
 
             // --- Inject theo thứ tự phụ thuộc ---
-            ctrlSanPham = new SanPhamController();
+            ISanPhamFactory dalSanPham = new SanPhamFactory();
+            SanPhamController ctrl = new SanPhamController(dalSanPham);
             ctrlKhachHang = khachHangCtrl;
             ctrlMaSanPham = maSpCtrl;
             ctrlPhieuBan = new PhieuBanController(phieuBanDal, khachHangCtrl);
@@ -70,7 +71,8 @@ namespace CuahangNongduoc
             ctrlPhieuBan = ctrlPB;
             ctrlChiTiet = new ChiTietPhieuBanController(chiTietDal, maSpCtrl);
             ctrlPhieuBanChiPhi = new PhieuBanChiPhiController();
-            ctrlSanPham = new SanPhamController();
+            ISanPhamFactory dalSanPham = new SanPhamFactory();
+            SanPhamController ctrl = new SanPhamController(dalSanPham);
             ctrlKhachHang = new KhachHangController();
             ctrlMaSanPham = maSpCtrl;
 

@@ -1,4 +1,5 @@
 ﻿using CuahangNongduoc.Controller;
+using CuahangNongduoc.DataLayer;
 using CuahangNongduoc.Utils;
 using System;
 using System.Collections.Generic;
@@ -12,10 +13,15 @@ namespace CuahangNongduoc
 {
     public partial class frmDonViTinh : Form
     {
-        DonViTinhController ctrl = new DonViTinhController();
+        private readonly DonViTinhController ctrl;
+
         public frmDonViTinh()
         {
             InitializeComponent();
+
+            // Khởi tạo DAL và inject vào controller
+            IDonViTinhDAL dal = new DonViTinhDAL();
+            ctrl = new DonViTinhController(dal);
         }
 
         private void frmDonViTinh_Load(object sender, EventArgs e)

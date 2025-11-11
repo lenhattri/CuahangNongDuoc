@@ -14,11 +14,16 @@ namespace CuahangNongduoc.Controller
 {
     public class SanPhamController
     {
-        SanPhamFactory factory = new SanPhamFactory();
+        private readonly ISanPhamFactory _dal;  // interface của DAL
+
+        public SanPhamController(ISanPhamFactory dal)
+        {
+            _dal = dal ?? throw new ArgumentNullException(nameof(dal));
+        }
 
         public void HienthiAutoComboBox(System.Windows.Forms.ComboBox cmb)
         {
-            DataTable tbl = factory.DanhsachSanPham(); 
+            DataTable tbl = _dal.DanhsachSanPham(); 
             cmb.DataSource = tbl;
             cmb.DisplayMember = "TEN_SAN_PHAM";
             cmb.ValueMember = "ID";
@@ -27,25 +32,25 @@ namespace CuahangNongduoc.Controller
         }
         public void HienthiDataGridViewComboBoxColumn(System.Windows.Forms.DataGridViewComboBoxColumn cmb)
         {
-            cmb.DataSource = factory.DanhsachSanPham();
+            cmb.DataSource = _dal.DanhsachSanPham();
             cmb.DisplayMember = "TEN_SAN_PHAM";
             cmb.ValueMember = "ID";
             cmb.AutoComplete = true;
         }
         public DataTable TimMaSanPham(String ma)
         {
-            return factory.TimMaSanPham(ma);
+            return _dal.TimMaSanPham(ma);
         }
         public DataTable TimTenSanPham(String ten)
         {
-            return factory.TimTenSanPham(ten);
+            return _dal.TimTenSanPham(ten);
         }
 
         public void HienthiDataGridview(System.Windows.Forms.DataGridView dg, System.Windows.Forms.BindingNavigator bn,
             TextBox txtMaSp, TextBox txtTenSp, ComboBox cmbDVT, NumericUpDown numSL, NumericUpDown numDonGiaNhap, NumericUpDown numGiaBanSi, NumericUpDown numGiaBanLe)
         {
             System.Windows.Forms.BindingSource bs = new System.Windows.Forms.BindingSource();
-            bs.DataSource = factory.DanhsachSanPham();
+            bs.DataSource = _dal.DanhsachSanPham();
             
             txtMaSp.DataBindings.Clear();
             txtMaSp.DataBindings.Add("Text", bs, "ID");
@@ -74,7 +79,7 @@ namespace CuahangNongduoc.Controller
         }
         public void CapNhatGiaNhap(String id, long gia_moi ,long so_luong)
         {
-            DataTable tbl = factory.LaySanPham(id);
+            DataTable tbl = _dal.LaySanPham(id);
             if (tbl.Rows.Count > 0)
             {
                 long tong_so = Convert.ToInt32(tbl.Rows[0]["SO_LUONG"]);
@@ -86,16 +91,17 @@ namespace CuahangNongduoc.Controller
                     tbl.Rows[0]["DON_GIA_NHAP"] = thanh_tien / tong_so;
                     tbl.Rows[0]["SO_LUONG"] = tong_so;
                 }
-                factory.Save();
+                _dal.Save();
             }
 
         }
     
         public SanPham LaySanPham(String id)
         {
-            DataTable tbl = factory.LaySanPham(id);
+            DataTable tbl = _dal.LaySanPham(id);
             SanPham sp = new SanPham();
-            DonViTinhController ctrlDVT = new DonViTinhController();
+            var dalDVT = new DonViTinhDAL();                         // tạo instance DAL
+            var ctrlDVT = new DonViTinhController(dalDVT);
             if (tbl.Rows.Count > 0)
             {
                 sp.Id = Convert.ToString(tbl.Rows[0]["ID"]);
@@ -116,10 +122,11 @@ namespace CuahangNongduoc.Controller
             DataTable tbl = f.LaySoLuongTon();
 
             IList<SoLuongTon> ds = new List<SoLuongTon>();
-            
 
-            DonViTinhController ctrlDVT = new DonViTinhController();
-            foreach(DataRow row in tbl.Rows)
+
+            var dalDVT = new DonViTinhDAL();                         // tạo instance DAL
+            var ctrlDVT = new DonViTinhController(dalDVT);
+            foreach (DataRow row in tbl.Rows)
             {
                 SoLuongTon slt = new SoLuongTon();
                 SanPham sp = new SanPham();
@@ -140,15 +147,15 @@ namespace CuahangNongduoc.Controller
 
         public DataRow NewRow()
         {
-            return factory.NewRow();
+            return _dal.NewRow();
         }
         public void Add(DataRow row)
         {
-            factory.Add(row);
+            _dal.Add(row);
         }
         public bool Save()
         {
-            return factory.Save();
+            return _dal.Save();
         }
     }
 }

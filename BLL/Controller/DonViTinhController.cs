@@ -9,7 +9,12 @@ namespace CuahangNongduoc.Controller
 {
     public class DonViTinhController
     {
-        private readonly DonViTinhDAL _dal = new DonViTinhDAL();
+        private readonly IDonViTinhDAL _dal;
+        public DonViTinhController(IDonViTinhDAL dal)
+        {
+            _dal = dal ?? throw new ArgumentNullException(nameof(dal));
+        }
+
 
         // Pick the first available column name from candidates; fall back to a string column or the first column.
         private static string PickColumn(DataTable dt, params string[] candidates)

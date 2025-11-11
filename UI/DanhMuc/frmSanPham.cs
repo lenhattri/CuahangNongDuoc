@@ -1,33 +1,51 @@
-﻿using System;
+﻿using CuahangNongduoc.Controller;
+using CuahangNongduoc.DataLayer;
+using CuahangNongduoc.Utils;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using CuahangNongduoc.Controller;
-using CuahangNongduoc.Utils;
 
 namespace CuahangNongduoc
 {
     public partial class frmSanPham : Form
     {
-        SanPhamController ctrl = new SanPhamController();
-        DonViTinhController ctrlDVT = new DonViTinhController();
+        private readonly SanPhamController ctrl;
+        private readonly DonViTinhController ctrlDVT;
 
         public frmSanPham()
         {
             InitializeComponent();
+
+            // Tạo DAL và inject vào controller
+            var dalSanPham = new SanPhamFactory();           // giả sử bạn có SanPhamDAL : ISanPhamDAL
+            var dalDVT = new DonViTinhDAL();            // DonViTinhDAL : IDonViTinhDAL
+
+            ctrl = new SanPhamController(dalSanPham);  // inject DAL
+            ctrlDVT = new DonViTinhController(dalDVT); // inject DAL
         }
 
         private void frmSanPham_Load(object sender, EventArgs e)
         {
             ctrlDVT.HienthiAutoComboBox(cmbDVT);
             dataGridView.Columns.Add(ctrlDVT.HienthiDataGridViewComboBoxColumn());
-            ctrl.HienthiDataGridview(dataGridView, bindingNavigator,
-                 txtMaSanPham, txtTenSanPham, cmbDVT, numSoLuong, numDonGiaNhap, numGiaBanSi, numGiaBanLe);
-            AppTheme.ApplyTheme(this);
 
+            ctrl.HienthiDataGridview(
+                dataGridView,
+                bindingNavigator,
+                txtMaSanPham,
+                txtTenSanPham,
+                cmbDVT,
+                numSoLuong,
+                numDonGiaNhap,
+                numGiaBanSi,
+                numGiaBanLe
+            );
+
+            AppTheme.ApplyTheme(this);
         }
 
         private void toolLuu_Click(object sender, EventArgs e)

@@ -34,7 +34,9 @@ namespace CuahangNongduoc
             InitializeComponent();
 
             // Khởi tạo dependencies (DI thủ công)
-            ctrlSanPham = new SanPhamController();
+            ISanPhamFactory dalSanPham = new SanPhamFactory();
+            SanPhamController ctrl = new SanPhamController(dalSanPham);
+
             ctrlKhachHang = new KhachHangController();
             ctrlMaSanPham = new MaSanPhamController();
 
@@ -53,7 +55,9 @@ namespace CuahangNongduoc
         {
             InitializeComponent();
 
-            ctrlSanPham = new SanPhamController();
+            ISanPhamFactory dalSanPham = new SanPhamFactory();
+            SanPhamController ctrl = new SanPhamController(dalSanPham);
+
             ctrlKhachHang = new KhachHangController();
             ctrlMaSanPham = new MaSanPhamController();
 

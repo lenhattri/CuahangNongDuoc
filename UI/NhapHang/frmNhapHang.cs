@@ -9,6 +9,7 @@ using System.Linq;
 using System.Windows.Forms;
 using CuahangNongduoc.Controller;
 using CuahangNongduoc.BusinessObject;
+using CuahangNongduoc.DataLayer;
 
 namespace CuahangNongduoc
 {
@@ -23,7 +24,7 @@ namespace CuahangNongduoc
         private const string COL_HH_GRID = "colNgayHetHan";   // nếu có
         private const string COL_THANH_TIEN_GRID = "colThanhTien";  // nếu lưới có cột Thành tiền
 
-        SanPhamController ctrlSanPham = new SanPhamController();
+        SanPhamController ctrlSanPham = new SanPhamController(new SanPhamFactory());
         PhieuNhapController ctrl = new PhieuNhapController();
         MaSanPhamController ctrlMaSP = new MaSanPhamController();
         NhaCungCapController ctrlNCC = new NhaCungCapController();
@@ -350,7 +351,7 @@ namespace CuahangNongduoc
             ctrlMaSP.Save();
 
             // Cập nhật giá nhập mặc định sản phẩm
-            SanPhamController ctrlSP = new SanPhamController();
+            SanPhamController ctrlSP = new SanPhamController(new SanPhamFactory());
             foreach (DataGridViewRow view in dataGridView.Rows)
             {
                 if (view.IsNewRow) continue;
