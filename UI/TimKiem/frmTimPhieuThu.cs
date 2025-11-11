@@ -1,3 +1,4 @@
+using CuahangNongduoc.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -17,6 +18,7 @@ namespace CuahangNongduoc
 
         private void frmTimPhieuThu_Load(object sender, EventArgs e)
         {
+            AppTheme.ApplyTheme(this);
             Controller.KhachHangController ctrl = new CuahangNongduoc.Controller.KhachHangController();
             ctrl.HienthiChungAutoComboBox(cmbKhachHang);
         }

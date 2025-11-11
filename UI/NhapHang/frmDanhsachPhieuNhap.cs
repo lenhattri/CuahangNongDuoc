@@ -1,8 +1,9 @@
-﻿using System;
+﻿using CuahangNongduoc.Controller;
+using CuahangNongduoc.Utils;
+using System;
 using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
-using CuahangNongduoc.Controller;
 
 namespace CuahangNongduoc
 {
@@ -18,6 +19,7 @@ namespace CuahangNongduoc
 
         private void frmDanhsachPhieuNhap_Load(object sender, EventArgs e)
         {
+            AppTheme.ApplyTheme(this);
             ctrlNCC.HienthiDataGridviewComboBox(colNhaCungCap);
             ctrl.HienthiPhieuNhap(bindingNavigator, dataGridView);
         }

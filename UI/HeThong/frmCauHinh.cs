@@ -1,4 +1,5 @@
 ﻿using CuahangNongduoc.BLL.Helpers;
+using CuahangNongduoc.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -20,7 +21,8 @@ namespace CuahangNongduoc.UI.HeThong
 
         private void frmCauHinh_Load(object sender, EventArgs e)
         {
-            if(CauHinhCuaHang.PhuongThucXuatKhoHienTai == CauHinhCuaHang.PhuongThucXuatKho.FIFO)
+            AppTheme.ApplyTheme(this);
+            if (CauHinhCuaHang.PhuongThucXuatKhoHienTai == CauHinhCuaHang.PhuongThucXuatKho.FIFO)
             {
                 rdbFIFO.Checked = true;
             }

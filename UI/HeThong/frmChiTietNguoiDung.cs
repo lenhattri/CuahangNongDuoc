@@ -1,4 +1,5 @@
 ﻿using CuahangNongduoc.Domain.Entities;
+using CuahangNongduoc.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -59,6 +60,7 @@ namespace CuahangNongduoc.UI.HeThong
 
         private void frmChiTietNguoiDung_Load(object sender, EventArgs e)
         {
+            AppTheme.ApplyTheme(this);
             cbbQuyen.DataSource = Enum.GetValues(typeof(QuyenNguoiDung));
             cbbQuyen.SelectedIndex = 0;
 

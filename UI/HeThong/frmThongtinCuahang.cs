@@ -1,3 +1,4 @@
+using CuahangNongduoc.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -17,6 +18,7 @@ namespace CuahangNongduoc
 
         private void frmThongtinCuahang_Load(object sender, EventArgs e)
         {
+            AppTheme.ApplyTheme(this);
             CuahangNongduoc.BusinessObject.CuaHang ch = ThamSo.LayCuaHang();
             txtTenCuaHang.Text = ch.TenCuaHang;
             txtDienThoai.Text = ch.DienThoai;

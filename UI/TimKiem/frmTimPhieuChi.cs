@@ -1,3 +1,4 @@
+using CuahangNongduoc.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -18,6 +19,7 @@ namespace CuahangNongduoc
 
         private void frmTimPhieuChi_Load(object sender, EventArgs e)
         {
+            AppTheme.ApplyTheme(this);
             Controller.LyDoChiController ctrl = new CuahangNongduoc.Controller.LyDoChiController();
             ctrl.HienthiAutoComboBox(cmbLyDo);
         }

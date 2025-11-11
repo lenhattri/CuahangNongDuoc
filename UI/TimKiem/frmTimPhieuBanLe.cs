@@ -1,3 +1,5 @@
+using CuahangNongduoc.Controller;
+using CuahangNongduoc.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -5,7 +7,6 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using CuahangNongduoc.Controller;
 
 namespace CuahangNongduoc
 {
@@ -21,5 +22,9 @@ namespace CuahangNongduoc
             ctrlKH.HienthiAutoComboBox(cmbNCC, loai);
         }
 
+        private void frmTimPhieuBanLe_Load(object sender, EventArgs e)
+        {
+            AppTheme.ApplyTheme(this);
+        }
     }
 }

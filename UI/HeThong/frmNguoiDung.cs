@@ -1,5 +1,6 @@
 ﻿using CuahangNongduoc.BLL.Controller;
 using CuahangNongduoc.Domain.Entities;
+using CuahangNongduoc.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -44,6 +45,7 @@ namespace CuahangNongduoc.UI.HeThong
 
         private void frmNguoiDung_Load(object sender, EventArgs e)
         {
+            AppTheme.ApplyTheme(this);
             userController.HienthiNguoiDungDataGridview(dataGridView, bindingNavigator);
         }
 

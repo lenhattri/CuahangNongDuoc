@@ -1,4 +1,5 @@
 using CuahangNongduoc.BusinessObject;
+using CuahangNongduoc.Utils;
 using CuahangNongduoc.Utils.Functions;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,7 @@ namespace CuahangNongduoc
 
         private void frmPhieuThanhToan_Load(object sender, EventArgs e)
         {
+            AppTheme.ApplyTheme(this);
             Num2Str num = new Num2Str();
             List<Microsoft.Reporting.WinForms.ReportParameter> param = new List<Microsoft.Reporting.WinForms.ReportParameter>();
             CuahangNongduoc.BusinessObject.CuaHang ch = ThamSo.LayCuaHang();
