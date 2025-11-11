@@ -104,18 +104,19 @@ namespace CuahangNongduoc.Controller
 {
     public class ChiTietPhieuBanController
     {
-        // DAL ADO.NET (SqlClient) đã viết ở bước trước
-        private readonly ChiTietPhieuBanDAL _dal = new ChiTietPhieuBanDAL();
-
-        // Bộ đệm hàng Added để Save() một lượt (thay cho DataService cũ)
+        private readonly IChiTietPhieuBanDAL _dal;            // ✅ Interface DAL (inject)
+        private readonly MaSanPhamController _maSanPhamCtrl;      // ✅ Inject controller phụ thuộc
         private readonly DataTable _buffer;
 
-        // Hiển thị buffer cho UI sử dụng
-        public DataTable Buffer => _buffer;
-        public ChiTietPhieuBanController()
+        // ✅ Constructor có tham số — Dấu hiệu rõ ràng là đã fix
+        public ChiTietPhieuBanController(IChiTietPhieuBanDAL dal, MaSanPhamController maSanPhamCtrl)
         {
+            _dal = dal;
+            _maSanPhamCtrl = maSanPhamCtrl;
             _buffer = CreateBufferSchema();
         }
+
+        public DataTable Buffer => _buffer;
 
         /* ===================== BINDING HIỂN THỊ ===================== */
         public void HienThiChiTiet(DataGridView dgv, string idPhieuBan)
@@ -128,14 +129,10 @@ namespace CuahangNongduoc.Controller
         }
 
         /* ===================== API GIỮ NGUYÊN CHO UI ===================== */
-        public DataRow NewRow()
-        {
-            return _buffer.NewRow();
-        }
-        
+        public DataRow NewRow() => _buffer.NewRow();
+
         public void Add(DataRow row)
         {
-            // Đảm bảo row thuộc schema _buffer
             if (row.Table != _buffer)
             {
                 var newRow = _buffer.NewRow();
@@ -152,14 +149,11 @@ namespace CuahangNongduoc.Controller
 
         public void Save()
         {
-            // Chỉ ghi các row trạng thái Added → DAL sẽ:
-            // 1) Trừ kho
-            // 2) Insert CHI_TIET_PHIEU_BAN (transaction)
             bool ok = _dal.SaveAddedRows(_buffer);
 
             if (ok)
             {
-                _buffer.Clear();        // reset buffer sau khi đã commit
+                _buffer.Clear();
                 _buffer.AcceptChanges();
             }
         }
@@ -180,16 +174,16 @@ namespace CuahangNongduoc.Controller
             return MapToList(_dal.LayChiTietPhieuBan(thang, nam));
         }
 
-        /* ===================== HELPERS ===================== */
         public decimal TinhTongTienBanTheoPhieuBan(string maPhieuBan)
         {
             return _dal.TinhTongThanhTienTheoPhieu(maPhieuBan);
         }
-        // Tính giá bình quân gia quyền của sản phẩm
+
         public decimal TinhGiaBinhQuanGiaQuyen(string idSanPham)
         {
             return _dal.TinhGiaBinhQuanGiaQuyen(idSanPham);
         }
+
         public decimal TinhGiaFIFO(string idSanPham)
         {
             return _dal.TinhGiaFIFO(idSanPham);
@@ -197,7 +191,6 @@ namespace CuahangNongduoc.Controller
 
         private static DataTable CreateBufferSchema()
         {
-            // Tạo schema tối thiểu cần để Insert + cập nhật kho
             var t = new DataTable("CHI_TIET_PHIEU_BAN");
             t.Columns.Add("ID_PHIEU_BAN", typeof(string));
             t.Columns.Add("ID_MA_SAN_PHAM", typeof(string));
@@ -207,10 +200,9 @@ namespace CuahangNongduoc.Controller
             return t;
         }
 
-        private static IList<ChiTietPhieuBan> MapToList(DataTable tbl)
+        private IList<ChiTietPhieuBan> MapToList(DataTable tbl)
         {
             var ds = new List<ChiTietPhieuBan>();
-            var ctrlMaSP = new MaSanPhamController(); // tạo 1 lần, dùng lại
 
             foreach (DataRow row in tbl.Rows)
             {
@@ -219,7 +211,7 @@ namespace CuahangNongduoc.Controller
                     DonGia = Convert.ToInt64(row["DON_GIA"]),
                     SoLuong = Convert.ToInt32(row["SO_LUONG"]),
                     ThanhTien = Convert.ToInt64(row["THANH_TIEN"]),
-                    MaSanPham = ctrlMaSP.LayMaSanPham(Convert.ToString(row["ID_MA_SAN_PHAM"]))
+                    MaSanPham = _maSanPhamCtrl.LayMaSanPham(Convert.ToString(row["ID_MA_SAN_PHAM"]))
                 };
                 ds.Add(ct);
             }
@@ -227,3 +219,4 @@ namespace CuahangNongduoc.Controller
         }
     }
 }
+

@@ -97,7 +97,10 @@ namespace CuahangNongduoc.Controller
                 KhachHang = _khachHangCtrl.LayKhachHang(Convert.ToString(row["ID_KHACH_HANG"]))
             };
 
-            var ctCtrl = new ChiTietPhieuBanController();
+            IChiTietPhieuBanDAL chiTietDal = new ChiTietPhieuBanDAL();
+            MaSanPhamController maSpCtrl = new MaSanPhamController();
+
+            var ctCtrl = new ChiTietPhieuBanController(chiTietDal, maSpCtrl);
             ph.ChiTiet = ctCtrl.ChiTietPhieuBan(ph.Id);
 
             return ph;

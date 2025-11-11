@@ -1,21 +1,26 @@
+﻿using CuahangNongduoc.BusinessObject;
+using CuahangNongduoc.Controller;
+using CuahangNongduoc.DataLayer;
+using CuahangNongduoc.Utils;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
-using CuahangNongduoc.BusinessObject;
-using CuahangNongduoc.Controller;
-using CuahangNongduoc.Utils;
 
 namespace CuahangNongduoc
 {
     public partial class frmSoLuongBan : Form
     {
+        private readonly ChiTietPhieuBanController _ctrlChiTiet;
+
         public frmSoLuongBan()
         {
             InitializeComponent();
+
+            // ✅ Inject dependencies trong constructor
+            IChiTietPhieuBanDAL chiTietDal = new ChiTietPhieuBanDAL();
+            MaSanPhamController maSpCtrl = new MaSanPhamController();
+
+            _ctrlChiTiet = new ChiTietPhieuBanController(chiTietDal, maSpCtrl);
         }
 
         private void frmSoLuongBan_Load(object sender, EventArgs e)
@@ -25,33 +30,35 @@ namespace CuahangNongduoc
             AppTheme.ApplyTheme(this);
         }
 
-        ChiTietPhieuBanController ctrl = new ChiTietPhieuBanController();
-
-        
         private void btnXemNgay_Click(object sender, EventArgs e)
         {
-            IList<Microsoft.Reporting.WinForms.ReportParameter> param = new List<Microsoft.Reporting.WinForms.ReportParameter>();
-            param.Add(new Microsoft.Reporting.WinForms.ReportParameter("ngay", "Ng�y " + dtNgay.Value.Date.ToString("dd/MM/yyyy")));
+            var param = new List<Microsoft.Reporting.WinForms.ReportParameter>
+            {
+                new Microsoft.Reporting.WinForms.ReportParameter("ngay", "Ngày " + dtNgay.Value.Date.ToString("dd/MM/yyyy"))
+            };
 
-            this.reportViewer.LocalReport.SetParameters(param);
+            reportViewer.LocalReport.SetParameters(param);
 
-            this.ChiTietPhieuBanBindingSource.DataSource = ctrl.ChiTietPhieuBan(dtNgay.Value.Date);
-            this.reportViewer.RefreshReport();
+            // ✅ Dùng _ctrlChiTiet thay vì ctrl
+            ChiTietPhieuBanBindingSource.DataSource = _ctrlChiTiet.ChiTietPhieuBan(dtNgay.Value.Date);
+            reportViewer.RefreshReport();
         }
 
         private void btnXemThang_Click(object sender, EventArgs e)
         {
-            IList<Microsoft.Reporting.WinForms.ReportParameter> param = new List<Microsoft.Reporting.WinForms.ReportParameter>();
-            param.Add(new Microsoft.Reporting.WinForms.ReportParameter("ngay",
-                "Th�ng " + Convert.ToString(cmbThang.SelectedIndex + 1) + "/" + numNam.Value.ToString()));
+            var param = new List<Microsoft.Reporting.WinForms.ReportParameter>
+            {
+                new Microsoft.Reporting.WinForms.ReportParameter(
+                    "ngay",
+                    "Tháng " + (cmbThang.SelectedIndex + 1) + "/" + numNam.Value.ToString()
+                )
+            };
 
-            this.reportViewer.LocalReport.SetParameters(param);
+            reportViewer.LocalReport.SetParameters(param);
 
-
-            this.ChiTietPhieuBanBindingSource.DataSource = ctrl.ChiTietPhieuBan(cmbThang.SelectedIndex + 1, Convert.ToInt32(numNam.Value));
-            this.reportViewer.RefreshReport();
+            // ✅ Dùng _ctrlChiTiet thay vì ctrl
+            ChiTietPhieuBanBindingSource.DataSource = _ctrlChiTiet.ChiTietPhieuBan(cmbThang.SelectedIndex + 1, Convert.ToInt32(numNam.Value));
+            reportViewer.RefreshReport();
         }
-
-      
     }
 }

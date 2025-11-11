@@ -20,36 +20,64 @@ using System.Windows.Forms;
 
 namespace CuahangNongduoc
 {
-    public partial class frmBanSi: Form
+    public partial class frmBanSi : Form
     {
-        SanPhamController ctrlSanPham = new SanPhamController();
-        KhachHangController ctrlKhachHang = new KhachHangController();
-        MaSanPhamController ctrlMaSanPham = new MaSanPhamController();
-        PhieuBanController ctrlPhieuBan = new PhieuBanController(
-             new PhieuBanFactory(),        // inject DAL
-                    new KhachHangController()
-            );
-        ChiTietPhieuBanController ctrlChiTiet = new ChiTietPhieuBanController();
-        PhieuBanChiPhiController ctrlPhieuBanChiPhi = new PhieuBanChiPhiController();
-        IList<MaSanPham> deleted = new List<MaSanPham>();
-        private List<ChiPhiPhatSinh> _dsChiPhiDaChon = new List<ChiPhiPhatSinh>();
-
-        Controll status = Controll.Normal;
+        // 🔹 Chỉ khai báo, KHÔNG khởi tạo tại đây
+        private SanPhamController ctrlSanPham;
+        private KhachHangController ctrlKhachHang;
+        private MaSanPhamController ctrlMaSanPham;
+        private PhieuBanController ctrlPhieuBan;
+        private ChiTietPhieuBanController ctrlChiTiet;
+        private PhieuBanChiPhiController ctrlPhieuBanChiPhi;
         private readonly IMaSanPhanFactory _maSpDal;
+        private IList<MaSanPham> deleted = new List<MaSanPham>();
+        private List<ChiPhiPhatSinh> _dsChiPhiDaChon = new List<ChiPhiPhatSinh>();
+        private Controll status = Controll.Normal;
+
+        // 🔹 Constructor chuẩn DI
         public frmBanSi()
         {
             InitializeComponent();
+
+            // --- Khởi tạo các dependency ---
             _maSpDal = new MaSanPhanFactory();
+
+            var phieuBanDal = new PhieuBanFactory();
+            var khachHangCtrl = new KhachHangController();
+            var chiTietDal = new ChiTietPhieuBanDAL();
+            var maSpCtrl = new MaSanPhamController();
+
+            // --- Inject theo thứ tự phụ thuộc ---
+            ctrlSanPham = new SanPhamController();
+            ctrlKhachHang = khachHangCtrl;
+            ctrlMaSanPham = maSpCtrl;
+            ctrlPhieuBan = new PhieuBanController(phieuBanDal, khachHangCtrl);
+            ctrlChiTiet = new ChiTietPhieuBanController(chiTietDal, maSpCtrl);
+            ctrlPhieuBanChiPhi = new PhieuBanChiPhiController();
+
             status = Controll.AddNew;
         }
 
-
+        // 🔹 Constructor overload để inject controller từ ngoài (nếu cần)
         public frmBanSi(PhieuBanController ctrlPB)
         {
             InitializeComponent();
-            this.ctrlPhieuBan = ctrlPB;
+
+            // Vẫn phải inject những phụ thuộc khác
+            var chiTietDal = new ChiTietPhieuBanDAL();
+            var maSpCtrl = new MaSanPhamController();
+
+            ctrlPhieuBan = ctrlPB;
+            ctrlChiTiet = new ChiTietPhieuBanController(chiTietDal, maSpCtrl);
+            ctrlPhieuBanChiPhi = new PhieuBanChiPhiController();
+            ctrlSanPham = new SanPhamController();
+            ctrlKhachHang = new KhachHangController();
+            ctrlMaSanPham = maSpCtrl;
+
             status = Controll.Normal;
         }
+
+
 
         private void frmNhapHang_Load(object sender, EventArgs e)
         {
@@ -346,8 +374,11 @@ namespace CuahangNongduoc
 
                  if (MessageBox.Show("Bạn có chắc chắn xóa không?", "Phieu Ban Si", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                  {
-                     ChiTietPhieuBanController ctrl = new ChiTietPhieuBanController();
-                     IList<ChiTietPhieuBan> ds = ctrl.ChiTietPhieuBan(view["ID"].ToString());
+                    IChiTietPhieuBanDAL chiTietDal = new ChiTietPhieuBanDAL();
+                    MaSanPhamController maSpCtrl = new MaSanPhamController();
+
+                    ChiTietPhieuBanController ctrlChiTiet = new ChiTietPhieuBanController(chiTietDal, maSpCtrl);
+                    IList<ChiTietPhieuBan> ds = ctrlChiTiet.ChiTietPhieuBan(view["ID"].ToString());
                      foreach (ChiTietPhieuBan ct in ds)
                      {
                          _maSpDal.CapNhatSoLuong(ct.MaSanPham.Id, ct.SoLuong);

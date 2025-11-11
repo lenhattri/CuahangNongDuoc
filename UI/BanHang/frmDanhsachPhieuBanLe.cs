@@ -64,7 +64,7 @@ namespace CuahangNongduoc
             else
             {
                 DataRowView view = (DataRowView)bindingNavigator.BindingSource.Current;
-                ChiTietPhieuBanController ctrl = new ChiTietPhieuBanController();
+                ChiTietPhieuBanController ctrl = new ChiTietPhieuBanController(new ChiTietPhieuBanDAL(), new MaSanPhamController());
                 IList<ChiTietPhieuBan> ds = ctrl.ChiTietPhieuBan(view["ID"].ToString());
                 MaSanPhanFactory factory = new MaSanPhanFactory();
                 foreach (ChiTietPhieuBan ct in ds)
@@ -82,7 +82,7 @@ namespace CuahangNongduoc
              {
                  if (MessageBox.Show("Bạn có chắc chắn xóa không?", "Phieu Ban Le", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                  {
-                     ChiTietPhieuBanController ctrl = new ChiTietPhieuBanController();
+                     ChiTietPhieuBanController ctrl = new ChiTietPhieuBanController(new ChiTietPhieuBanDAL(), new MaSanPhamController());
                      IList<ChiTietPhieuBan> ds = ctrl.ChiTietPhieuBan(view["ID"].ToString());
                     MaSanPhanFactory factory = new MaSanPhanFactory();
                     foreach (ChiTietPhieuBan ct in ds)
