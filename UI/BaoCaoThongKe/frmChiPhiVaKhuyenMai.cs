@@ -31,11 +31,14 @@ namespace CuahangNongduoc.UI.BaoCaoThongKe
             var ds = phieuBanFactory.DanhsachPhieu();
             DateTime tuNgay = dtpTuNgay.Value.Date;
             DateTime denNgay = dtpDenNgay.Value.Date;
+            bool chiPhi = chkChiPhi.Checked;
             var dsFiltered = ds.Clone();
             foreach (DataRow row in ds.Rows)
             {
                 DateTime ngayBan = Convert.ToDateTime(row["NGAY_BAN"]);
-                if (ngayBan >= tuNgay && ngayBan <= denNgay)
+                decimal tongChiPhi = Convert.ToDecimal(row["TONG_CHI_PHI"]);
+                bool conditionChiPhi = !chiPhi || tongChiPhi > 0;
+                if (ngayBan >= tuNgay && ngayBan <= denNgay && conditionChiPhi)
                 {
                     dsFiltered.ImportRow(row);
                 }
@@ -49,6 +52,10 @@ namespace CuahangNongduoc.UI.BaoCaoThongKe
             {
                 LoadReport(dsFiltered);
             }
+        }
+        private void btnReset_Click(object sender, EventArgs e)
+        {
+            frmChiPhiVaKhuyenMai_Load(sender,e);
         }
         public void LoadReport(DataTable dt)
         {
@@ -117,5 +124,7 @@ namespace CuahangNongduoc.UI.BaoCaoThongKe
         {
 
         }
+
+        
     }
 }

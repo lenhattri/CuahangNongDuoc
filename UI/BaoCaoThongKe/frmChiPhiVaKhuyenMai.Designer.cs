@@ -37,6 +37,8 @@
             this.label2 = new System.Windows.Forms.Label();
             this.dtpTuNgay = new System.Windows.Forms.DateTimePicker();
             this.dtpDenNgay = new System.Windows.Forms.DateTimePicker();
+            this.chkChiPhi = new System.Windows.Forms.CheckBox();
+            this.btnReset = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -79,6 +81,8 @@
             // groupBox1
             // 
             this.groupBox1.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.groupBox1.Controls.Add(this.btnReset);
+            this.groupBox1.Controls.Add(this.chkChiPhi);
             this.groupBox1.Controls.Add(this.dtpDenNgay);
             this.groupBox1.Controls.Add(this.dtpTuNgay);
             this.groupBox1.Controls.Add(this.btnXemBaoCao);
@@ -96,12 +100,12 @@
             // 
             // btnXemBaoCao
             // 
-            this.btnXemBaoCao.Image = global::CuahangNongduoc.Properties.Resources.reload;
+            this.btnXemBaoCao.Image = global::CuahangNongduoc.Properties.Resources.find;
             this.btnXemBaoCao.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnXemBaoCao.Location = new System.Drawing.Point(227, 100);
+            this.btnXemBaoCao.Location = new System.Drawing.Point(309, 85);
             this.btnXemBaoCao.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnXemBaoCao.Name = "btnXemBaoCao";
-            this.btnXemBaoCao.Size = new System.Drawing.Size(126, 37);
+            this.btnXemBaoCao.Size = new System.Drawing.Size(141, 37);
             this.btnXemBaoCao.TabIndex = 8;
             this.btnXemBaoCao.Text = "Xem báo cáo";
             this.btnXemBaoCao.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -148,6 +152,30 @@
             this.dtpDenNgay.TabIndex = 10;
             this.dtpDenNgay.ValueChanged += new System.EventHandler(this.dtpDenNgay_ValueChanged);
             // 
+            // chkChiPhi
+            // 
+            this.chkChiPhi.AutoSize = true;
+            this.chkChiPhi.Location = new System.Drawing.Point(12, 92);
+            this.chkChiPhi.Name = "chkChiPhi";
+            this.chkChiPhi.Size = new System.Drawing.Size(292, 24);
+            this.chkChiPhi.TabIndex = 11;
+            this.chkChiPhi.Text = "Chỉ xem hóa đơn có chi phí phát sinh";
+            this.chkChiPhi.UseVisualStyleBackColor = true;
+            // 
+            // btnReset
+            // 
+            this.btnReset.Image = global::CuahangNongduoc.Properties.Resources.reload;
+            this.btnReset.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnReset.Location = new System.Drawing.Point(473, 85);
+            this.btnReset.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.btnReset.Name = "btnReset";
+            this.btnReset.Size = new System.Drawing.Size(81, 37);
+            this.btnReset.TabIndex = 12;
+            this.btnReset.Text = "Reset";
+            this.btnReset.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnReset.UseVisualStyleBackColor = true;
+            this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
+            // 
             // frmChiPhiVaKhuyenMai
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -178,5 +206,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.DateTimePicker dtpTuNgay;
         private System.Windows.Forms.DateTimePicker dtpDenNgay;
+        private System.Windows.Forms.CheckBox chkChiPhi;
+        private System.Windows.Forms.Button btnReset;
     }
 }
