@@ -93,7 +93,17 @@ namespace CuahangNongduoc.DataLayer
         public DataTable DanhsachPhieu()
         {
             const string sql =
-                "SELECT PB.* FROM PHIEU_BAN PB INNER JOIN KHACH_HANG KH ON PB.ID_KHACH_HANG = KH.ID";
+                @"SELECT PB.ID,  
+                         KH.HO_TEN, 
+                         PB.NGAY_BAN, 
+                         PB.TONG_TIEN, 
+                         ISNULL(SUM(CP.SO_TIEN), 0) AS TONG_CHI_PHI
+                  FROM PHIEU_BAN PB 
+                  INNER JOIN KHACH_HANG KH ON PB.ID_KHACH_HANG = KH.ID
+                  LEFT JOIN PHIEU_BAN_CHI_PHI PBCP ON PB.ID = PBCP.MA_PHIEU_BAN
+                  LEFT JOIN CHI_PHI_PHAT_SINH CP ON PBCP.MA_CHI_PHI = CP.ID
+                  GROUP BY 
+                         PB.ID, KH.HO_TEN, PB.NGAY_BAN, PB.TONG_TIEN";
             using (var cn = _db.Open())
             using (var cmd = _db.Cmd(cn, sql, CommandType.Text))
             using (var da = new SqlDataAdapter(cmd))
