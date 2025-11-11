@@ -209,6 +209,7 @@ namespace CuahangNongduoc
 
             DataRow row = ctrlPhieuBan.NewRow();
             row["ID"] = txtMaPhieu.Text;
+            MessageBox.Show(Session.CurrentUser.Id.ToString());
             row["ID_NHAN_VIEN"] = Session.CurrentUser.Id;
             row["ID_KHACH_HANG"] = cmbKhachHang.SelectedValue;
             row["NGAY_BAN"] = dtNgayLapPhieu.Value.Date;

@@ -1,4 +1,5 @@
 ﻿using CuahangNongduoc.Controller;
+using CuahangNongduoc.DAL.DataLayer;
 using CuahangNongduoc.DataLayer;
 using CuahangNongduoc.DTO;
 using CuahangNongduoc.Utils.Functions;
@@ -17,6 +18,7 @@ namespace CuahangNongduoc.UI.BaoCaoThongKe
     public partial class frmChiPhiVaKhuyenMai : Form
     {
         private PhieuBanFactory phieuBanFactory = new PhieuBanFactory();
+        private UserDAL userDAL = new UserDAL();
         public frmChiPhiVaKhuyenMai()
         {
             InitializeComponent();
@@ -31,10 +33,16 @@ namespace CuahangNongduoc.UI.BaoCaoThongKe
             IList <ChiPhiKhuyenMaiReport> phieuChiReport = new List<ChiPhiKhuyenMaiReport>();
             foreach (var item in phieuBanFactory.DanhsachPhieu().Select())
             {
+                decimal TongTien = item["TONG_TIEN"].ToString() != "" ? decimal.Parse(item["TONG_TIEN"].ToString()) : 0;
+                decimal GiamGia = item["GIAM_GIA"].ToString() != "" ? decimal.Parse(item["GIAM_GIA"].ToString()) : 0;
+
                 ChiPhiKhuyenMaiReport chiPhiKhuyenMaiReport = new ChiPhiKhuyenMaiReport()
                 {
                     NgayLap = DateTime.Parse(item["NGAY_BAN"].ToString()),
-                    TongTien = item["TONG_TIEN"].ToString() != "" ? decimal.Parse(item["TONG_TIEN"].ToString()) : 0,
+                    TongTien = TongTien,
+                    TenNguoiLap = userDAL.LayTenNguoiDungTheoId(item["ID_NHAN_VIEN"].ToString()),
+                    GiamGia = GiamGia,
+                    TongTienSauGiamGia = TongTien - GiamGia
                 };
                 phieuChiReport.Add(chiPhiKhuyenMaiReport);
             }

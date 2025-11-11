@@ -335,7 +335,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Fields!NgayLap.Value</Value>
+                              <Value>=Format(Fields!NgayLap.Value, "dd/MM/yyyy")</Value>
                               <Style />
                             </TextRun>
                           </TextRuns>
@@ -487,8 +487,8 @@
   </Body>
   <Width>16.51cm</Width>
   <Page>
-    <PageHeight>29.7cm</PageHeight>
-    <PageWidth>21cm</PageWidth>
+    <PageHeight>21cm</PageHeight>
+    <PageWidth>29.7cm</PageWidth>
     <LeftMargin>2.5cm</LeftMargin>
     <RightMargin>2.5cm</RightMargin>
     <TopMargin>2.5cm</TopMargin>

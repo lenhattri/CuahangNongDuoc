@@ -70,10 +70,12 @@ namespace CuahangNongduoc
             if (status == Controll.AddNew)
             {
                 txtMaPhieu.Text = ThamSo.LayMaPhieuBan().ToString();
+                ctrlChiTiet.HienThiChiTiet(dgvDanhsachSP, txtMaPhieu.Text);
             }
             else
             {
                 this.Allow(false);
+                ctrlChiTiet.HienThiChiTiet(dgvDanhsachSP, txtMaPhieu.Text);
             }
 
             AppTheme.ApplyTheme(this);

@@ -158,7 +158,7 @@ namespace CuahangNongduoc.DataLayer
                 // Ghi chi tiết phiếu bán cho Lô
                 DataRow chiTietPhieuBan = row.Table.NewRow();
                 chiTietPhieuBan["ID_PHIEU_BAN"] = idPhieuBan;
-                chiTietPhieuBan["ID_MA_SAN_PHAM"] = idMaSanPham;
+                chiTietPhieuBan["ID_MA_SAN_PHAM"] = idMaLoHienTai;
                 chiTietPhieuBan["SO_LUONG"] = soLuongXuatTuLo;
                 chiTietPhieuBan["DON_GIA"] = donGia;
                 chiTietPhieuBan["THANH_TIEN"] = donGia * soLuongXuatTuLo;

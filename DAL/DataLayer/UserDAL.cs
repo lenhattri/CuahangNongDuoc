@@ -56,6 +56,20 @@ namespace CuahangNongduoc.DAL.DataLayer
             return dt.Rows.Count > 0 ? dt.Rows[0] : null;
         }
 
+        public string LayTenNguoiDungTheoId(string tenNguoiId)
+        {
+            if (!long.TryParse(tenNguoiId, out long id))
+                return null;
+
+            const string sql = @"SELECT HO_TEN FROM NHAN_VIEN WHERE ID = @id";
+
+            var dt = _db.ExecuteDataTable(sql, CommandType.Text,
+                _db.P("@id", SqlDbType.BigInt, id));
+
+            return dt.Rows.Count > 0 ? dt.Rows[0][0].ToString() : null;
+        }
+
+
         public DataRow LayNguoiDungTheoTenDangNhap(string tenDangNhap)
         {
             const string sql = @"
