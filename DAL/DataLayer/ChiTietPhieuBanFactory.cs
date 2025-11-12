@@ -158,7 +158,7 @@ namespace CuahangNongduoc.DataLayer
                 // Ghi chi tiết phiếu bán cho Lô
                 DataRow chiTietPhieuBan = row.Table.NewRow();
                 chiTietPhieuBan["ID_PHIEU_BAN"] = idPhieuBan;
-                chiTietPhieuBan["ID_MA_SAN_PHAM"] = idMaSanPham;
+                chiTietPhieuBan["ID_MA_SAN_PHAM"] = idMaLoHienTai;
                 chiTietPhieuBan["SO_LUONG"] = soLuongXuatTuLo;
                 chiTietPhieuBan["DON_GIA"] = donGia;
                 chiTietPhieuBan["THANH_TIEN"] = donGia * soLuongXuatTuLo;
@@ -180,7 +180,10 @@ namespace CuahangNongduoc.DataLayer
             int soLuongCanXuat = Convert.ToInt32(row["SO_LUONG"]);
             decimal donGia = Convert.ToDecimal(row["DON_GIA"]);
             DataTable loSanPhams = LayThongTinMotLo(idMaSanPham);
-
+            if (loSanPhams == null || loSanPhams.Rows.Count == 0)
+            {
+                throw new Exception($"Không tìm thấy thông tin lô {idMaSanPham}");
+            }
             string idSanPham = LayIdSanPhamTuMaSanPham(idMaSanPham);
             int soLuongTon = Convert.ToInt32(loSanPhams.Rows[0]["SO_LUONG"]);
             if (soLuongTon < soLuongCanXuat)
