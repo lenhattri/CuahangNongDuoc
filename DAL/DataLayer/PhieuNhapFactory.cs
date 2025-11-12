@@ -8,12 +8,13 @@ namespace CuahangNongduoc.DataLayer
 
     public class PhieuNhapFactory : IPhieuNhapFactory
     {
-        private readonly DbClient _db = DbClient.Instance;
+        private readonly DbClient _db;
         private readonly DataTable _buffer;
 
 
-        public PhieuNhapFactory()
+        public PhieuNhapFactory(DbClient dbClient)
         {
+            _db = dbClient ?? throw new ArgumentNullException(nameof(dbClient));
             _buffer = CreateSchema();
         }
 

@@ -1,9 +1,10 @@
-﻿using System;
+﻿using CuahangNongduoc.BusinessObject;
+using CuahangNongduoc.DAL.Infrastructure;
+using CuahangNongduoc.DataLayer;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Windows.Forms;
-using CuahangNongduoc.BusinessObject;
-using CuahangNongduoc.DataLayer;
 
 namespace CuahangNongduoc.Controller
 {
@@ -35,9 +36,13 @@ namespace CuahangNongduoc.Controller
 
         public void HienThiChiTietPhieuNhap(string id, ListView lvw)
         {
+            // Khởi tạo các controller với DI đúng
             var ctrlMSP = new MaSanPhamController(new MaSanPhanFactory(), new SanPhamFactory());
-            var ctrlPN = new PhieuNhapController();
-            DataTable tbl = _factory.LayChiTietPhieuNhap(id);
+            var phieuNhapFactory = new PhieuNhapFactory(DbClient.Instance);
+            var ctrlPN = new PhieuNhapController(phieuNhapFactory);
+
+            // Lấy chi tiết phiếu nhập
+            DataTable tbl = phieuNhapFactory.LayPhieuNhap(id);
 
             lvw.Items.Clear();
             foreach (DataRow row in tbl.Rows)

@@ -4,22 +4,31 @@ using CuahangNongduoc.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace CuahangNongduoc.BLL.Controller
 {
     public class PhieuBanChiPhiController
     {
-        PhieuBanChiPhiFactory dal = new PhieuBanChiPhiFactory();
+        private readonly IPhieuBanChiPhiFactory _dal;
+
+        // ✅ Constructor inject interface
+        public PhieuBanChiPhiController(IPhieuBanChiPhiFactory dal)
+        {
+            _dal = dal ?? throw new ArgumentNullException(nameof(dal));
+        }
+
+        // ✅ Constructor mặc định (dùng nhanh trong WinForms)
+        public PhieuBanChiPhiController() : this(new PhieuBanChiPhiFactory()) { }
+
         public DataTable LayDanhSachTheoPhieuBan(string maPhieuBan)
         {
-            return dal.LayDanhSachTheoPhieuBan(maPhieuBan);
+            return _dal.LayDanhSachTheoPhieuBan(maPhieuBan);
         }
+
         public IList<ChiPhiPhatSinh> LayDanhSachTheoPB(string maPhieuBan)
         {
-            DataTable table = dal.LayDanhSachTheoPhieuBan(maPhieuBan);
+            DataTable table = _dal.LayDanhSachTheoPhieuBan(maPhieuBan);
             IList<ChiPhiPhatSinh> ds = new List<ChiPhiPhatSinh>();
             foreach (DataRow row in table.Rows)
             {
@@ -34,27 +43,29 @@ namespace CuahangNongduoc.BLL.Controller
             }
             return ds;
         }
+
         public void LuuChiPhiPhatSinh(string maPhieuBan, List<ChiPhiPhatSinh> chiPhis)
         {
-
-            dal.LuuChiPhiPhatSinh(maPhieuBan, chiPhis);
+            _dal.LuuChiPhiPhatSinh(maPhieuBan, chiPhis);
         }
+
         public void CapNhatChiPhiPhatSinh(string maPhieuBan, List<ChiPhiPhatSinh> chiPhis)
         {
-            dal.DeletedByPhieuBan(maPhieuBan);
-            dal.LuuChiPhiPhatSinh(maPhieuBan, chiPhis);
+            _dal.DeletedByPhieuBan(maPhieuBan);
+            _dal.LuuChiPhiPhatSinh(maPhieuBan, chiPhis);
         }
-        public void HienThiDataGridView(System.Windows.Forms.DataGridView dgv, System.Windows.Forms.BindingNavigator bnv, string maPhieuBan)
+
+        public void HienThiDataGridView(DataGridView dgv, BindingNavigator bnv, string maPhieuBan)
         {
             DataTable table = LayDanhSachTheoPhieuBan(maPhieuBan);
-            System.Windows.Forms.BindingSource bsource = new System.Windows.Forms.BindingSource();
-            bsource.DataSource = table;
+            BindingSource bsource = new BindingSource { DataSource = table };
             bnv.BindingSource = bsource;
             dgv.DataSource = bsource;
         }
+
         public void Insert(PhieuBanChiPhi phieuBanChiPhi)
         {
-             dal.Insert(phieuBanChiPhi);
+            _dal.Insert(phieuBanChiPhi);
         }
     }
 }

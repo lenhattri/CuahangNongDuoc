@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using CuahangNongduoc.DataLayer;
@@ -11,26 +11,32 @@ namespace CuahangNongduoc.Controller
     
     public class PhieuThanhToanController
     {
-        PhieuThanhToanDAL factory = new PhieuThanhToanDAL();
+        private readonly IPhieuThanhToanDAL _factory; // Inject DAL qua interface
+        private readonly BindingSource _bs = new BindingSource();
 
+        public PhieuThanhToanController(IPhieuThanhToanDAL factory)
+        {
+            _factory = factory ?? throw new ArgumentNullException(nameof(factory));
+            _bs.DataSource = _factory.LayPhieuThanhToan("-1"); // schema rỗng ban đầu
+        }
 
         public DataRow NewRow()
         {
-            return factory.NewRow();
+            return _factory.NewRow();
         }
         public void Add(DataRow row)
         {
-            factory.Add(row);
+            _factory.Add(row);
         }
         public void Save()
         {
-            factory.Save();
+            _factory.Save();
         }
 
         public PhieuThanhToan LayPhieuThanhToan(String id)
         {
             PhieuThanhToan ph = null;
-            DataTable tbl = factory.LayPhieuThanhToan(id);
+            DataTable tbl = _factory.LayPhieuThanhToan(id);
             if (tbl.Rows.Count > 0 )
             {
                 ph = new PhieuThanhToan();
@@ -47,7 +53,7 @@ namespace CuahangNongduoc.Controller
         public void HienthiPhieuThanhToan(BindingNavigator bn, DataGridView dg,ComboBox cmb, TextBox txt, DateTimePicker dt, NumericUpDown numTongTien, TextBox txtGhichu)
         {
             BindingSource bs = new BindingSource();
-            bs.DataSource = factory.DanhsachPhieuThanhToan();
+            bs.DataSource = _factory.DanhsachPhieuThanhToan();
             bn.BindingSource = bs;
             dg.DataSource = bs;
 
@@ -72,7 +78,7 @@ namespace CuahangNongduoc.Controller
         {
             
             BindingSource bs = new BindingSource();
-            bs.DataSource = factory.TimPhieuThanhToan(idKH, dtNgayThu);
+            bs.DataSource = _factory.TimPhieuThanhToan(idKH, dtNgayThu);
             bn.BindingSource = bs;
             dg.DataSource = bs;
 

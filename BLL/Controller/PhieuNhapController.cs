@@ -10,33 +10,34 @@ namespace CuahangNongduoc.Controller
 {
     public class PhieuNhapController
     {
-        private readonly PhieuNhapFactory factory = new PhieuNhapFactory();
+        private readonly IPhieuNhapFactory _factory;
         private readonly BindingSource bs = new BindingSource();
 
-        public PhieuNhapController()
+        public PhieuNhapController(IPhieuNhapFactory factory)
         {
+            _factory = factory ?? throw new ArgumentNullException(nameof(factory));
             // Bind schema rỗng để tránh lỗi khi UI khởi tạo
-            bs.DataSource = factory.LayPhieuNhap("-1");
+            bs.DataSource = _factory.LayPhieuNhap("-1");
         }
 
-        public DataRow NewRow() => factory.NewRow();
-        public void Add(DataRow row) => factory.Add(row);
+        public DataRow NewRow() => _factory.NewRow();
+        public void Add(DataRow row) => _factory.Add(row);
 
         public void Update()
         {
             //   EndCurrentEdit để commit dữ liệu từ UI -> DataRow
             var cm = GetCurrencyManager();
             cm?.EndCurrentEdit();
-            factory.Save();
+            _factory.Save();
         }
 
-        public void Save() => factory.Save();
+        public void Save() => _factory.Save();
 
         public PhieuNhap LayPhieuNhap(string id)
         {
-            var tbl = factory.LayPhieuNhap(id);
+            var tbl = _factory.LayPhieuNhap(id);
             PhieuNhap ph = null;
-            var ctrlNCC = new NhaCungCapController();
+            var ctrlNCC = new NhaCungCapController(new NhaCungCapDAL());
             if (tbl.Rows.Count > 0)
             {
                 var r = tbl.Rows[0];
@@ -67,7 +68,7 @@ namespace CuahangNongduoc.Controller
 
         public void HienthiPhieuNhap(BindingNavigator bn, DataGridView dg)
         {
-            bs.DataSource = factory.DanhsachPhieuNhap();
+            bs.DataSource = _factory.DanhsachPhieuNhap();
             bn.BindingSource = bs;
             dg.DataSource = bs;
         }
@@ -104,7 +105,7 @@ namespace CuahangNongduoc.Controller
 
         public void TimPhieuNhap(string maNCC, DateTime dt)
         {
-            bs.DataSource = factory.TimPhieuNhap(maNCC, dt);
+            bs.DataSource = _factory.TimPhieuNhap(maNCC, dt);
         }
 
         private CurrencyManager GetCurrencyManager()
