@@ -2,7 +2,8 @@
 using System;
 using System.Data;
 using System.Data.SqlClient;
-using CuahangNongduoc.DAL.Infrastructure;             // CHANGED: dùng DbClient (singleton)
+using CuahangNongduoc.DAL.Infrastructure;
+using CuahangNongduoc.Utils;             // CHANGED: dùng DbClient (singleton)
 
 namespace CuahangNongduoc.DataLayer
 {
@@ -13,7 +14,7 @@ namespace CuahangNongduoc.DataLayer
         private DataTable _table;                          // NEW: giữ DataTable đang bind để Save()
 
         private const string SELECT_BASE =
-            "SELECT ID, ID_KHACH_HANG, NGAY_BAN, TONG_TIEN, DA_TRA, CON_NO, CHI_PHI_VAN_CHUYEN, PHI_DICH_VU, GIAM_GIA FROM PHIEU_BAN";
+            "SELECT ID, ID_KHACH_HANG,ID_NHAN_VIEN, NGAY_BAN, TONG_TIEN, DA_TRA, CON_NO FROM PHIEU_BAN";
 
         /* ===================== Helpers ===================== */
 
@@ -92,26 +93,40 @@ namespace CuahangNongduoc.DataLayer
 
         public DataTable DanhsachPhieu()
         {
-            const string sql =
+            string Quyen = Session.CurrentUser.Quyen;
+            long maNhanVien = Session.CurrentUser.Id;
+            string sql =
                 @"SELECT PB.ID,  
-                         KH.HO_TEN, 
+                         KH.HO_TEN AS TEN_KHACH_HANG, 
+                         NV.HO_TEN ,
                          PB.NGAY_BAN, 
-                         PB.TONG_TIEN, 
-                         ISNULL(SUM(CP.SO_TIEN), 0) AS TONG_CHI_PHI
+                         CP.LOAI_CHI_PHI,
+                         CP.SO_TIEN
                   FROM PHIEU_BAN PB 
                   INNER JOIN KHACH_HANG KH ON PB.ID_KHACH_HANG = KH.ID
-                  LEFT JOIN PHIEU_BAN_CHI_PHI PBCP ON PB.ID = PBCP.MA_PHIEU_BAN
-                  LEFT JOIN CHI_PHI_PHAT_SINH CP ON PBCP.MA_CHI_PHI = CP.ID
-                  GROUP BY 
-                         PB.ID, KH.HO_TEN, PB.NGAY_BAN, PB.TONG_TIEN";
+                  INNER JOIN NHAN_VIEN NV ON PB.ID_NHAN_VIEN = NV.ID
+                  INNER JOIN PHIEU_BAN_CHI_PHI PBCP ON PB.ID = PBCP.MA_PHIEU_BAN
+                  INNER JOIN CHI_PHI_PHAT_SINH CP ON PBCP.MA_CHI_PHI = CP.ID
+                  WHERE CP.LOAI_CHI_PHI IN (N'Giảm giá',N'Khuyến mãi')";
+            if(Quyen == "NhanVien")
+            {
+                sql += @" AND PB.ID_NHAN_VIEN = @maNhanVien";
+            }
             using (var cn = _db.Open())
             using (var cmd = _db.Cmd(cn, sql, CommandType.Text))
-            using (var da = new SqlDataAdapter(cmd))
             {
-                var dtRes = new DataTable("PHIEU_BAN");
-                da.Fill(dtRes);
-                _table = dtRes;
-                return dtRes;
+                // Thêm tham số nếu là NhanVien
+                if (Quyen == "NhanVien")
+                {
+                    cmd.Parameters.Add(_db.P("@maNhanVien", SqlDbType.BigInt, maNhanVien));
+                }
+                using (var da = new SqlDataAdapter(cmd))
+                {
+                    var dtRes = new DataTable("PHIEU_BAN");
+                    da.Fill(dtRes);
+                    _table = dtRes;
+                    return dtRes;
+                }
             }
         }
 

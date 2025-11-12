@@ -177,7 +177,7 @@ namespace CuahangNongduoc
                 row["SO_LUONG"] = numSoLuong.Value;
                 row["THANH_TIEN"] = numThanhTien.Value;
                 ctrlChiTiet.Add(row);
-
+                
             }
 
         }

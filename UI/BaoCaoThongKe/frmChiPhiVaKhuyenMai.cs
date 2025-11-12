@@ -31,14 +31,11 @@ namespace CuahangNongduoc.UI.BaoCaoThongKe
             var ds = phieuBanFactory.DanhsachPhieu();
             DateTime tuNgay = dtpTuNgay.Value.Date;
             DateTime denNgay = dtpDenNgay.Value.Date;
-            bool chiPhi = chkChiPhi.Checked;
             var dsFiltered = ds.Clone();
             foreach (DataRow row in ds.Rows)
             {
                 DateTime ngayBan = Convert.ToDateTime(row["NGAY_BAN"]);
-                decimal tongChiPhi = Convert.ToDecimal(row["TONG_CHI_PHI"]);
-                bool conditionChiPhi = !chiPhi || tongChiPhi > 0;
-                if (ngayBan >= tuNgay && ngayBan <= denNgay && conditionChiPhi)
+                if (ngayBan >= tuNgay && ngayBan <= denNgay)
                 {
                     dsFiltered.ImportRow(row);
                 }
@@ -66,10 +63,11 @@ namespace CuahangNongduoc.UI.BaoCaoThongKe
                 ChiPhiKhuyenMaiReport chiPhiKhuyenMaiReport = new ChiPhiKhuyenMaiReport()
                 {
                     Id = int.Parse(item["ID"].ToString()), // No change needed here
-                    TenKhachHang = item["HO_TEN"]?.ToString() ?? "", // Added null-conditional operator
+                    TenKhachHang = item["TEN_KHACH_HANG"]?.ToString() ?? "", // Added null-conditional operator
+                    TenNhanVien = item["TEN_NHAN_VIEN"]?.ToString() ?? "",
                     NgayLap = DateTime.Parse(item["NGAY_BAN"].ToString()), // No change needed here
-                    TongTien = decimal.Parse(item["TONG_TIEN"].ToString()), // No change needed here
-                    TongChiPhi = decimal.Parse(item["TONG_CHI_PHI"].ToString()), // No change needed here
+                    LoaiChiPhi = item["LOAI_CHI_PHI"]?.ToString() ?? "",
+                    SoTien = decimal.Parse(item["SO_TIEN"].ToString())
                 };
                 phieuChiReport.Add(chiPhiKhuyenMaiReport);
             }

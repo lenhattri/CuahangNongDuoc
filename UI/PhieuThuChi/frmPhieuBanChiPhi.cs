@@ -69,7 +69,7 @@ namespace CuahangNongduoc.UI.PhieuThuChi
                     ds.Add(cp);
                 }
             }
-
+            lblThanhTien.Text = "Thành tiền: "+ds.Sum(c => c.SoTien).ToString("N0") +"đ";
             return ds;
         }
 
@@ -78,6 +78,22 @@ namespace CuahangNongduoc.UI.PhieuThuChi
             _dsDaChon = LayDanhSachChiPhiDaChon();
             DialogResult = DialogResult.OK;
             this.Close();
+        }
+
+        private void dgvChiPhi_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if(dgvChiPhi.Columns[e.ColumnIndex].Name == "Chon")
+            {
+                LayDanhSachChiPhiDaChon();
+            }
+        }
+
+        private void dgvChiPhi_CurrentCellDirtyStateChanged(object sender, EventArgs e)
+        {
+            if(dgvChiPhi.IsCurrentCellDirty)
+            {
+                dgvChiPhi.CommitEdit(DataGridViewDataErrorContexts.Commit);
+            }
         }
     }
 }

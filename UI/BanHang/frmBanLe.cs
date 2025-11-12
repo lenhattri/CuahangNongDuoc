@@ -161,6 +161,7 @@ namespace CuahangNongduoc
             row["SO_LUONG"] = numSoLuong.Value;
             row["THANH_TIEN"] = numThanhTien.Value;
             ctrlChiTiet.Add(row);
+            
         }
 
         private void numDonGia_ValueChanged(object sender, EventArgs e)

@@ -9,10 +9,10 @@ namespace CuahangNongduoc.DTO
     public class ChiPhiKhuyenMaiReport
     {
         public int Id {  get; set; }
+        public string TenNhanVien { get; set; }
         public string TenKhachHang {  get; set; }
         public DateTime NgayLap { get; set; }
-        public decimal TongTien { get; set; }
-        public decimal TongChiPhi { get; set; }
-        public decimal TongTienSauGiamGia => TongTien - TongChiPhi;
+        public string LoaiChiPhi { get; set; }
+        public decimal SoTien { get; set; }
     }
 }
