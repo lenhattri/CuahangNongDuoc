@@ -38,9 +38,9 @@ namespace CuahangNongduoc
             SanPhamController ctrl = new SanPhamController(dalSanPham);
 
             ctrlKhachHang = new KhachHangController();
-            ctrlMaSanPham = new MaSanPhamController();
+            ctrlMaSanPham = new MaSanPhamController(new MaSanPhanFactory(), new SanPhamFactory());
 
-            maSpCtrl = new MaSanPhamController();
+            maSpCtrl = new MaSanPhamController(new MaSanPhanFactory(), new SanPhamFactory());
             chiTietDal = new ChiTietPhieuBanDAL();
             ctrlChiTiet = new ChiTietPhieuBanController(chiTietDal, maSpCtrl);
 
@@ -59,11 +59,11 @@ namespace CuahangNongduoc
             SanPhamController ctrl = new SanPhamController(dalSanPham);
 
             ctrlKhachHang = new KhachHangController();
-            ctrlMaSanPham = new MaSanPhamController();
+            ctrlMaSanPham = new MaSanPhamController(new MaSanPhanFactory(), new SanPhamFactory());
 
             ctrlPhieuBan = ctrlPB;
 
-            maSpCtrl = new MaSanPhamController();
+            maSpCtrl = new MaSanPhamController(new MaSanPhanFactory(), new SanPhamFactory());
             chiTietDal = new ChiTietPhieuBanDAL();
             ctrlChiTiet = new ChiTietPhieuBanController(chiTietDal, maSpCtrl);
 
@@ -111,7 +111,7 @@ namespace CuahangNongduoc
         {
             if (cmbSanPham.SelectedValue != null)
             {
-                MaSanPhamController ctrlMSP = new MaSanPhamController();
+                MaSanPhamController ctrlMSP = new MaSanPhamController(new MaSanPhanFactory(), new SanPhamFactory());
                 cmbMaSanPham.SelectedIndexChanged -= new EventHandler(cmbMaSanPham_SelectedIndexChanged);
                 ctrlMSP.HienThiAutoComboBox(cmbSanPham.SelectedValue.ToString(), cmbMaSanPham);
                 cmbMaSanPham.SelectedIndexChanged += new EventHandler(cmbMaSanPham_SelectedIndexChanged);
@@ -128,7 +128,7 @@ namespace CuahangNongduoc
         {
             if (cmbMaSanPham.SelectedValue == null) return;
 
-            MaSanPhamController ctrl = new MaSanPhamController();
+            MaSanPhamController ctrl = new MaSanPhamController(new MaSanPhanFactory(), new SanPhamFactory());
             MaSanPham masp = ctrl.LayMaSanPham(cmbMaSanPham.SelectedValue.ToString());
 
             numDonGia.Value = masp.SanPham.GiaBanLe;
@@ -366,7 +366,7 @@ namespace CuahangNongduoc
                 if (MessageBox.Show("Bạn có chắc chắn xóa không?", "Phieu Ban Le", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
                     IChiTietPhieuBanDAL chiTietDal = new ChiTietPhieuBanDAL();
-                    MaSanPhamController maSpCtrl = new MaSanPhamController();
+                    MaSanPhamController maSpCtrl = new MaSanPhamController(new MaSanPhanFactory(), new SanPhamFactory());
 
                     ChiTietPhieuBanController ctrlChiTiet = new ChiTietPhieuBanController(chiTietDal, maSpCtrl);
                     IList<ChiTietPhieuBan> ds = ctrlChiTiet.ChiTietPhieuBan(view["ID"].ToString());

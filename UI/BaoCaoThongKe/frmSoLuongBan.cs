@@ -18,7 +18,7 @@ namespace CuahangNongduoc
 
             // ✅ Inject dependencies trong constructor
             IChiTietPhieuBanDAL chiTietDal = new ChiTietPhieuBanDAL();
-            MaSanPhamController maSpCtrl = new MaSanPhamController();
+            MaSanPhamController maSpCtrl = new MaSanPhamController(new MaSanPhanFactory(), new SanPhamFactory());
 
             _ctrlChiTiet = new ChiTietPhieuBanController(chiTietDal, maSpCtrl);
         }

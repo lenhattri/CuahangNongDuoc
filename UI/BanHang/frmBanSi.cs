@@ -45,7 +45,7 @@ namespace CuahangNongduoc
             var phieuBanDal = new PhieuBanFactory();
             var khachHangCtrl = new KhachHangController();
             var chiTietDal = new ChiTietPhieuBanDAL();
-            var maSpCtrl = new MaSanPhamController();
+            var maSpCtrl = new MaSanPhamController(new MaSanPhanFactory(), new SanPhamFactory());
 
             // --- Inject theo thứ tự phụ thuộc ---
             ISanPhamFactory dalSanPham = new SanPhamFactory();
@@ -66,7 +66,7 @@ namespace CuahangNongduoc
 
             // Vẫn phải inject những phụ thuộc khác
             var chiTietDal = new ChiTietPhieuBanDAL();
-            var maSpCtrl = new MaSanPhamController();
+            var maSpCtrl = new MaSanPhamController(new MaSanPhanFactory(), new SanPhamFactory());
 
             ctrlPhieuBan = ctrlPB;
             ctrlChiTiet = new ChiTietPhieuBanController(chiTietDal, maSpCtrl);
@@ -124,7 +124,7 @@ namespace CuahangNongduoc
         {
             if (cmbSanPham.SelectedValue != null)
             {
-                MaSanPhamController ctrlMSP = new MaSanPhamController();
+                MaSanPhamController ctrlMSP = new MaSanPhamController(new MaSanPhanFactory(), new SanPhamFactory());
 
                 cmbMaSanPham.SelectedIndexChanged -= new EventHandler(cmbMaSanPham_SelectedIndexChanged);
                 ctrlMSP.HienThiAutoComboBox(cmbSanPham.SelectedValue.ToString(), cmbMaSanPham);
@@ -146,7 +146,7 @@ namespace CuahangNongduoc
 
         void cmbMaSanPham_SelectedIndexChanged(object sender, EventArgs e)
         {
-            MaSanPhamController ctrl = new MaSanPhamController();
+            MaSanPhamController ctrl = new MaSanPhamController(new MaSanPhanFactory(), new SanPhamFactory());
             MaSanPham masp = ctrl.LayMaSanPham(cmbMaSanPham.SelectedValue.ToString());
             numDonGia.Value = masp.SanPham.GiaBanSi;
             txtGiaNhap.Text = masp.GiaNhap.ToString("#,###0");
@@ -377,7 +377,7 @@ namespace CuahangNongduoc
                  if (MessageBox.Show("Bạn có chắc chắn xóa không?", "Phieu Ban Si", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                  {
                     IChiTietPhieuBanDAL chiTietDal = new ChiTietPhieuBanDAL();
-                    MaSanPhamController maSpCtrl = new MaSanPhamController();
+                    MaSanPhamController maSpCtrl = new MaSanPhamController(new MaSanPhanFactory(), new SanPhamFactory());
 
                     ChiTietPhieuBanController ctrlChiTiet = new ChiTietPhieuBanController(chiTietDal, maSpCtrl);
                     IList<ChiTietPhieuBan> ds = ctrlChiTiet.ChiTietPhieuBan(view["ID"].ToString());

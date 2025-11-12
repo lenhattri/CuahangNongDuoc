@@ -98,7 +98,7 @@ namespace CuahangNongduoc.Controller
             };
 
             IChiTietPhieuBanDAL chiTietDal = new ChiTietPhieuBanDAL();
-            MaSanPhamController maSpCtrl = new MaSanPhamController();
+            MaSanPhamController maSpCtrl = new MaSanPhamController(new MaSanPhanFactory(), new SanPhamFactory());
 
             var ctCtrl = new ChiTietPhieuBanController(chiTietDal, maSpCtrl);
             ph.ChiTiet = ctCtrl.ChiTietPhieuBan(ph.Id);

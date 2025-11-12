@@ -26,7 +26,7 @@ namespace CuahangNongduoc
 
         SanPhamController ctrlSanPham = new SanPhamController(new SanPhamFactory());
         PhieuNhapController ctrl = new PhieuNhapController();
-        MaSanPhamController ctrlMaSP = new MaSanPhamController();
+        MaSanPhamController ctrlMaSP = new MaSanPhamController(new MaSanPhanFactory(), new SanPhamFactory());
         NhaCungCapController ctrlNCC = new NhaCungCapController();
         PhieuNhap m_PhieuNhap = null;
 
@@ -145,7 +145,7 @@ namespace CuahangNongduoc
                 return;
             }
 
-            MaSanPhamController ctrlTemp = new MaSanPhamController();
+            MaSanPhamController ctrlTemp = new MaSanPhamController(new MaSanPhanFactory(), new SanPhamFactory());
             MaSanPham masp = ctrlTemp.LayMaSanPham(txtMaSo.Text.Trim());
             if (masp == null)
             {

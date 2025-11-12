@@ -145,18 +145,29 @@ namespace CuahangNongduoc.Controller
 {
     public class KhachHangController
     {
-        private readonly KhachHangFactory factory = new KhachHangFactory();
+        private readonly IKhachHangFactory _dal;
+
+        // ✅ Constructor chính: inject DAL từ ngoài vào
+        public KhachHangController(IKhachHangFactory dal)
+        {
+            _dal = dal ?? throw new ArgumentNullException(nameof(dal));
+        }
+
+        // ✅ Constructor rỗng: tự tạo DAL mặc định để form cũ vẫn hoạt động
+        public KhachHangController() : this(new KhachHangFactory())
+        {
+        }
 
         public void HienthiAutoComboBox(ComboBox cmb, bool loai)
         {
-            cmb.DataSource = factory.DanhsachKhachHang(loai);
+            cmb.DataSource = _dal.DanhsachKhachHang(loai);
             cmb.DisplayMember = "HO_TEN";
             cmb.ValueMember = "ID";
         }
 
         public void HienthiChungAutoComboBox(ComboBox cmb)
         {
-            cmb.DataSource = factory.DanhsachKhachHang();
+            cmb.DataSource = _dal.DanhsachKhachHang();
             cmb.DisplayMember = "HO_TEN";
             cmb.ValueMember = "ID";
         }
@@ -164,9 +175,8 @@ namespace CuahangNongduoc.Controller
         public void HienthiKhachHangDataGridview(DataGridView dg, BindingNavigator bn)
         {
             var bs = new BindingSource();
-            DataTable tbl = factory.DanhsachKhachHang(false);
+            DataTable tbl = _dal.DanhsachKhachHang(false);
 
-            // Đặt default theo TÊN cột thay vì index 4 để an toàn khi đổi DB/schema
             if (tbl.Columns.Contains("LOAI_KH"))
                 tbl.Columns["LOAI_KH"].DefaultValue = false;
 
@@ -177,7 +187,7 @@ namespace CuahangNongduoc.Controller
 
         public void HienthiKhachHangChungDataGridviewComboBox(DataGridViewComboBoxColumn cmb)
         {
-            cmb.DataSource = factory.DanhsachKhachHang();
+            cmb.DataSource = _dal.DanhsachKhachHang();
             cmb.DisplayMember = "HO_TEN";
             cmb.ValueMember = "ID";
             cmb.DataPropertyName = "ID_KHACH_HANG";
@@ -186,7 +196,7 @@ namespace CuahangNongduoc.Controller
 
         public void HienthiKhachHangDataGridviewComboBox(DataGridViewComboBoxColumn cmb)
         {
-            cmb.DataSource = factory.DanhsachKhachHang(false);
+            cmb.DataSource = _dal.DanhsachKhachHang(false);
             cmb.DisplayMember = "HO_TEN";
             cmb.ValueMember = "ID";
             cmb.DataPropertyName = "ID_KHACH_HANG";
@@ -195,7 +205,7 @@ namespace CuahangNongduoc.Controller
 
         public void HienthiDaiLyDataGridviewComboBox(DataGridViewComboBoxColumn cmb)
         {
-            cmb.DataSource = factory.DanhsachKhachHang(true);
+            cmb.DataSource = _dal.DanhsachKhachHang(true);
             cmb.DisplayMember = "HO_TEN";
             cmb.ValueMember = "ID";
             cmb.DataPropertyName = "ID_KHACH_HANG";
@@ -205,7 +215,7 @@ namespace CuahangNongduoc.Controller
         public void HienthiDaiLyDataGridview(DataGridView dg, BindingNavigator bn)
         {
             var bs = new BindingSource();
-            DataTable tbl = factory.DanhsachKhachHang(true);
+            DataTable tbl = _dal.DanhsachKhachHang(true);
 
             if (tbl.Columns.Contains("LOAI_KH"))
                 tbl.Columns["LOAI_KH"].DefaultValue = true;
@@ -217,19 +227,19 @@ namespace CuahangNongduoc.Controller
 
         public DataTable TimHoTen(string hoten, bool loai)
         {
-            // Nếu form muốn hiện kết quả tìm, hãy bind DataSource = factory.TimHoTen(...)
-            return factory.TimHoTen(hoten, loai);
+            return _dal.TimHoTen(hoten, loai);
         }
 
         public DataTable TimDiaChi(string diachi, bool loai)
         {
-            return factory.TimDiaChi(diachi, loai);
+            return _dal.TimDiaChi(diachi, loai);
         }
 
         public KhachHang LayKhachHang(string id)
         {
-            DataTable tbl = factory.LayKhachHang(id);
+            DataTable tbl = _dal.LayKhachHang(id);
             KhachHang kh = new KhachHang();
+
             if (tbl.Rows.Count > 0)
             {
                 var r = tbl.Rows[0];
@@ -244,8 +254,9 @@ namespace CuahangNongduoc.Controller
 
         public IList<KhachHang> LayDanhSachKhachHang()
         {
-            DataTable tbl = factory.DanhsachKhachHang();
+            DataTable tbl = _dal.DanhsachKhachHang();
             IList<KhachHang> ds = new List<KhachHang>();
+
             foreach (DataRow row in tbl.Rows)
             {
                 ds.Add(new KhachHang
@@ -257,23 +268,18 @@ namespace CuahangNongduoc.Controller
                     LoaiKH = Convert.ToBoolean(row["LOAI_KH"])
                 });
             }
+
             return ds;
         }
 
-        // ✅ Bổ sung 2 overload để form Khách Hàng gọi cho gọn
-        public DataTable TimHoTen(string hoten)
-        {
-            return factory.TimHoTen(hoten, false);
-        }
+        // Overload cho form KH không cần truyền bool
+        public DataTable TimHoTen(string hoten) => _dal.TimHoTen(hoten, false);
+        public DataTable TimDiaChi(string diachi) => _dal.TimDiaChi(diachi, false);
 
-        public DataTable TimDiaChi(string diachi)
-        {
-            return factory.TimDiaChi(diachi, false);
-        }
-
-
-        public DataRow NewRow() => factory.NewRow();
-        public void Add(DataRow row) => factory.Add(row);
-        public bool Save() => factory.Save();
+        // CRUD binding-friendly
+        public DataRow NewRow() => _dal.NewRow();
+        public void Add(DataRow row) => _dal.Add(row);
+        public bool Save() => _dal.Save();
     }
 }
+

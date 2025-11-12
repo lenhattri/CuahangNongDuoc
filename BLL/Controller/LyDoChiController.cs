@@ -59,7 +59,6 @@
 //    }
 //}
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Windows.Forms;
 using CuahangNongduoc.BusinessObject;
@@ -69,8 +68,16 @@ namespace CuahangNongduoc.Controller
 {
     public class LyDoChiController
     {
-        // DAL ADO.NET (SqlClient) đã viết ở bước trước
-        private readonly LyDoChiFactory _dal = new LyDoChiFactory();
+        private readonly ILyDoChiFactory _dal;
+
+        // ✅ DI constructor – inject factory bên ngoài
+        public LyDoChiController(ILyDoChiFactory dal)
+        {
+            _dal = dal ?? throw new ArgumentNullException(nameof(dal));
+        }
+
+        // ✅ Constructor rỗng – giữ tương thích cho Form cũ
+        public LyDoChiController() : this(new LyDoChiFactory()) { }
 
         /* ===================== BINDING HIỂN THỊ ===================== */
         public void HienthiAutoComboBox(ComboBox cmb)
@@ -100,10 +107,7 @@ namespace CuahangNongduoc.Controller
         }
 
         /* ===================== API GIỮ NGUYÊN CHO UI ===================== */
-        public DataRow NewRow()
-        {
-            return _dal.NewRow();
-        }
+        public DataRow NewRow() => _dal.NewRow();
 
         public void Add(DataRow row)
         {
@@ -113,10 +117,7 @@ namespace CuahangNongduoc.Controller
             _dal.Add(row);
         }
 
-        public bool Save()
-        {
-            return _dal.Save();
-        }
+        public bool Save() => _dal.Save();
 
         /* ===================== TRẢ VỀ SINGLE DOMAIN OBJECT ===================== */
         public LyDoChi LayLyDoChi(long id)

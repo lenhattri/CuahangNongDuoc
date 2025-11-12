@@ -35,7 +35,7 @@ namespace CuahangNongduoc.Controller
 
         public void HienThiChiTietPhieuNhap(string id, ListView lvw)
         {
-            var ctrlMSP = new MaSanPhamController();
+            var ctrlMSP = new MaSanPhamController(new MaSanPhanFactory(), new SanPhamFactory());
             var ctrlPN = new PhieuNhapController();
             DataTable tbl = _factory.LayChiTietPhieuNhap(id);
 

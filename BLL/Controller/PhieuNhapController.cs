@@ -59,7 +59,7 @@ namespace CuahangNongduoc.Controller
                 };
                 ph.NhaCungCap = ctrlNCC.LayNCC(Convert.ToString(r["ID_NHA_CUNG_CAP"]));
 
-                var ctrl = new MaSanPhamController();
+                var ctrl = new MaSanPhamController(new MaSanPhanFactory(), new SanPhamFactory());
                 ph.ChiTiet = ctrl.ChiTietPhieuNhap(ph.Id);
             }
             return ph;

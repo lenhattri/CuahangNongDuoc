@@ -1,152 +1,142 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Windows.Forms;
 using System.Data;
-using CuahangNongduoc.DataLayer;
+using System.Windows.Forms;
 using CuahangNongduoc.BusinessObject;
+using CuahangNongduoc.DataLayer;
 
 namespace CuahangNongduoc.Controller
 {
     public class MaSanPhamController
     {
-        MaSanPhanFactory factory = new MaSanPhanFactory();
+        private readonly IMaSanPhanFactory _dal;
+        private readonly ISanPhamFactory _sanPhamDal;
 
-        public DataRow NewRow()
+        // ✅ Inject DAL qua constructor
+        public MaSanPhamController(IMaSanPhanFactory dal, ISanPhamFactory sanPhamDal)
         {
-            return factory.NewRow();
+            _dal = dal ?? throw new ArgumentNullException(nameof(dal));
+            _sanPhamDal = sanPhamDal ?? throw new ArgumentNullException(nameof(sanPhamDal));
         }
-        public void Add(DataRow row)
-        {
-            factory.Add(row);
-        }
-        public bool Save()
-        {
-            return factory.Save();
-        }
+
+        /* ===================== CRUD ===================== */
+
+        public DataRow NewRow() => _dal.NewRow();
+        public void Add(DataRow row) => _dal.Add(row);
+        public bool Save() => _dal.Save();
+
+        /* ===================== DOMAIN LOGIC ===================== */
 
         public SanPham LaySanPham(string idMaSanPham)
         {
-            var f = new MaSanPhanFactory();
-            DataTable tbl = f.LaySanPham(idMaSanPham);
-            SanPham sp = null;
+            DataTable tbl = _dal.LaySanPham(idMaSanPham);
+            if (tbl.Rows.Count == 0) return null;
 
-            var dalDVT = new DonViTinhDAL();                         // tạo instance DAL
-            var ctrlDVT = new DonViTinhController(dalDVT);          // inject DAL vào controller
-
-            if (tbl.Rows.Count > 0)
+            var row = tbl.Rows[0];
+            return new SanPham
             {
-                sp = new SanPham
+                Id = Convert.ToString(row["ID"]),
+                TenSanPham = Convert.ToString(row["TEN_SAN_PHAM"]),
+                SoLuong = Convert.ToInt32(row["SO_LUONG"]),
+                DonGiaNhap = Convert.ToInt64(row["DON_GIA_NHAP"]),
+                GiaBanLe = Convert.ToInt64(row["GIA_BAN_LE"]),
+                GiaBanSi = Convert.ToInt64(row["GIA_BAN_SI"])
+            };
+        }
+
+        public MaSanPham LayMaSanPham(string idMaSanPham)
+        {
+            DataTable tbl = _dal.LayMaSanPham(idMaSanPham);
+            if (tbl.Rows.Count == 0) return null;
+
+            var row = tbl.Rows[0];
+            var spCtrl = new SanPhamController(_sanPhamDal); // Inject đúng DAL dùng chung
+
+            return new MaSanPham
+            {
+                Id = Convert.ToString(row["ID"]),
+                SoLuong = Convert.ToInt32(row["SO_LUONG"]),
+                GiaNhap = Convert.ToInt64(row["DON_GIA_NHAP"]),
+                NgayNhap = Convert.ToDateTime(row["NGAY_NHAP"]),
+                NgaySanXuat = Convert.ToDateTime(row["NGAY_SAN_XUAT"]),
+                NgayHetHan = Convert.ToDateTime(row["NGAY_HET_HAN"]),
+                SanPham = spCtrl.LaySanPham(row["ID_SAN_PHAM"].ToString())
+            };
+        }
+
+        public IList<MaSanPham> LayMaSanPhamHetHan(DateTime dt)
+        {
+            var ds = new List<MaSanPham>();
+            var tbl = _dal.DanhsachMaSanPhamHetHan(dt);
+            var spCtrl = new SanPhamController(_sanPhamDal);
+
+            foreach (DataRow row in tbl.Rows)
+            {
+                ds.Add(new MaSanPham
                 {
-                    Id = Convert.ToString(tbl.Rows[0]["ID"]),
-                    TenSanPham = Convert.ToString(tbl.Rows[0]["TEN_SAN_PHAM"]),
-                    SoLuong = Convert.ToInt32(tbl.Rows[0]["SO_LUONG"]),
-                    DonGiaNhap = Convert.ToInt64(tbl.Rows[0]["DON_GIA_NHAP"]),
-                    GiaBanLe = Convert.ToInt64(tbl.Rows[0]["GIA_BAN_LE"]),
-                    GiaBanSi = Convert.ToInt64(tbl.Rows[0]["GIA_BAN_SI"]),
-                    DonViTinh = ctrlDVT.LayDVT(Convert.ToInt32(tbl.Rows[0]["ID_DON_VI_TINH"]))
-                };
+                    Id = Convert.ToString(row["ID"]),
+                    SoLuong = Convert.ToInt32(row["SO_LUONG"]),
+                    GiaNhap = Convert.ToInt64(row["DON_GIA_NHAP"]),
+                    NgayNhap = Convert.ToDateTime(row["NGAY_NHAP"]),
+                    NgaySanXuat = Convert.ToDateTime(row["NGAY_SAN_XUAT"]),
+                    NgayHetHan = Convert.ToDateTime(row["NGAY_HET_HAN"]),
+                    SanPham = spCtrl.LaySanPham(row["ID_SAN_PHAM"].ToString())
+                });
             }
 
-            return sp;
-        }
-
-
-
-        public MaSanPham LayMaSanPham(String idMaSanPham)
-        {
-            MaSanPhanFactory f = new MaSanPhanFactory();
-            DataTable tbl = f.LayMaSanPham(idMaSanPham);
-            MaSanPham sp = null;
-            ISanPhamFactory dalSanPham = new SanPhamFactory();
-            SanPhamController ctrl = new SanPhamController(dalSanPham);
-
-            if (tbl.Rows.Count > 0)
-            {
-                sp = new MaSanPham();
-                sp.Id = Convert.ToString(tbl.Rows[0]["ID"]);
-                sp.SoLuong = Convert.ToInt32(tbl.Rows[0]["SO_LUONG"]);
-                sp.GiaNhap = Convert.ToInt64(tbl.Rows[0]["DON_GIA_NHAP"]);
-                sp.NgayNhap = Convert.ToDateTime(tbl.Rows[0]["NGAY_NHAP"]);
-                sp.NgaySanXuat = Convert.ToDateTime(tbl.Rows[0]["NGAY_SAN_XUAT"]);
-                sp.NgayHetHan = Convert.ToDateTime(tbl.Rows[0]["NGAY_HET_HAN"]);
-                sp.SanPham = ctrl.LaySanPham(tbl.Rows[0]["ID_SAN_PHAM"].ToString());
-                
-            }
-            return sp;
-
-        }
-
-        public static IList<MaSanPham> LayMaSanPhamHetHan(DateTime dt)
-        {
-            IList<MaSanPham> ds = new List<MaSanPham>();
-            MaSanPhanFactory f = new MaSanPhanFactory();
-            DataTable tbl = f.DanhsachMaSanPhamHetHan(dt);
-
-            MaSanPham sp = null;
-            ISanPhamFactory dalSanPham = new SanPhamFactory();
-            SanPhamController ctrl = new SanPhamController(dalSanPham);
-
-            foreach ( DataRow row in tbl.Rows)
-            {
-                sp = new MaSanPham();
-                sp.Id = Convert.ToString(row["ID"]);
-                sp.SoLuong = Convert.ToInt32(row["SO_LUONG"]);
-                sp.GiaNhap = Convert.ToInt64(row["DON_GIA_NHAP"]);
-                sp.NgayNhap = Convert.ToDateTime(row["NGAY_NHAP"]);
-                sp.NgaySanXuat = Convert.ToDateTime(row["NGAY_SAN_XUAT"]);
-                sp.NgayHetHan = Convert.ToDateTime(row["NGAY_HET_HAN"]);
-                sp.SanPham = ctrl.LaySanPham(row["ID_SAN_PHAM"].ToString());
-                ds.Add(sp);
-            }
             return ds;
-
         }
 
-        public void HienThiAutoComboBox(String sp, ComboBox cmb)
+        /* ===================== HIỂN THỊ ===================== */
+
+        public void HienThiAutoComboBox(string sp, ComboBox cmb)
         {
-            cmb.DataSource = factory.DanhsachMaSanPham(sp);
+            cmb.DataSource = _dal.DanhsachMaSanPham(sp);
             cmb.DisplayMember = "ID";
             cmb.ValueMember = "ID";
         }
 
         public void HienThiDataGridViewComboBox(DataGridViewComboBoxColumn cmb)
         {
-            cmb.DataSource = factory.DanhsachMaSanPham();
+            cmb.DataSource = _dal.DanhsachMaSanPham();
             cmb.DisplayMember = "ID";
             cmb.ValueMember = "ID";
             cmb.DataPropertyName = "ID_MA_SAN_PHAM";
             cmb.HeaderText = "Mã sản phẩm";
         }
 
-        public void HienThiChiTietPhieuNhap(String id, DataGridView dg)
+        public void HienThiChiTietPhieuNhap(string id, DataGridView dg)
         {
-            
-            dg.DataSource = factory.DanhsachChiTiet(id);
+            dg.DataSource = _dal.DanhsachChiTiet(id);
         }
-        public IList<MaSanPham> ChiTietPhieuNhap(String id)
-        {
-            ISanPhamFactory dalSanPham = new SanPhamFactory();
-            SanPhamController ctrl = new SanPhamController(dalSanPham);
 
+        public IList<MaSanPham> ChiTietPhieuNhap(string id)
+        {
             IList<MaSanPham> ds = new List<MaSanPham>();
-            DataTable tbl = factory.DanhsachChiTiet(id);
+            DataTable tbl = _dal.DanhsachChiTiet(id);
+            var spCtrl = new SanPhamController(_sanPhamDal);
+
             foreach (DataRow row in tbl.Rows)
             {
-                MaSanPham sp = new MaSanPham();
-                sp = new MaSanPham();
-                sp.Id = Convert.ToString(row["ID"]);
-                sp.SoLuong = Convert.ToInt32(row["SO_LUONG"]);
-                sp.GiaNhap = Convert.ToInt64(row["DON_GIA_NHAP"]);
-                sp.ThanhTien = sp.SoLuong * sp.GiaNhap;
-                sp.NgayNhap = Convert.ToDateTime(row["NGAY_NHAP"]);
-                sp.NgaySanXuat = Convert.ToDateTime(row["NGAY_SAN_XUAT"]);
-                sp.NgayHetHan = Convert.ToDateTime(row["NGAY_HET_HAN"]);
-                sp.SanPham = ctrl.LaySanPham(row["ID_SAN_PHAM"].ToString());
-                ds.Add(sp);
+                ds.Add(new MaSanPham
+                {
+                    Id = Convert.ToString(row["ID"]),
+                    SoLuong = Convert.ToInt32(row["SO_LUONG"]),
+                    GiaNhap = Convert.ToInt64(row["DON_GIA_NHAP"]),
+                    ThanhTien = Convert.ToInt64(row["SO_LUONG"]) * Convert.ToInt64(row["DON_GIA_NHAP"]),
+                    NgayNhap = Convert.ToDateTime(row["NGAY_NHAP"]),
+                    NgaySanXuat = Convert.ToDateTime(row["NGAY_SAN_XUAT"]),
+                    NgayHetHan = Convert.ToDateTime(row["NGAY_HET_HAN"]),
+                    SanPham = spCtrl.LaySanPham(row["ID_SAN_PHAM"].ToString())
+                });
             }
+
             return ds;
         }
 
+        public void CapNhatSoLuong(string maSP, int soLuong)
+        {
+            _dal.CapNhatSoLuong(maSP, soLuong);
+        }
     }
 }
