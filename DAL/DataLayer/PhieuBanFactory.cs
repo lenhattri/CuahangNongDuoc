@@ -91,14 +91,14 @@ namespace CuahangNongduoc.DataLayer
             }
         }
 
-        public DataTable DanhsachPhieu()
+        public DataTable DanhsachPhieu(bool coKhuyenMaiGiamGia = false)
         {
             string Quyen = Session.CurrentUser.Quyen;
             long maNhanVien = Session.CurrentUser.Id;
             string sql =
                 @"SELECT PB.ID,  
                          KH.HO_TEN AS TEN_KHACH_HANG, 
-                         NV.HO_TEN ,
+                         NV.HO_TEN AS TEN_NHAN_VIEN,
                          PB.NGAY_BAN, 
                          CP.LOAI_CHI_PHI,
                          CP.SO_TIEN
@@ -107,7 +107,11 @@ namespace CuahangNongduoc.DataLayer
                   INNER JOIN NHAN_VIEN NV ON PB.ID_NHAN_VIEN = NV.ID
                   INNER JOIN PHIEU_BAN_CHI_PHI PBCP ON PB.ID = PBCP.MA_PHIEU_BAN
                   INNER JOIN CHI_PHI_PHAT_SINH CP ON PBCP.MA_CHI_PHI = CP.ID
-                  WHERE CP.LOAI_CHI_PHI IN (N'Giảm giá',N'Khuyến mãi')";
+                  WHERE 1=1";
+            if (coKhuyenMaiGiamGia)
+            {
+                sql += @" AND CP.LOAI_CHI_PHI IN (N'Khuyến mãi', N'Giảm giá')";
+            }
             if(Quyen == "NhanVien")
             {
                 sql += @" AND PB.ID_NHAN_VIEN = @maNhanVien";
