@@ -24,7 +24,7 @@ namespace CuahangNongduoc.UI.BaoCaoThongKe
 
         private void frmChiPhiVaKhuyenMai_Load(object sender, EventArgs e)
         {
-            LoadReport(phieuBanFactory.DanhsachPhieu());
+                LoadReport(phieuBanFactory.DanhsachPhieu(false));
         }
         private void btnXemBaoCao_Click(object sender, EventArgs e)
         {
@@ -123,6 +123,9 @@ namespace CuahangNongduoc.UI.BaoCaoThongKe
 
         }
 
-        
+        private void chkKM_GG_CheckedChanged(object sender, EventArgs e)
+        {
+            LoadReport(phieuBanFactory.DanhsachPhieu(chkKM_GG.Checked));
+        }
     }
 }

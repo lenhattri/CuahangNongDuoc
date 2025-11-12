@@ -9,7 +9,7 @@ namespace CuahangNongduoc.DataLayer
         long LayConNo(string kh, int thang, int nam);
          int LaySoPhieu();
         void Add(DataRow row);
-        DataTable DanhsachPhieu();
+        DataTable DanhsachPhieu(bool coKhuyenMaiGiamGia =false);
         DataTable DanhsachPhieuBanLe();
         DataTable DanhsachPhieuBanSi();
         DataTable LayChiTietPhieuBan(string idPhieuBan);
