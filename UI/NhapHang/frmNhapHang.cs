@@ -1,15 +1,16 @@
-﻿using System;
+﻿using CuahangNongduoc.BusinessObject;
+using CuahangNongduoc.Controller;
+using CuahangNongduoc.DAL.Infrastructure;
+using CuahangNongduoc.DataLayer;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Text;
 using System.Linq;
+using System.Text;
 using System.Windows.Forms;
-using CuahangNongduoc.Controller;
-using CuahangNongduoc.BusinessObject;
-using CuahangNongduoc.DataLayer;
 
 namespace CuahangNongduoc
 {
@@ -23,11 +24,24 @@ namespace CuahangNongduoc
         private const string COL_NSX_GRID = "colNgaySanXuat";  // nếu có
         private const string COL_HH_GRID = "colNgayHetHan";   // nếu có
         private const string COL_THANH_TIEN_GRID = "colThanhTien";  // nếu lưới có cột Thành tiền
+        // ===== Factory =====
+        private readonly IPhieuNhapFactory _phieuNhapFactory;
+        private readonly IMaSanPhanFactory _maSanPhamFactory;
+        private readonly ISanPhamFactory _sanPhamFactory;
+        private readonly INhaCungCapDAL _nhaCungCapDAL;
+
+        // ===== Controller =====
+        private readonly PhieuNhapController _ctrlPhieuNhap;
+        private readonly MaSanPhamController _ctrlMaSP;
+        private readonly SanPhamController _ctrlSanPham;
+        private readonly NhaCungCapController _ctrlNCC;
 
         SanPhamController ctrlSanPham = new SanPhamController(new SanPhamFactory());
-        PhieuNhapController ctrl = new PhieuNhapController();
+        IPhieuNhapFactory factories = new PhieuNhapFactory(DbClient.Instance);
+        PhieuNhapController ctrl = new PhieuNhapController(new PhieuNhapFactory(DbClient.Instance));
+
         MaSanPhamController ctrlMaSP = new MaSanPhamController(new MaSanPhanFactory(), new SanPhamFactory());
-        NhaCungCapController ctrlNCC = new NhaCungCapController();
+        NhaCungCapController ctrlNCC = new NhaCungCapController(new NhaCungCapDAL());
         PhieuNhap m_PhieuNhap = null;
 
         Controll status = Controll.Normal;
@@ -38,6 +52,17 @@ namespace CuahangNongduoc
         public frmNhapHang()
         {
             InitializeComponent();
+            // ===== Khởi tạo Factory =====
+            _phieuNhapFactory = new PhieuNhapFactory(DbClient.Instance);
+            _maSanPhamFactory = new MaSanPhanFactory();
+            _sanPhamFactory = new SanPhamFactory();
+            _nhaCungCapDAL = new NhaCungCapDAL();
+
+            // ===== Khởi tạo Controller =====
+            _ctrlPhieuNhap = new PhieuNhapController(_phieuNhapFactory);
+            _ctrlMaSP = new MaSanPhamController(_maSanPhamFactory, _sanPhamFactory);
+            _ctrlSanPham = new SanPhamController(_sanPhamFactory);
+            _ctrlNCC = new NhaCungCapController(_nhaCungCapDAL);
             status = Controll.AddNew;
 
             // Khởi gán ErrorProvider
@@ -77,7 +102,7 @@ namespace CuahangNongduoc
 
         public frmNhapHang(PhieuNhapController ctrlPN) : this()
         {
-            this.ctrl = ctrlPN ?? new PhieuNhapController();
+            _ctrlPhieuNhap = ctrlPN ?? new PhieuNhapController(_phieuNhapFactory);
             status = Controll.Normal;
         }
 
@@ -319,7 +344,7 @@ namespace CuahangNongduoc
         void ThemMoi()
         {
             // Kiểm tra trùng mã phiếu trước khi Add
-            PhieuNhapController ctrlPNCheck = new PhieuNhapController();
+            PhieuNhapController ctrlPNCheck = new PhieuNhapController(_phieuNhapFactory);
             if (ctrlPNCheck.LayPhieuNhap(txtMaPhieu.Text) != null)
             {
                 MessageBox.Show("Mã Phiếu nhập này đã tồn tại!", "Phiếu Nhập",
@@ -368,7 +393,11 @@ namespace CuahangNongduoc
 
         private void toolLuuThem_Click(object sender, EventArgs e)
         {
-            ctrl = new PhieuNhapController();
+            // tạo factory với DbClient
+            IPhieuNhapFactory factory = new PhieuNhapFactory(DbClient.Instance);
+
+            // tạo controller với factory
+            PhieuNhapController ctrlPN = new PhieuNhapController(factory);
             status = Controll.AddNew;
 
             txtMaPhieu.Text = ThamSo.LayMaPhieuNhap().ToString();
@@ -393,8 +422,13 @@ namespace CuahangNongduoc
             else
             {
                 String ma_phieu = txtMaPhieu.Text;
-                PhieuNhapController ctrlPN = new PhieuNhapController();
-                CuahangNongduoc.BusinessObject.PhieuNhap ph = ctrlPN.LayPhieuNhap(ma_phieu);
+                // tạo factory với DbClient
+                IPhieuNhapFactory factory = new PhieuNhapFactory(DbClient.Instance);
+
+                // tạo controller với factory
+                PhieuNhapController ctrlPN = new PhieuNhapController(factory);
+                PhieuNhapController ctrl = new PhieuNhapController(factory);
+                CuahangNongduoc.BusinessObject.PhieuNhap ph = ctrl.LayPhieuNhap(ma_phieu);
                 frmInPhieuNhap PhieuNhap = new frmInPhieuNhap(ph);
                 PhieuNhap.Show();
             }

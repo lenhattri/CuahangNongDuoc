@@ -13,24 +13,30 @@ namespace CuahangNongduoc.BLL.Controller
 {
     public class UserController
     {
-        private UserDAL userDAL = new UserDAL();
+        private readonly IUserDAL _userDAL;
+
+        // ✅ Inject IUserDAL qua constructor
+        public UserController(IUserDAL userDAL)
+        {
+            _userDAL = userDAL ?? throw new ArgumentNullException(nameof(userDAL));
+        }
 
         public void HienthiNguoiDungDataGridview(DataGridView dgv, BindingNavigator bn)
         {
             BindingSource bs = new BindingSource();
-            bs.DataSource = userDAL.LayDanhSachNguoiDung();
+            bs.DataSource = _userDAL.LayDanhSachNguoiDung();
             bn.BindingSource = bs;
             dgv.DataSource = bs;
         }
 
         public DataRow LayNguoiDungTheoId(string id)
         {
-            return userDAL.LayNguoiDungTheoId(id);
+            return _userDAL.LayNguoiDungTheoId(id);
         }
 
         public NguoiDungDTO LayNguoiDungTheoTenDangNhap(string tenDangNhap)
         {
-            DataRow row = userDAL.LayNguoiDungTheoTenDangNhap(tenDangNhap);
+            DataRow row = _userDAL.LayNguoiDungTheoTenDangNhap(tenDangNhap);
             if (row != null)
             {
                 return new NguoiDungDTO
@@ -48,7 +54,7 @@ namespace CuahangNongduoc.BLL.Controller
 
         public bool KiemTraDangNhap(string tenDangNhap, string matKhau)
         {
-            DataRow row = userDAL.LayNguoiDungTheoTenDangNhap(tenDangNhap);
+            DataRow row = _userDAL.LayNguoiDungTheoTenDangNhap(tenDangNhap);
             if (row != null)
             {
                 string matKhauHash = Convert.ToString(row["MAT_KHAU"]);
@@ -59,7 +65,7 @@ namespace CuahangNongduoc.BLL.Controller
 
         public DataRow NewRow()
         {
-            return userDAL.NewRow();
+            return _userDAL.NewRow();
         }
 
         public void Add(DataRow row)
@@ -67,7 +73,7 @@ namespace CuahangNongduoc.BLL.Controller
             if (row != null)
             {
                 row["MAT_KHAU"] = BCrypt.Net.BCrypt.HashPassword(Convert.ToString(row["MAT_KHAU"]));
-                userDAL.Add(row);
+                _userDAL.Add(row);
             }
             else
             {
@@ -77,17 +83,17 @@ namespace CuahangNongduoc.BLL.Controller
 
         public void Update(long id)
         {
-            userDAL.Update(id);
+            _userDAL.Update(id);
         }
 
         public bool Save()
         {
-            return userDAL.Save();
+            return _userDAL.Save();
         }
 
         internal void Delete(long id)
         {
-            userDAL.Delete(id);
+            _userDAL.Delete(id);
         }
     }
 }

@@ -6,13 +6,14 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using CuahangNongduoc.Controller;
+using CuahangNongduoc.DataLayer;
 
 namespace CuahangNongduoc
 {
     public partial class frmPhieuChi : Form
     {
         LyDoChiController ctrlLyDo = new LyDoChiController();
-        PhieuChiController ctrl = new PhieuChiController();
+        PhieuChiController ctrl = new PhieuChiController(new PhieuChiFactory(), new LyDoChiController());
         public frmPhieuChi()
         {
             InitializeComponent();
@@ -80,7 +81,7 @@ namespace CuahangNongduoc
             DataRowView row = (DataRowView)bindingNavigator.BindingSource.Current;
             if (row != null)
             {
-                PhieuChiController ctrlChi = new PhieuChiController();
+                PhieuChiController ctrlChi = new PhieuChiController(new PhieuChiFactory(),new LyDoChiController());
                 String ma_phieu = row["ID"].ToString();
                 CuahangNongduoc.BusinessObject.PhieuChi ph = ctrlChi.LayPhieuChi(ma_phieu);
                 frmInPhieuChi InPhieu = new frmInPhieuChi(ph);

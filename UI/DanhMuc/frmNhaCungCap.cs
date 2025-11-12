@@ -6,12 +6,12 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-
+using CuahangNongduoc.DataLayer;
 namespace CuahangNongduoc
 {
     public partial class frmNhaCungCap : Form
     {
-        CuahangNongduoc.Controller.NhaCungCapController ctrl = new CuahangNongduoc.Controller.NhaCungCapController();
+        CuahangNongduoc.Controller.NhaCungCapController ctrl = new CuahangNongduoc.Controller.NhaCungCapController(new NhaCungCapDAL());
         public frmNhaCungCap()
         {
             InitializeComponent();

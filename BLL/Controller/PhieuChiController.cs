@@ -108,15 +108,22 @@ namespace CuahangNongduoc.Controller
 {
     public class PhieuChiController
     {
-        // DAL ADO.NET (SqlClient) đã viết ở bước trước
-        private readonly PhieuChiFactory _dal = new PhieuChiFactory();
+        private readonly IPhieuChiFactory _phieuChiDal;
+        private readonly LyDoChiController _lyDoChiCtrl;
+
+        // ✅ Inject qua constructor
+        public PhieuChiController(IPhieuChiFactory phieuChiDal, LyDoChiController lyDoChiCtrl = null)
+        {
+            _phieuChiDal = phieuChiDal ?? throw new ArgumentNullException(nameof(phieuChiDal));
+            _lyDoChiCtrl = lyDoChiCtrl ?? new LyDoChiController();
+        }
 
         /* ===================== BINDING HIỂN THỊ ===================== */
         public void HienthiPhieuChi(BindingNavigator bn, DataGridView dg, ComboBox cmb, TextBox txtId, DateTimePicker dt, NumericUpDown numTongTien, TextBox txtGhichu)
         {
             var bs = new BindingSource
             {
-                DataSource = _dal.DanhsachPhieuChi()
+                DataSource = _phieuChiDal.DanhsachPhieuChi()
             };
             bn.BindingSource = bs;
             dg.DataSource = bs;
@@ -141,7 +148,7 @@ namespace CuahangNongduoc.Controller
         {
             var bs = new BindingSource
             {
-                DataSource = _dal.TimPhieuChi(lydo, ngay)
+                DataSource = _phieuChiDal.TimPhieuChi(lydo, ngay)
             };
             bn.BindingSource = bs;
             dg.DataSource = bs;
@@ -163,72 +170,57 @@ namespace CuahangNongduoc.Controller
         }
 
         /* ===================== API GIỮ NGUYÊN CHO UI ===================== */
-        public DataRow NewRow()
-        {
-            return _dal.NewRow();
-        }
+        public DataRow NewRow() => _phieuChiDal.NewRow();
 
         public void Add(DataRow row)
         {
-            if (row == null)
-                throw new ArgumentNullException(nameof(row));
-
-            _dal.Add(row);
+            if (row == null) throw new ArgumentNullException(nameof(row));
+            _phieuChiDal.Add(row);
         }
 
-        public bool Save()
-        {
-            return _dal.Save();
-        }
+        public bool Save() => _phieuChiDal.Save();
 
         /* ===================== TRẢ VỀ SINGLE DOMAIN OBJECT ===================== */
         public PhieuChi LayPhieuChi(string id)
         {
-            DataTable tbl = _dal.LayPhieuChi(id);
+            DataTable tbl = _phieuChiDal.LayPhieuChi(id);
             if (tbl.Rows.Count == 0)
                 return null;
 
-            var ctrlLyDo = new LyDoChiController();
             var row = tbl.Rows[0];
             return new PhieuChi
             {
                 Id = Convert.ToString(row["ID"]),
-                LyDoChi = ctrlLyDo.LayLyDoChi(Convert.ToInt64(row["ID_LY_DO_CHI"])),
+                LyDoChi = _lyDoChiCtrl.LayLyDoChi(Convert.ToInt64(row["ID_LY_DO_CHI"])),
                 NgayChi = Convert.ToDateTime(row["NGAY_CHI"]),
                 TongTien = Convert.ToInt64(row["TONG_TIEN"]),
                 GhiChu = Convert.ToString(row["GHI_CHU"])
             };
         }
 
-        /* ===================== TRẢ VỀ LIST DOMAIN OBJECT (THÊM MỚI) ===================== */
-        public IList<PhieuChi> LayDanhSachPhieuChi()
-        {
-            return MapToList(_dal.DanhsachPhieuChi());
-        }
+        /* ===================== TRẢ VỀ LIST DOMAIN OBJECT ===================== */
+        public IList<PhieuChi> LayDanhSachPhieuChi() => MapToList(_phieuChiDal.DanhsachPhieuChi());
 
-        public IList<PhieuChi> TimPhieuChi(int lydo, DateTime ngay)
-        {
-            return MapToList(_dal.TimPhieuChi(lydo, ngay));
-        }
+        public IList<PhieuChi> TimPhieuChi(int lydo, DateTime ngay) => MapToList(_phieuChiDal.TimPhieuChi(lydo, ngay));
 
         /* ===================== HELPERS ===================== */
-        private static IList<PhieuChi> MapToList(DataTable tbl)
+        private IList<PhieuChi> MapToList(DataTable tbl)
         {
             var ds = new List<PhieuChi>();
-            var ctrlLyDo = new LyDoChiController(); // tạo 1 lần, dùng lại
 
             foreach (DataRow row in tbl.Rows)
             {
                 var ph = new PhieuChi
                 {
                     Id = Convert.ToString(row["ID"]),
-                    LyDoChi = ctrlLyDo.LayLyDoChi(Convert.ToInt64(row["ID_LY_DO_CHI"])),
+                    LyDoChi = _lyDoChiCtrl.LayLyDoChi(Convert.ToInt64(row["ID_LY_DO_CHI"])),
                     NgayChi = Convert.ToDateTime(row["NGAY_CHI"]),
                     TongTien = Convert.ToInt64(row["TONG_TIEN"]),
                     GhiChu = Convert.ToString(row["GHI_CHU"])
                 };
                 ds.Add(ph);
             }
+
             return ds;
         }
     }

@@ -3,7 +3,8 @@ using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
 using CuahangNongduoc.Controller;
-
+using CuahangNongduoc.DAL.Infrastructure;
+using CuahangNongduoc.DataLayer;
 namespace CuahangNongduoc
 {
     public partial class frmDanhsachPhieuNhap : Form
@@ -13,8 +14,8 @@ namespace CuahangNongduoc
             InitializeComponent();
         }
 
-        PhieuNhapController ctrl = new PhieuNhapController();
-        NhaCungCapController ctrlNCC = new NhaCungCapController();
+        PhieuNhapController ctrl = new PhieuNhapController(new PhieuNhapFactory(DbClient.Instance));
+        NhaCungCapController ctrlNCC = new NhaCungCapController(new NhaCungCapDAL());
 
         private void frmDanhsachPhieuNhap_Load(object sender, EventArgs e)
         {
@@ -60,7 +61,7 @@ namespace CuahangNongduoc
             DataRowView row = (DataRowView)bindingNavigator.BindingSource.Current;
             if (row != null)
             {
-                PhieuNhapController ctrlPN = new PhieuNhapController();
+                PhieuNhapController ctrlPN = new PhieuNhapController(new PhieuNhapFactory(DbClient.Instance));
                 String ma_phieu = row["ID"].ToString();
                 CuahangNongduoc.BusinessObject.PhieuNhap ph = ctrlPN.LayPhieuNhap(ma_phieu);
                 frmInPhieuNhap PhieuNhap = new frmInPhieuNhap(ph);

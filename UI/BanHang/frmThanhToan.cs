@@ -7,16 +7,21 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using CuahangNongduoc.DataLayer;
+using CuahangNongduoc.DAL.Infrastructure;
 
 namespace CuahangNongduoc
 {
     public partial class frmThanhToan : Form
     {
         KhachHangController ctrlKH = new KhachHangController();
-        PhieuThanhToanController ctrl = new PhieuThanhToanController();
+        private IPhieuThanhToanDAL factory;
+        private PhieuThanhToanController ctrl;
         public frmThanhToan()
         {
             InitializeComponent();
+            ctrlKH = new KhachHangController();
+            ctrl = new PhieuThanhToanController(new DataLayer.PhieuThanhToanDAL());
         }
 
         private void frmThanhToan_Load(object sender, EventArgs e)
@@ -79,12 +84,14 @@ namespace CuahangNongduoc
 
         private void toolIn_Click(object sender, EventArgs e)
         {
+
             DataRowView row = (DataRowView)bindingNavigator.BindingSource.Current;
             if (row != null)
             {
-                PhieuThanhToanController ctrlTT = new PhieuThanhToanController();
+                ctrlKH = new KhachHangController();
+                ctrl = new PhieuThanhToanController(new DataLayer.PhieuThanhToanDAL());
                 String ma_phieu = row["ID"].ToString();
-                CuahangNongduoc.BusinessObject.PhieuThanhToan ph = ctrlTT.LayPhieuThanhToan(ma_phieu);
+                CuahangNongduoc.BusinessObject.PhieuThanhToan ph = ctrl.LayPhieuThanhToan(ma_phieu);
                 frmInPhieuThanhToan PhieuThanhToan = new frmInPhieuThanhToan(ph);
                 PhieuThanhToan.Show();
             }

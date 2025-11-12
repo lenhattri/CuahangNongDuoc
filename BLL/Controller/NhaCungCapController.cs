@@ -106,9 +106,12 @@
 //}
 
 
+
+
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Windows.Forms;
 using CuahangNongduoc.BusinessObject;
 using CuahangNongduoc.DataLayer;
 
@@ -116,119 +119,132 @@ namespace CuahangNongduoc.Controller
 {
     public class NhaCungCapController
     {
-        NhaCungCapDAL dal = new NhaCungCapDAL();
+        // ✅ Dùng interface để tách phụ thuộc — chuẩn Dependency Injection
+        private readonly INhaCungCapDAL _dal;
 
-        public void HienthiAutoComboBox(System.Windows.Forms.ComboBox cmb)
+        // ==================== Constructor (Inject) ====================
+        public NhaCungCapController(INhaCungCapDAL dal)
         {
-            cmb.DataSource = dal.DanhsachNCC();
+            _dal = dal ?? throw new ArgumentNullException(nameof(dal));
+        }
+
+        // ==================== Hiển thị dữ liệu ====================
+
+        public void HienthiAutoComboBox(ComboBox cmb)
+        {
+            cmb.DataSource = _dal.DanhsachNCC();
             cmb.DisplayMember = "HO_TEN";
             cmb.ValueMember = "ID";
         }
 
-        public void HienthiAllComboBox(System.Windows.Forms.ComboBox cmb)
+        public void HienthiAllComboBox(ComboBox cmb)
         {
-            IList<NhaCungCap> ds = this.LayDanhSachNCC();
+            IList<NhaCungCap> ds = LayDanhSachNCC();
             ds.Add(new NhaCungCap("ALL", "Tất cả"));
             cmb.DataSource = ds;
             cmb.DisplayMember = "HoTen";
             cmb.ValueMember = "Id";
         }
 
-        public void HienthiDataGridview(System.Windows.Forms.DataGridView dg, System.Windows.Forms.BindingNavigator bn)
+        public void HienthiDataGridview(DataGridView dg, BindingNavigator bn)
         {
-            System.Windows.Forms.BindingSource bs = new System.Windows.Forms.BindingSource();
-            DataTable tbl = dal.DanhsachNCC();
+            BindingSource bs = new BindingSource();
+            DataTable tbl = _dal.DanhsachNCC();
             bs.DataSource = tbl;
             bn.BindingSource = bs;
             dg.DataSource = bs;
         }
 
-        public void HienthiDataGridviewComboBox(System.Windows.Forms.DataGridViewComboBoxColumn cmb)
+        public void HienthiDataGridviewComboBox(DataGridViewComboBoxColumn cmb)
         {
-            cmb.DataSource = dal.DanhsachNCC();
+            cmb.DataSource = _dal.DanhsachNCC();
             cmb.DisplayMember = "HO_TEN";
             cmb.ValueMember = "ID";
             cmb.DataPropertyName = "ID_NHA_CUNG_CAP";
             cmb.HeaderText = "Nhà cung cấp";
         }
 
+        // ==================== Lấy dữ liệu ====================
+
         public NhaCungCap LayNCC(string id)
         {
-            DataTable tbl = dal.LayNCC(id);
+            DataTable tbl = _dal.LayNCC(id);
             NhaCungCap ncc = new NhaCungCap();
+
             if (tbl.Rows.Count > 0)
             {
-                ncc.Id = Convert.ToString(tbl.Rows[0]["ID"]);
-                ncc.HoTen = Convert.ToString(tbl.Rows[0]["HO_TEN"]);
-                ncc.DienThoai = Convert.ToString(tbl.Rows[0]["DIEN_THOAI"]);
-                ncc.DiaChi = Convert.ToString(tbl.Rows[0]["DIA_CHI"]);
+                DataRow row = tbl.Rows[0];
+                ncc.Id = Convert.ToString(row["ID"]);
+                ncc.HoTen = Convert.ToString(row["HO_TEN"]);
+                ncc.DienThoai = Convert.ToString(row["DIEN_THOAI"]);
+                ncc.DiaChi = Convert.ToString(row["DIA_CHI"]);
             }
+
             return ncc;
         }
 
         public IList<NhaCungCap> LayDanhSachNCC()
         {
-            DataTable tbl = dal.DanhsachNCC();
+            DataTable tbl = _dal.DanhsachNCC();
             IList<NhaCungCap> ds = new List<NhaCungCap>();
 
             foreach (DataRow row in tbl.Rows)
             {
-                NhaCungCap kh = new NhaCungCap();
-                kh.Id = Convert.ToString(row["ID"]);
-                kh.HoTen = Convert.ToString(row["HO_TEN"]);
-                kh.DienThoai = Convert.ToString(row["DIEN_THOAI"]);
-                kh.DiaChi = Convert.ToString(row["DIA_CHI"]);
-                ds.Add(kh);
+                ds.Add(new NhaCungCap
+                {
+                    Id = Convert.ToString(row["ID"]),
+                    HoTen = Convert.ToString(row["HO_TEN"]),
+                    DienThoai = Convert.ToString(row["DIEN_THOAI"]),
+                    DiaChi = Convert.ToString(row["DIA_CHI"])
+                });
             }
+
             return ds;
         }
 
-        // 🔍 Tìm kiếm theo Họ tên (Nhà cung cấp)
+        // ==================== Tìm kiếm ====================
+
         public DataTable TimHoTen(string hoten)
         {
-            if (string.IsNullOrWhiteSpace(hoten))
-                return dal.DanhsachNCC();
-
-            return dal.TimHoTen(hoten);
+            return string.IsNullOrWhiteSpace(hoten)
+                ? _dal.DanhsachNCC()
+                : _dal.TimHoTen(hoten);
         }
 
-        // 🔍 Tìm kiếm theo Địa chỉ
         public DataTable TimDiaChi(string diachi)
         {
-            if (string.IsNullOrWhiteSpace(diachi))
-                return dal.DanhsachNCC();
-
-            return dal.TimDiaChi(diachi);
+            return string.IsNullOrWhiteSpace(diachi)
+                ? _dal.DanhsachNCC()
+                : _dal.TimDiaChi(diachi);
         }
 
-        public void Insert(NhaCungCap ncc)
+        // ==================== CRUD ====================
+
+        public bool Insert(NhaCungCap ncc)
         {
-            dal.Insert(ncc);
+            return _dal.Insert(ncc);
         }
 
-        public void Update(NhaCungCap ncc)
+        public bool Update(NhaCungCap ncc)
         {
-            dal.Update(ncc);
+            return _dal.Update(ncc);
         }
 
-        public void Delete(string id)
+        public bool Delete(string id)
         {
-            dal.Delete(id);
+            return _dal.Delete(id);
         }
 
-        public void Save()
+        public bool Save()
         {
-            dal.Save();
+            return _dal.Save();
         }
 
-        public DataRow NewRow()
-        {
-            return dal.NewRow();
-        }
+        // ==================== DataTable pattern ====================
 
-        public void Add(DataRow row)
-        {
-            dal.Add(row);
-        }
+        public DataRow NewRow() => _dal.NewRow();
+
+        public void Add(DataRow row) => _dal.Add(row);
     }
 }
+

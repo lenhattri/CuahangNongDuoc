@@ -1,4 +1,5 @@
 ﻿using CuahangNongduoc.BLL.Controller;
+using CuahangNongduoc.DAL.DataLayer;
 using CuahangNongduoc.Utils;
 using System;
 using System.Collections.Generic;
@@ -14,10 +15,12 @@ namespace CuahangNongduoc.UI.HeThong
 {
     public partial class frmDangNhap : Form
     {
-        private UserController userController = new UserController();
+
+        private readonly UserController userController;
         public frmDangNhap()
         {
             InitializeComponent();
+            userController = new UserController(new UserDAL());
         }
 
         private void btnDangNhap_Click(object sender, EventArgs e)

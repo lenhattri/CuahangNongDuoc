@@ -1,4 +1,5 @@
 ﻿using CuahangNongduoc.BLL.Controller;
+using CuahangNongduoc.DAL.DataLayer;
 using CuahangNongduoc.Domain.Entities;
 using CuahangNongduoc.Utils;
 using System;
@@ -15,10 +16,11 @@ namespace CuahangNongduoc.UI.HeThong
 {
     public partial class frmNguoiDung : Form
     {
-        private UserController userController = new UserController();
+        private UserController userController;
         public frmNguoiDung()
         {
             InitializeComponent();
+            userController = new UserController(new UserDAL());
         }
 
         private void toolLuu_Click(object sender, EventArgs e)
