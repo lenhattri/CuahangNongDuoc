@@ -29,13 +29,14 @@
         private void InitializeComponent()
         {
             this.dgvChiPhi = new System.Windows.Forms.DataGridView();
-            this.btnLuu = new System.Windows.Forms.Button();
-            this.panel1 = new System.Windows.Forms.Panel();
             this.Chon = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TEN_CHI_PHI = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.LOAI_CHI_PHI = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.SO_TIEN = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.btnLuu = new System.Windows.Forms.Button();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.lblThanhTien = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgvChiPhi)).BeginInit();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -58,25 +59,8 @@
             this.dgvChiPhi.RowTemplate.Height = 28;
             this.dgvChiPhi.Size = new System.Drawing.Size(800, 344);
             this.dgvChiPhi.TabIndex = 0;
-            // 
-            // btnLuu
-            // 
-            this.btnLuu.Location = new System.Drawing.Point(317, 24);
-            this.btnLuu.Name = "btnLuu";
-            this.btnLuu.Size = new System.Drawing.Size(166, 52);
-            this.btnLuu.TabIndex = 1;
-            this.btnLuu.Text = "Lưu";
-            this.btnLuu.UseVisualStyleBackColor = true;
-            this.btnLuu.Click += new System.EventHandler(this.btnLuu_Click);
-            // 
-            // panel1
-            // 
-            this.panel1.Controls.Add(this.btnLuu);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(0, 244);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(800, 100);
-            this.panel1.TabIndex = 2;
+            this.dgvChiPhi.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvChiPhi_CellValueChanged);
+            this.dgvChiPhi.CurrentCellDirtyStateChanged += new System.EventHandler(this.dgvChiPhi_CurrentCellDirtyStateChanged);
             // 
             // Chon
             // 
@@ -120,6 +104,36 @@
             this.SO_TIEN.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.SO_TIEN.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
+            // btnLuu
+            // 
+            this.btnLuu.Location = new System.Drawing.Point(317, 24);
+            this.btnLuu.Name = "btnLuu";
+            this.btnLuu.Size = new System.Drawing.Size(166, 52);
+            this.btnLuu.TabIndex = 1;
+            this.btnLuu.Text = "Lưu";
+            this.btnLuu.UseVisualStyleBackColor = true;
+            this.btnLuu.Click += new System.EventHandler(this.btnLuu_Click);
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.lblThanhTien);
+            this.panel1.Controls.Add(this.btnLuu);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel1.Location = new System.Drawing.Point(0, 244);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(800, 100);
+            this.panel1.TabIndex = 2;
+            // 
+            // lblThanhTien
+            // 
+            this.lblThanhTien.AutoSize = true;
+            this.lblThanhTien.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblThanhTien.Location = new System.Drawing.Point(537, 31);
+            this.lblThanhTien.Name = "lblThanhTien";
+            this.lblThanhTien.Size = new System.Drawing.Size(132, 29);
+            this.lblThanhTien.TabIndex = 2;
+            this.lblThanhTien.Text = "Thành tiền:";
+            // 
             // frmPhieuBanChiPhi
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -132,6 +146,7 @@
             this.Load += new System.EventHandler(this.frmPhieuBanChiPhi_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvChiPhi)).EndInit();
             this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -146,5 +161,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn TEN_CHI_PHI;
         private System.Windows.Forms.DataGridViewTextBoxColumn LOAI_CHI_PHI;
         private System.Windows.Forms.DataGridViewTextBoxColumn SO_TIEN;
+        private System.Windows.Forms.Label lblThanhTien;
     }
 }

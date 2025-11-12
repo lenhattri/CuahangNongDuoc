@@ -148,7 +148,7 @@ namespace CuahangNongduoc.DataLayer
                 if (soLuongConPhaiXuat <= 0)
                     break;
                 // Lấy thông tin của Lô
-                string idMaLoHienTai = lo["ID_MA_SAN_PHAM"].ToString();
+                string idMaLoHienTai = lo["ID"].ToString();
                 int soLuongTon = Convert.ToInt32(lo["SO_LUONG"]);
                 int soLuongXuatTuLo = Math.Min(soLuongConPhaiXuat, soLuongTon);
                 // Cập nhật số lượng tồn kho của Lô
@@ -158,9 +158,9 @@ namespace CuahangNongduoc.DataLayer
                 // Ghi chi tiết phiếu bán cho Lô
                 DataRow chiTietPhieuBan = row.Table.NewRow();
                 chiTietPhieuBan["ID_PHIEU_BAN"] = idPhieuBan;
-                chiTietPhieuBan["ID_MA_SAN_PHAM"] = idMaSanPham;
+                chiTietPhieuBan["ID_MA_SAN_PHAM"] = idMaLoHienTai;
                 chiTietPhieuBan["SO_LUONG"] = soLuongXuatTuLo;
-                chiTietPhieuBan["DON_GIA_NHAP"] = donGia;
+                chiTietPhieuBan["DON_GIA"] = donGia;
                 chiTietPhieuBan["THANH_TIEN"] = donGia * soLuongXuatTuLo;
                 Insert(chiTietPhieuBan, tx);
                 // Cập nhật số lượng còn phải xuất
@@ -180,7 +180,10 @@ namespace CuahangNongduoc.DataLayer
             int soLuongCanXuat = Convert.ToInt32(row["SO_LUONG"]);
             decimal donGia = Convert.ToDecimal(row["DON_GIA"]);
             DataTable loSanPhams = LayThongTinMotLo(idMaSanPham);
-
+            if (loSanPhams == null || loSanPhams.Rows.Count == 0)
+            {
+                throw new Exception($"Không tìm thấy thông tin lô {idMaSanPham}");
+            }
             string idSanPham = LayIdSanPhamTuMaSanPham(idMaSanPham);
             int soLuongTon = Convert.ToInt32(loSanPhams.Rows[0]["SO_LUONG"]);
             if (soLuongTon < soLuongCanXuat)
