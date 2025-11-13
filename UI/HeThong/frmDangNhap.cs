@@ -1,7 +1,4 @@
-﻿using CuahangNongduoc.BLL.Controller;
-using CuahangNongduoc.DAL.DataLayer;
-using CuahangNongduoc.Utils;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -10,6 +7,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using CuahangNongduoc.BLL.Controller;
+using CuahangNongduoc.DAL.DataLayer;
+using CuahangNongduoc.Utils;
+using CuahangNongduoc.Utils.Functions;
 
 namespace CuahangNongduoc.UI.HeThong
 {
@@ -67,7 +68,20 @@ namespace CuahangNongduoc.UI.HeThong
 
         private void frmDangNhap_Load(object sender, EventArgs e)
         {
+            this.KeyPreview = true;
+            this.KeyDown += OnKeyDown;
+        }
 
+        private void OnKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control && (e.KeyCode == Keys.F1))
+            {
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+
+                string url = "https://longs-organization-25.gitbook.io/cua-hang-nong-duoc/he-thong/dang-nhap";
+                IFU_Helper.IFU(url);
+            }
         }
 
         //private void pictureBox2_Click(object sender, EventArgs e)

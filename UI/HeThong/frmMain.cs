@@ -3,14 +3,17 @@ using CuahangNongduoc.UI.BaoCaoThongKe;
 using CuahangNongduoc.UI.HeThong;
 using CuahangNongduoc.UI.PhieuThuChi;
 using CuahangNongduoc.Utils;
+using CuahangNongduoc.Utils.Functions;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
+using System.Security.Policy;
 using System.Text;
 using System.Windows.Forms;
 
@@ -18,6 +21,8 @@ namespace CuahangNongduoc
 {
     public partial class frmMain : Form
     {
+
+        private string Url = ConfigurationManager.AppSettings["Url"].ToString();
         public frmMain()
         {
             InitializeComponent();
@@ -115,8 +120,12 @@ namespace CuahangNongduoc
 
 
             DataService.OpenConnection();
-            
+
+            helpProvider1.HelpNamespace = Url+"/cua-hang-nong-duoc";
+            helpProvider1.SetShowHelp(this, true);
+
         }
+
         frmSanPham SanPham = null;
         private void mnuSanPham_Click(object sender, EventArgs e)
         {
@@ -363,7 +372,7 @@ namespace CuahangNongduoc
 
         private void mnuTrogiupHuongdan_Click(object sender, EventArgs e)
         {
-           // Help.ShowHelp(this, "CPP.CHM");
+            IFU_Helper.IFU(Url);
         }
 
         frmDangNhap DangNhap = null;

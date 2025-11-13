@@ -5,6 +5,7 @@ using CuahangNongduoc.Controller;
 using CuahangNongduoc.DataLayer;
 using CuahangNongduoc.UI.PhieuThuChi;
 using CuahangNongduoc.Utils;
+using CuahangNongduoc.Utils.Functions;
 using System;
 using System.Collections.Generic;
 using System.Data;
