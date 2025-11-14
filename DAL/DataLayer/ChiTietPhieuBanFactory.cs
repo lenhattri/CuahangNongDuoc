@@ -203,6 +203,22 @@ namespace CuahangNongduoc.DataLayer
             chiTietPhieuBan["THANH_TIEN"] = donGia * soLuongCanXuat;
             Insert(chiTietPhieuBan, tx);
         }
+        // Lấy toàn bộ chi tiết phiếu bán
+        public DataTable LayTatCaChiTietPhieuBan()
+        {
+            const string sql =
+               @"SELECT  
+                    ct.ID_MA_SAN_PHAM, 
+                    ct.SO_LUONG,
+                    ct.DON_GIA,
+                    ct.THANH_TIEN,
+                    sp.TEN_SAN_PHAM
+                FROM CHI_TIET_PHIEU_BAN ct
+                INNER JOIN MA_SAN_PHAM msp ON msp.ID = ct.ID_MA_SAN_PHAM
+                INNER JOIN SAN_PHAM sp ON sp.ID = msp.ID_SAN_PHAM";
+            
+            return _db.ExecuteDataTable(sql, CommandType.Text);
+        }
 
         /* ===================== INSERT/UPDATE/DELETE ===================== */
 

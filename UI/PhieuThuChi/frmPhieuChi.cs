@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using CuahangNongduoc.Controller;
 using CuahangNongduoc.DataLayer;
+using CuahangNongduoc.Utils;
 
 namespace CuahangNongduoc
 {
@@ -24,6 +25,7 @@ namespace CuahangNongduoc
             ctrlLyDo.HienthiAutoComboBox(cmbLyDoChi);
             ctrlLyDo.HienthiDataGridviewComboBox(colLyDoChi);
             ctrl.HienthiPhieuChi(bindingNavigator, dataGridView, cmbLyDoChi, txtMaPhieu, dtNgayChi, numTongTien, txtGhiChu);
+            AppTheme.ApplyTheme(this);
         }
 
         private void toolAdd_Click(object sender, EventArgs e)

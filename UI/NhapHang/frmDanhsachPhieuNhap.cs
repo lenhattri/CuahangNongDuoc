@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using CuahangNongduoc.Controller;
 using CuahangNongduoc.DAL.Infrastructure;
 using CuahangNongduoc.DataLayer;
+using CuahangNongduoc.Utils;
 namespace CuahangNongduoc
 {
     public partial class frmDanhsachPhieuNhap : Form
@@ -21,6 +22,7 @@ namespace CuahangNongduoc
         {
             ctrlNCC.HienthiDataGridviewComboBox(colNhaCungCap);
             ctrl.HienthiPhieuNhap(bindingNavigator, dataGridView);
+            AppTheme.ApplyTheme(this);
         }
 
         frmNhapHang NhapHang = null;
