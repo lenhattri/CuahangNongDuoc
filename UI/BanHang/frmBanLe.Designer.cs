@@ -274,7 +274,7 @@
             this.toolIn.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.toolIn.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolIn.Name = "toolIn";
-            this.toolIn.Size = new System.Drawing.Size(54, 43);
+            this.toolIn.Size = new System.Drawing.Size(53, 43);
             this.toolIn.Text = "Trang in";
             this.toolIn.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.toolIn.Click += new System.EventHandler(this.toolLuuIn_Click);
