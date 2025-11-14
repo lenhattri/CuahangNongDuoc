@@ -8,6 +8,8 @@ using System.Text;
 using System.Windows.Forms;
 using CuahangNongduoc.Controller;
 using CuahangNongduoc.DataLayer;
+using CuahangNongduoc.Utils.Functions;
+using CuahangNongduoc.DTO;
 
 namespace CuahangNongduoc
 {
@@ -20,13 +22,11 @@ namespace CuahangNongduoc
 
         private void btnXem_Click(object sender, EventArgs e)
         {
-            // ✅ Tạo DAL và inject vào controller
             var maSanPhanDal = new MaSanPhanFactory();
             var sanPhamDal = new SanPhamFactory();  // thêm dòng này
 
             var ctrl = new MaSanPhamController(maSanPhanDal, sanPhamDal);
 
-            // ✅ Gọi qua đối tượng ctrl
             IList<CuahangNongduoc.BusinessObject.MaSanPham> data =
                 ctrl.LayMaSanPhamHetHan(dt.Value.Date);
 
@@ -35,9 +35,29 @@ namespace CuahangNongduoc
             param.Add(new Microsoft.Reporting.WinForms.ReportParameter(
                 "ngay_tinh", dt.Value.Date.ToString("dd/MM/yyyy")));
 
-            this.MaSanPhamBindingSource.DataSource = data;
-            this.reportViewer.LocalReport.SetParameters(param);
-            this.reportViewer.RefreshReport();
+            IList<SanPhamHetHanReport> sanPhamHetHanReports = new List<SanPhamHetHanReport>();
+
+            foreach (var item in data)
+            {
+                SanPhamHetHanReport reportItem = new SanPhamHetHanReport
+                {
+                    Id = item.Id,
+                    GiaNhap = item.GiaNhap.ToString(),
+                    SoLuong = item.SoLuong,
+                    NgayNhap = item.NgayNhap,
+                    NgaySanXuat = item.NgaySanXuat,
+                    NgayHetHan = item.NgayHetHan,
+                    TenSanPham = item.SanPham.TenSanPham,
+                };
+                sanPhamHetHanReports.Add(reportItem);
+            }
+
+            ReportHanler.LoadReport(
+                this.reportViewer,
+                sanPhamHetHanReports,
+                "rptSanPhamHetHan.rdlc",
+                "SanPhamHetHan",
+                param);
         }
 
         private void frmSanphamHethan_Load(object sender, EventArgs e)
