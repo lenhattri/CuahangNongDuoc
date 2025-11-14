@@ -75,7 +75,10 @@ namespace CuahangNongduoc.DataLayer
 
         public DataTable LayMaSanPham(string idMaSanPham)
         {
-            const string sql = "SELECT * FROM MA_SAN_PHAM WHERE ID = @id";
+            const string sql = @"SELECT msp.*,sp.TEN_SAN_PHAM 
+                                FROM MA_SAN_PHAM msp
+                                LEFT JOIN SAN_PHAM sp ON msp.ID_SAN_PHAM = sp.ID
+                                WHERE msp.ID = @id";
             var dt = _db.ExecuteDataTable(sql, CommandType.Text,
                 _db.P("@id", SqlDbType.NVarChar, idMaSanPham, 50));   // CHANGED
             _table = dt;                                              // NEW

@@ -188,7 +188,11 @@ namespace CuahangNongduoc.Controller
         {
             return _dal.TinhGiaFIFO(idSanPham);
         }
-
+        // Lấy toàn bộ chi tiết phiếu bán
+        public IList<ChiTietPhieuBan> LayTatCaChiTietPhieuBan()
+        {
+            return MapToList(_dal.LayTatCaChiTietPhieuBan());
+        }
         private static DataTable CreateBufferSchema()
         {
             var t = new DataTable("CHI_TIET_PHIEU_BAN");

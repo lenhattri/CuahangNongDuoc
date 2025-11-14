@@ -2,47 +2,46 @@
 <Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
-    <DataSource Name="DummyDataSource">
+    <DataSource Name="CuahangNongduocDTO">
       <ConnectionProperties>
-        <DataProvider>SQL</DataProvider>
-        <ConnectString />
+        <DataProvider>System.Data.DataSet</DataProvider>
+        <ConnectString>/* Local Connection */</ConnectString>
       </ConnectionProperties>
-      <rd:DataSourceID>d8818d19-3002-40b5-be15-c6518600d299</rd:DataSourceID>
+      <rd:DataSourceID>c7b202a9-bc5d-472c-a176-4940a16d1767</rd:DataSourceID>
     </DataSource>
   </DataSources>
   <DataSets>
-    <DataSet Name="CuahangNongduoc_BusinessObject_ChiTietPhieuBan">
+    <DataSet Name="SoLuongBan">
       <Query>
-        <DataSourceName>DummyDataSource</DataSourceName>
-        <CommandText />
-        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+        <DataSourceName>CuahangNongduocDTO</DataSourceName>
+        <CommandText>/* Local Query */</CommandText>
       </Query>
       <Fields>
         <Field Name="DonGia">
           <DataField>DonGia</DataField>
-          <rd:TypeName>System.Int64</rd:TypeName>
+          <rd:TypeName>System.Decimal</rd:TypeName>
         </Field>
         <Field Name="MaSanPham">
           <DataField>MaSanPham</DataField>
-          <rd:TypeName>CuahangNongduoc.BusinessObject.MaSanPham</rd:TypeName>
-        </Field>
-        <Field Name="PhieuBan">
-          <DataField>PhieuBan</DataField>
-          <rd:TypeName>CuahangNongduoc.BusinessObject.PhieuBan</rd:TypeName>
+          <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
         <Field Name="SoLuong">
           <DataField>SoLuong</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
+        <Field Name="TenSanPham">
+          <DataField>TenSanPham</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
         <Field Name="ThanhTien">
           <DataField>ThanhTien</DataField>
-          <rd:TypeName>System.Int64</rd:TypeName>
+          <rd:TypeName>System.Decimal</rd:TypeName>
         </Field>
       </Fields>
       <rd:DataSetInfo>
-        <rd:DataSetName>CuahangNongduoc.BusinessObject</rd:DataSetName>
-        <rd:TableName>ChiTietPhieuBan</rd:TableName>
-        <rd:ObjectDataSourceType>CuahangNongduoc.BusinessObject.ChiTietPhieuBan, CuahangNongduoc, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</rd:ObjectDataSourceType>
+        <rd:DataSetName>CuahangNongduoc.DTO</rd:DataSetName>
+        <rd:TableName>SoLuongBanReport</rd:TableName>
+        <rd:ObjectDataSourceType>CuahangNongduoc.DTO.SoLuongBanReport, CuahangNongduoc, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</rd:ObjectDataSourceType>
       </rd:DataSetInfo>
     </DataSet>
   </DataSets>
@@ -553,14 +552,14 @@
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="textbox5">
+                        <Textbox Name="TenSanPham1">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!MaSanPham.Value.SanPham.TenSanPham</Value>
+                                  <Value>=Fields!TenSanPham.Value</Value>
                                   <Style>
                                     <FontFamily />
                                     <FontWeight>Bold</FontWeight>
@@ -568,18 +567,15 @@
                                 </TextRun>
                               </TextRuns>
                               <Style>
-                                <FontFamily />
-                                <TextAlign>Left</TextAlign>
+                                <TextAlign>Center</TextAlign>
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>textbox5</rd:DefaultName>
-                          <ZIndex>7</ZIndex>
+                          <rd:DefaultName>TenSanPham1</rd:DefaultName>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
                             </Border>
-                            <FontFamily />
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -593,14 +589,14 @@
                     <TablixCell />
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="SoLuong_1">
+                        <Textbox Name="DonGia1">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Sum(Fields!SoLuong.Value)</Value>
+                                  <Value>=Sum(Fields!DonGia.Value)</Value>
                                   <Style>
                                     <FontFamily />
                                     <FontWeight>Bold</FontWeight>
@@ -614,7 +610,7 @@
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>SoLuong_1</rd:DefaultName>
+                          <rd:DefaultName>DonGia1</rd:DefaultName>
                           <ZIndex>6</ZIndex>
                           <Style>
                             <Border>
@@ -631,7 +627,7 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="ThanhTien_1">
+                        <Textbox Name="ThanhTien1">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
@@ -652,7 +648,7 @@
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>ThanhTien_1</rd:DefaultName>
+                          <rd:DefaultName>ThanhTien1</rd:DefaultName>
                           <ZIndex>5</ZIndex>
                           <Style>
                             <Border>
@@ -681,7 +677,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=RowNumber("sanpham")</Value>
+                                  <Value>=RowNumber(nothing)</Value>
                                   <Style>
                                     <FontFamily />
                                   </Style>
@@ -717,7 +713,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!MaSanPham.Value.Id</Value>
+                                  <Value>=Fields!MaSanPham.Value</Value>
                                   <Style>
                                     <FontFamily />
                                   </Style>
@@ -727,12 +723,10 @@
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>MaSanPham</rd:DefaultName>
-                          <ZIndex>3</ZIndex>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
                             </Border>
-                            <FontFamily />
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -750,7 +744,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!DonGia.Value</Value>
+                                  <Value>=Format(Fields!DonGia.Value,"N0")</Value>
                                   <Style>
                                     <FontFamily />
                                     <Format>#,###0</Format>
@@ -824,7 +818,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!ThanhTien.Value</Value>
+                                  <Value>=Format(Fields!ThanhTien.Value,"N0")</Value>
                                   <Style>
                                     <FontFamily />
                                     <Format>#,###0</Format>
@@ -885,7 +879,7 @@
                 <TablixMember>
                   <Group Name="sanpham">
                     <GroupExpressions>
-                      <GroupExpression>=Fields!MaSanPham.Value.SanPham.TenSanPham</GroupExpression>
+                      <GroupExpression>="Sản phẩm: " &amp; Fields!TenSanPham.Value</GroupExpression>
                     </GroupExpressions>
                   </Group>
                   <TablixMembers>
@@ -908,7 +902,7 @@
                 </TablixMember>
               </TablixMembers>
             </TablixRowHierarchy>
-            <DataSetName>CuahangNongduoc_BusinessObject_ChiTietPhieuBan</DataSetName>
+            <DataSetName>SoLuongBan</DataSetName>
             <Height>3.9246cm</Height>
             <Width>16.33333cm</Width>
             <Style />
@@ -922,9 +916,9 @@
         <PageHeight>29.7cm</PageHeight>
         <PageWidth>21cm</PageWidth>
         <LeftMargin>2.5cm</LeftMargin>
-        <RightMargin>2.5cm</RightMargin>
-        <TopMargin>2.5cm</TopMargin>
-        <BottomMargin>2.5cm</BottomMargin>
+        <RightMargin>2cm</RightMargin>
+        <TopMargin>2cm</TopMargin>
+        <BottomMargin>2cm</BottomMargin>
         <ColumnSpacing>1cm</ColumnSpacing>
         <Style />
       </Page>
