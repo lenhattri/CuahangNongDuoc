@@ -96,6 +96,7 @@
             this.numDaTra = new System.Windows.Forms.NumericUpDown();
             this.label6 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
+            this.helpProvider1 = new System.Windows.Forms.HelpProvider();
             ((System.ComponentModel.ISupportInitialize)(this.bindingNavigator)).BeginInit();
             this.bindingNavigator.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -224,7 +225,7 @@
             this.toolThem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.toolThem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolThem.Name = "toolThem";
-            this.toolThem.Size = new System.Drawing.Size(41, 43);
+            this.toolThem.Size = new System.Drawing.Size(42, 43);
             this.toolThem.Text = "Thêm";
             this.toolThem.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.toolThem.Click += new System.EventHandler(this.toolLuu_Them_Click);
@@ -294,7 +295,7 @@
             this.toolThoat.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.toolThoat.Name = "toolThoat";
             this.toolThoat.RightToLeftAutoMirrorImage = true;
-            this.toolThoat.Size = new System.Drawing.Size(41, 43);
+            this.toolThoat.Size = new System.Drawing.Size(42, 43);
             this.toolThoat.Text = "Thoát";
             this.toolThoat.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.toolThoat.Click += new System.EventHandler(this.toolThoat_Click);
@@ -424,10 +425,10 @@
             // btnThemSanPham
             // 
             this.btnThemSanPham.Image = global::CuahangNongduoc.Properties.Resources.add_16;
-            this.btnThemSanPham.Location = new System.Drawing.Point(201, 17);
+            this.btnThemSanPham.Location = new System.Drawing.Point(137, 11);
             this.btnThemSanPham.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.btnThemSanPham.Name = "btnThemSanPham";
-            this.btnThemSanPham.Size = new System.Drawing.Size(24, 24);
+            this.btnThemSanPham.Size = new System.Drawing.Size(16, 16);
             this.btnThemSanPham.TabIndex = 63;
             this.btnThemSanPham.UseVisualStyleBackColor = true;
             this.btnThemSanPham.Click += new System.EventHandler(this.btnThemSanPham_Click);
@@ -654,7 +655,7 @@
             this.cmbSanPham.FormattingEnabled = true;
             this.cmbSanPham.Location = new System.Drawing.Point(73, 19);
             this.cmbSanPham.Name = "cmbSanPham";
-            this.cmbSanPham.Size = new System.Drawing.Size(123, 21);
+            this.cmbSanPham.Size = new System.Drawing.Size(133, 21);
             this.cmbSanPham.TabIndex = 49;
             // 
             // label3
@@ -871,8 +872,10 @@
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.bindingNavigator);
+            this.helpProvider1.SetHelpKeyword(this, "");
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmBanLe";
+            this.helpProvider1.SetShowHelp(this, true);
             this.Text = "BÁN LẺ";
             this.Load += new System.EventHandler(this.frmBanLe_Load);
             ((System.ComponentModel.ISupportInitialize)(this.bindingNavigator)).EndInit();
@@ -968,5 +971,6 @@
         private System.Windows.Forms.Button btnThemDaiLy;
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.Button btnThemChiPhi;
+        private System.Windows.Forms.HelpProvider helpProvider1;
     }
 }

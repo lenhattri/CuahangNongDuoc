@@ -415,6 +415,7 @@
     <Compile Include="Utils\AppTheme.cs" />
     <Compile Include="Utils\Functions\DataAccessHelper.cs" />
     <Compile Include="Utils\Functions\DataTableHelper.cs" />
+    <Compile Include="Utils\Functions\IFU_Helper.cs" />
     <Compile Include="Utils\Functions\LogHelper.cs" />
     <Compile Include="Utils\Functions\Num2Str.cs" />
     <Compile Include="Program.cs" />

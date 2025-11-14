@@ -1,19 +1,24 @@
-﻿using CuahangNongduoc.BusinessObject;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Configuration;
+using System.Data;
+using System.Drawing;
+using System.Security.Policy;
+using System.Text;
+using System.Windows.Forms;
+using CuahangNongduoc.BusinessObject;
 using CuahangNongduoc.Controller;
 using CuahangNongduoc.DataLayer;
 using CuahangNongduoc.Utils;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
+using CuahangNongduoc.Utils.Functions;
 
 namespace CuahangNongduoc
 {
     public partial class frmDanhsachPhieuBanLe : Form
     {
+        private string Url = ConfigurationManager.AppSettings["Url"].ToString();
+
         public frmDanhsachPhieuBanLe()
         {
             InitializeComponent();
@@ -31,7 +36,24 @@ namespace CuahangNongduoc
             ctrlKH.HienthiKhachHangDataGridviewComboBox(colKhachhang);
             ctrl.HienthiPhieuBanLe(bindingNavigator, dataGridView);
             AppTheme.ApplyTheme(this);
+
+            this.KeyPreview = true;
+            this.KeyDown += OnKeyDown;
         }
+
+        private void OnKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control && (e.KeyCode == Keys.F1))
+            {
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+
+                string url = Url + "/nghiep-vu/ban-le-ban-si";
+                IFU_Helper.IFU(url);
+            }
+        }
+
+
         frmBanLe BanLe = null;
         private void dataGridView_DoubleClick(object sender, EventArgs e)
         {
