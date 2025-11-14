@@ -225,7 +225,7 @@
             this.toolThem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.toolThem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolThem.Name = "toolThem";
-            this.toolThem.Size = new System.Drawing.Size(42, 43);
+            this.toolThem.Size = new System.Drawing.Size(41, 43);
             this.toolThem.Text = "Thêm";
             this.toolThem.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.toolThem.Click += new System.EventHandler(this.toolLuu_Them_Click);
@@ -295,7 +295,7 @@
             this.toolThoat.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.toolThoat.Name = "toolThoat";
             this.toolThoat.RightToLeftAutoMirrorImage = true;
-            this.toolThoat.Size = new System.Drawing.Size(42, 43);
+            this.toolThoat.Size = new System.Drawing.Size(41, 43);
             this.toolThoat.Text = "Thoát";
             this.toolThoat.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.toolThoat.Click += new System.EventHandler(this.toolThoat_Click);
@@ -425,10 +425,10 @@
             // btnThemSanPham
             // 
             this.btnThemSanPham.Image = global::CuahangNongduoc.Properties.Resources.add_16;
-            this.btnThemSanPham.Location = new System.Drawing.Point(137, 11);
-            this.btnThemSanPham.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnThemSanPham.Location = new System.Drawing.Point(201, 17);
+            this.btnThemSanPham.Margin = new System.Windows.Forms.Padding(2);
             this.btnThemSanPham.Name = "btnThemSanPham";
-            this.btnThemSanPham.Size = new System.Drawing.Size(16, 16);
+            this.btnThemSanPham.Size = new System.Drawing.Size(24, 24);
             this.btnThemSanPham.TabIndex = 63;
             this.btnThemSanPham.UseVisualStyleBackColor = true;
             this.btnThemSanPham.Click += new System.EventHandler(this.btnThemSanPham_Click);
@@ -655,7 +655,7 @@
             this.cmbSanPham.FormattingEnabled = true;
             this.cmbSanPham.Location = new System.Drawing.Point(73, 19);
             this.cmbSanPham.Name = "cmbSanPham";
-            this.cmbSanPham.Size = new System.Drawing.Size(133, 21);
+            this.cmbSanPham.Size = new System.Drawing.Size(123, 21);
             this.cmbSanPham.TabIndex = 49;
             // 
             // label3
@@ -696,9 +696,9 @@
             this.groupBox4.Controls.Add(this.btnThemChiPhi);
             this.groupBox4.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.groupBox4.Location = new System.Drawing.Point(3, 170);
-            this.groupBox4.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox4.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox4.Padding = new System.Windows.Forms.Padding(2);
             this.groupBox4.Size = new System.Drawing.Size(252, 68);
             this.groupBox4.TabIndex = 60;
             this.groupBox4.TabStop = false;
@@ -707,7 +707,7 @@
             // btnThemChiPhi
             // 
             this.btnThemChiPhi.Location = new System.Drawing.Point(65, 30);
-            this.btnThemChiPhi.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnThemChiPhi.Margin = new System.Windows.Forms.Padding(2);
             this.btnThemChiPhi.Name = "btnThemChiPhi";
             this.btnThemChiPhi.Size = new System.Drawing.Size(123, 31);
             this.btnThemChiPhi.TabIndex = 0;
