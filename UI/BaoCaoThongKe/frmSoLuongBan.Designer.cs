@@ -63,8 +63,9 @@
             this.panel1.Controls.Add(this.groupBox2);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(860, 104);
+            this.panel1.Size = new System.Drawing.Size(1290, 160);
             this.panel1.TabIndex = 11;
             // 
             // groupBox1
@@ -74,16 +75,19 @@
             this.groupBox1.Controls.Add(this.cmbThang);
             this.groupBox1.Controls.Add(this.btnXemThang);
             this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Location = new System.Drawing.Point(203, 3);
+            this.groupBox1.Location = new System.Drawing.Point(304, 5);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(217, 95);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.groupBox1.Size = new System.Drawing.Size(326, 146);
             this.groupBox1.TabIndex = 7;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Xem theo tháng/nãm";
             // 
             // numNam
             // 
-            this.numNam.Location = new System.Drawing.Point(147, 23);
+            this.numNam.Location = new System.Drawing.Point(220, 35);
+            this.numNam.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.numNam.Maximum = new decimal(new int[] {
             9999,
             0,
@@ -95,7 +99,7 @@
             0,
             0});
             this.numNam.Name = "numNam";
-            this.numNam.Size = new System.Drawing.Size(64, 20);
+            this.numNam.Size = new System.Drawing.Size(96, 26);
             this.numNam.TabIndex = 13;
             this.numNam.Value = new decimal(new int[] {
             2007,
@@ -106,9 +110,10 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(112, 30);
+            this.label3.Location = new System.Drawing.Point(168, 46);
+            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(29, 13);
+            this.label3.Size = new System.Drawing.Size(42, 20);
             this.label3.TabIndex = 12;
             this.label3.Text = "Nãm";
             // 
@@ -129,18 +134,19 @@
             "10",
             "11",
             "12"});
-            this.cmbThang.Location = new System.Drawing.Point(50, 22);
+            this.cmbThang.Location = new System.Drawing.Point(75, 34);
+            this.cmbThang.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.cmbThang.Name = "cmbThang";
-            this.cmbThang.Size = new System.Drawing.Size(56, 21);
+            this.cmbThang.Size = new System.Drawing.Size(82, 28);
             this.cmbThang.TabIndex = 11;
             // 
             // btnXemThang
             // 
-            this.btnXemThang.Image = global::CuahangNongduoc.Properties.Resources.reload;
             this.btnXemThang.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnXemThang.Location = new System.Drawing.Point(61, 60);
+            this.btnXemThang.Location = new System.Drawing.Point(92, 92);
+            this.btnXemThang.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnXemThang.Name = "btnXemThang";
-            this.btnXemThang.Size = new System.Drawing.Size(97, 24);
+            this.btnXemThang.Size = new System.Drawing.Size(146, 37);
             this.btnXemThang.TabIndex = 10;
             this.btnXemThang.Text = "Xem tháng";
             this.btnXemThang.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -150,9 +156,10 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 30);
+            this.label2.Location = new System.Drawing.Point(9, 46);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(38, 13);
+            this.label2.Size = new System.Drawing.Size(54, 20);
             this.label2.TabIndex = 9;
             this.label2.Text = "Tháng";
             // 
@@ -161,9 +168,11 @@
             this.groupBox2.Controls.Add(this.dtNgay);
             this.groupBox2.Controls.Add(this.btnXemNgay);
             this.groupBox2.Controls.Add(this.label1);
-            this.groupBox2.Location = new System.Drawing.Point(426, 3);
+            this.groupBox2.Location = new System.Drawing.Point(639, 5);
+            this.groupBox2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(190, 95);
+            this.groupBox2.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.groupBox2.Size = new System.Drawing.Size(285, 146);
             this.groupBox2.TabIndex = 6;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Xem theo ngày";
@@ -172,18 +181,20 @@
             // 
             this.dtNgay.CustomFormat = "dd/MM/yyyy";
             this.dtNgay.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dtNgay.Location = new System.Drawing.Point(66, 21);
+            this.dtNgay.Location = new System.Drawing.Point(99, 32);
+            this.dtNgay.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.dtNgay.Name = "dtNgay";
-            this.dtNgay.Size = new System.Drawing.Size(107, 20);
+            this.dtNgay.Size = new System.Drawing.Size(158, 26);
             this.dtNgay.TabIndex = 6;
+            this.dtNgay.Value = new System.DateTime(2025, 11, 14, 18, 17, 44, 0);
             // 
             // btnXemNgay
             // 
-            this.btnXemNgay.Image = global::CuahangNongduoc.Properties.Resources.reload;
             this.btnXemNgay.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnXemNgay.Location = new System.Drawing.Point(53, 60);
+            this.btnXemNgay.Location = new System.Drawing.Point(80, 92);
+            this.btnXemNgay.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnXemNgay.Name = "btnXemNgay";
-            this.btnXemNgay.Size = new System.Drawing.Size(80, 24);
+            this.btnXemNgay.Size = new System.Drawing.Size(120, 37);
             this.btnXemNgay.TabIndex = 7;
             this.btnXemNgay.Text = "Xem";
             this.btnXemNgay.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -193,9 +204,10 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(17, 27);
+            this.label1.Location = new System.Drawing.Point(26, 42);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(32, 13);
+            this.label1.Size = new System.Drawing.Size(45, 20);
             this.label1.TabIndex = 5;
             this.label1.Text = "Ngày";
             // 
@@ -203,9 +215,10 @@
             // 
             this.panel2.Controls.Add(this.reportViewer);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(0, 104);
+            this.panel2.Location = new System.Drawing.Point(0, 160);
+            this.panel2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(860, 436);
+            this.panel2.Size = new System.Drawing.Size(1290, 671);
             this.panel2.TabIndex = 12;
             // 
             // reportViewer
@@ -216,19 +229,21 @@
             this.reportViewer.LocalReport.DataSources.Add(reportDataSource1);
             this.reportViewer.LocalReport.ReportEmbeddedResource = "CuahangNongduoc.Report.rptSoLuongBan.rdlc";
             this.reportViewer.Location = new System.Drawing.Point(0, 0);
+            this.reportViewer.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.reportViewer.Name = "reportViewer";
             this.reportViewer.ServerReport.BearerToken = null;
-            this.reportViewer.Size = new System.Drawing.Size(860, 436);
+            this.reportViewer.Size = new System.Drawing.Size(1290, 671);
             this.reportViewer.TabIndex = 0;
             // 
             // frmSoLuongBan
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(860, 540);
+            this.ClientSize = new System.Drawing.Size(1290, 831);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "frmSoLuongBan";
             this.Text = "SỐ LƯỢNG BÁN";
             this.Load += new System.EventHandler(this.frmSoLuongBan_Load);
