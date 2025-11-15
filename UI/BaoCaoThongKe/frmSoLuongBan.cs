@@ -1,6 +1,7 @@
 ﻿using CuahangNongduoc.BusinessObject;
 using CuahangNongduoc.Controller;
 using CuahangNongduoc.DataLayer;
+using CuahangNongduoc.DTO;
 using CuahangNongduoc.Utils;
 using CuahangNongduoc.Utils.Functions;
 using System;
@@ -32,6 +33,12 @@ namespace CuahangNongduoc
         {
             cmbThang.SelectedIndex = DateTime.Now.Month - 1;
             numNam.Value = DateTime.Now.Year;
+            LoadReport(_ctrlChiTiet.LayTatCaChiTietPhieuBan());
+            var param = new List<Microsoft.Reporting.WinForms.ReportParameter>
+            {
+                new Microsoft.Reporting.WinForms.ReportParameter("ngay", "Tất cả")
+            };
+            reportViewer.LocalReport.SetParameters(param);
             AppTheme.ApplyTheme(this);
             this.reportViewer.RefreshReport();
             this.KeyPreview = true;
@@ -49,7 +56,28 @@ namespace CuahangNongduoc
                 IFU_Helper.IFU(url);
             }
         }
+        public void LoadReport(IList<ChiTietPhieuBan> dt)
+        {
+            IList<SoLuongBanReport> dsReport = new List<SoLuongBanReport>();
 
+            foreach (var row in dt)
+            {
+                dsReport.Add(new SoLuongBanReport
+                {
+                    TenSanPham = row.MaSanPham.SanPham.TenSanPham,
+                    MaSanPham = row.MaSanPham.Id,
+                    DonGia = row.DonGia,
+                    SoLuong = row.SoLuong,
+                    ThanhTien = row.ThanhTien
+                });
+            }
+            ReportHanler.LoadReport(
+                this.reportViewer,
+                dsReport,
+                "rptSoLuongBan.rdlc",
+                "SoLuongBan"
+            );
+        }
         private void btnXemNgay_Click(object sender, EventArgs e)
         {
             var param = new List<Microsoft.Reporting.WinForms.ReportParameter>
@@ -60,7 +88,8 @@ namespace CuahangNongduoc
             reportViewer.LocalReport.SetParameters(param);
 
             // ✅ Dùng _ctrlChiTiet thay vì ctrl
-            ChiTietPhieuBanBindingSource.DataSource = _ctrlChiTiet.ChiTietPhieuBan(dtNgay.Value.Date);
+            //ChiTietPhieuBanBindingSource.DataSource = _ctrlChiTiet.ChiTietPhieuBan(dtNgay.Value.Date);
+            LoadReport(_ctrlChiTiet.ChiTietPhieuBan(dtNgay.Value.Date));
             reportViewer.RefreshReport();
         }
 
@@ -77,7 +106,8 @@ namespace CuahangNongduoc
             reportViewer.LocalReport.SetParameters(param);
 
             // ✅ Dùng _ctrlChiTiet thay vì ctrl
-            ChiTietPhieuBanBindingSource.DataSource = _ctrlChiTiet.ChiTietPhieuBan(cmbThang.SelectedIndex + 1, Convert.ToInt32(numNam.Value));
+            //ChiTietPhieuBanBindingSource.DataSource = _ctrlChiTiet.ChiTietPhieuBan(cmbThang.SelectedIndex + 1, Convert.ToInt32(numNam.Value));
+            LoadReport(_ctrlChiTiet.ChiTietPhieuBan(cmbThang.SelectedIndex + 1, Convert.ToInt32(numNam.Value)));
             reportViewer.RefreshReport();
         }
     }

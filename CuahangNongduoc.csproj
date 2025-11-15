@@ -168,6 +168,7 @@
     <Compile Include="DTO\PhieuChiReport.cs" />
     <Compile Include="DTO\PhieuNhapReport.cs" />
     <Compile Include="DTO\PhieuThanhToanReport.cs" />
+    <Compile Include="DTO\SoLuongBanReport.cs" />
     <Compile Include="DTO\SoLuongTonView.cs" />
     <Compile Include="UI\BaoCaoThongKe\frmChiPhiVaKhuyenMai.cs">
       <SubType>Form</SubType>
@@ -603,6 +604,7 @@
     <None Include="Properties\DataSources\CuahangNongduoc.DTO.PhieuBanReport.datasource" />
     <None Include="Properties\DataSources\CuahangNongduoc.DTO.PhieuChiReport.datasource" />
     <None Include="Properties\DataSources\CuahangNongduoc.DTO.PhieuNhapReport.datasource" />
+    <None Include="Properties\DataSources\CuahangNongduoc.DTO.SoLuongBanReport.datasource" />
     <None Include="Properties\DataSources\frmInPhieuThanhToan.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

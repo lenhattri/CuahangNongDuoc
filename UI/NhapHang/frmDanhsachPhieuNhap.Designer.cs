@@ -30,10 +30,10 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmDanhsachPhieuNhap));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.bindingNavigator = new System.Windows.Forms.BindingNavigator(this.components);
             this.bindingNavigatorCountItem = new System.Windows.Forms.ToolStripLabel();
             this.bindingNavigatorMoveFirstItem = new System.Windows.Forms.ToolStripButton();
@@ -49,6 +49,7 @@
             this.bindingNavigatorDeleteItem = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolIn = new System.Windows.Forms.ToolStripButton();
+            this.toolTimKiem = new System.Windows.Forms.ToolStripButton();
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.colId = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colNhaCungCap = new System.Windows.Forms.DataGridViewComboBoxColumn();
@@ -56,7 +57,6 @@
             this.colTongTien = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colDaTra = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colConNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.toolTimKiem = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.bindingNavigator)).BeginInit();
             this.bindingNavigator.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
@@ -128,6 +128,7 @@
             // 
             this.bindingNavigatorPositionItem.AccessibleName = "Position";
             this.bindingNavigatorPositionItem.AutoSize = false;
+            this.bindingNavigatorPositionItem.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.bindingNavigatorPositionItem.Name = "bindingNavigatorPositionItem";
             this.bindingNavigatorPositionItem.Size = new System.Drawing.Size(50, 23);
             this.bindingNavigatorPositionItem.Text = "0";
@@ -167,7 +168,7 @@
             this.bindingNavigatorAddNewItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.bindingNavigatorAddNewItem.Name = "bindingNavigatorAddNewItem";
             this.bindingNavigatorAddNewItem.RightToLeftAutoMirrorImage = true;
-            this.bindingNavigatorAddNewItem.Size = new System.Drawing.Size(66, 43);
+            this.bindingNavigatorAddNewItem.Size = new System.Drawing.Size(65, 43);
             this.bindingNavigatorAddNewItem.Text = "Thêm mới";
             this.bindingNavigatorAddNewItem.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.bindingNavigatorAddNewItem.Click += new System.EventHandler(this.bindingNavigatorAddNewItem_Click);
@@ -205,10 +206,21 @@
             this.toolIn.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.toolIn.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolIn.Name = "toolIn";
-            this.toolIn.Size = new System.Drawing.Size(55, 43);
+            this.toolIn.Size = new System.Drawing.Size(53, 43);
             this.toolIn.Text = "Trang in";
             this.toolIn.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.toolIn.Click += new System.EventHandler(this.toolIn_Click);
+            // 
+            // toolTimKiem
+            // 
+            this.toolTimKiem.Image = global::CuahangNongduoc.Properties.Resources.find;
+            this.toolTimKiem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.toolTimKiem.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolTimKiem.Name = "toolTimKiem";
+            this.toolTimKiem.Size = new System.Drawing.Size(60, 43);
+            this.toolTimKiem.Text = "Tìm kiếm";
+            this.toolTimKiem.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.toolTimKiem.Click += new System.EventHandler(this.toolTimKiem_Click);
             // 
             // dataGridView
             // 
@@ -249,9 +261,9 @@
             // colNgayNhap
             // 
             this.colNgayNhap.DataPropertyName = "NGAY_NHAP";
-            dataGridViewCellStyle5.Format = "d";
-            dataGridViewCellStyle5.NullValue = null;
-            this.colNgayNhap.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle1.Format = "d";
+            dataGridViewCellStyle1.NullValue = null;
+            this.colNgayNhap.DefaultCellStyle = dataGridViewCellStyle1;
             this.colNgayNhap.HeaderText = "Ngày nhập";
             this.colNgayNhap.Name = "colNgayNhap";
             this.colNgayNhap.ReadOnly = true;
@@ -259,10 +271,10 @@
             // colTongTien
             // 
             this.colTongTien.DataPropertyName = "TONG_TIEN";
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle6.Format = "N0";
-            dataGridViewCellStyle6.NullValue = "0";
-            this.colTongTien.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle2.Format = "N0";
+            dataGridViewCellStyle2.NullValue = "0";
+            this.colTongTien.DefaultCellStyle = dataGridViewCellStyle2;
             this.colTongTien.HeaderText = "Tổng tiền";
             this.colTongTien.Name = "colTongTien";
             this.colTongTien.ReadOnly = true;
@@ -270,10 +282,10 @@
             // colDaTra
             // 
             this.colDaTra.DataPropertyName = "DA_TRA";
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle7.Format = "N0";
-            dataGridViewCellStyle7.NullValue = "0";
-            this.colDaTra.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle3.Format = "N0";
+            dataGridViewCellStyle3.NullValue = "0";
+            this.colDaTra.DefaultCellStyle = dataGridViewCellStyle3;
             this.colDaTra.HeaderText = "Đã trả";
             this.colDaTra.Name = "colDaTra";
             this.colDaTra.ReadOnly = true;
@@ -281,24 +293,13 @@
             // colConNo
             // 
             this.colConNo.DataPropertyName = "CON_NO";
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle8.Format = "N0";
-            dataGridViewCellStyle8.NullValue = "0";
-            this.colConNo.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle4.Format = "N0";
+            dataGridViewCellStyle4.NullValue = "0";
+            this.colConNo.DefaultCellStyle = dataGridViewCellStyle4;
             this.colConNo.HeaderText = "Còn nợ";
             this.colConNo.Name = "colConNo";
             this.colConNo.ReadOnly = true;
-            // 
-            // toolTimKiem
-            // 
-            this.toolTimKiem.Image = global::CuahangNongduoc.Properties.Resources.find;
-            this.toolTimKiem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.toolTimKiem.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolTimKiem.Name = "toolTimKiem";
-            this.toolTimKiem.Size = new System.Drawing.Size(61, 43);
-            this.toolTimKiem.Text = "Tìm kiếm";
-            this.toolTimKiem.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.toolTimKiem.Click += new System.EventHandler(this.toolTimKiem_Click);
             // 
             // frmDanhsachPhieuNhap
             // 
@@ -309,7 +310,7 @@
             this.Controls.Add(this.bindingNavigator);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmDanhsachPhieuNhap";
-            this.Text = "DANH SACH PHIEU NHAP";
+            this.Text = "DANH SÁCH PHIẾU NHẬP";
             this.Load += new System.EventHandler(this.frmDanhsachPhieuNhap_Load);
             ((System.ComponentModel.ISupportInitialize)(this.bindingNavigator)).EndInit();
             this.bindingNavigator.ResumeLayout(false);

@@ -113,7 +113,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "frmTimPhieuChi";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
-            this.Text = "Tim Phieu Chi";
+            this.Text = "TÌM PHIẾU CHI";
             this.Load += new System.EventHandler(this.frmTimPhieuChi_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

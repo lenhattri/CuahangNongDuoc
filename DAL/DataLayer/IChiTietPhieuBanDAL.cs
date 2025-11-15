@@ -1,5 +1,7 @@
 ﻿// DAL/DataLayer/ChiTietPhieuBanFactory.cs
+using CuahangNongduoc.BusinessObject;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -22,5 +24,7 @@ namespace CuahangNongduoc.DataLayer
         int UpdateTonKho(string idMaSanPham, int deltaSoLuong, SqlTransaction tx);
         void XuatTheoChonLo(DataRow row, SqlTransaction tx, string idPhieuBan);
         void XuatTheoFIFO(DataRow row, SqlTransaction tx, string idPhieuBan);
+        // Lấy toàn bộ chi tiết phiếu bán
+        DataTable LayTatCaChiTietPhieuBan();
     }
 }
