@@ -8,7 +8,7 @@ namespace CuahangNongduoc.BLL.Interfaces
     /// <summary>
     /// Business abstraction for product lots (ma san pham).
     /// </summary>
-    public interface IProductLotService
+    public interface IMaSanPhamService
     {
         DataTable GetProductLots(string productId = null);
         DataTable GetProductLotDetails(string receiptId);

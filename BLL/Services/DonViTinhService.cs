@@ -6,11 +6,11 @@ using CuahangNongduoc.DataLayer;
 
 namespace CuahangNongduoc.BLL.Services
 {
-    public class UnitService : IUnitService
+    public class DonViTinhService : IDonViTinhService
     {
         private readonly IDonViTinhDAL _dal;
 
-        public UnitService(IDonViTinhDAL dal)
+        public DonViTinhService(IDonViTinhDAL dal)
         {
             _dal = dal ?? throw new ArgumentNullException(nameof(dal));
         }

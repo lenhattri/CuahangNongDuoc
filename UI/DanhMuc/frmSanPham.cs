@@ -9,24 +9,24 @@ namespace CuahangNongduoc
 {
     public partial class frmSanPham : Form
     {
-        private readonly ProductFacade _productFacade;
-        private readonly UnitFacade _unitFacade;
+        private readonly SanPhamFacade _sanPhamFacade;
+        private readonly DonViTinhFacade _donViTinhFacade;
         private BindingSource _productBinding;
 
         public frmSanPham()
         {
             InitializeComponent();
 
-            _productFacade = ServiceLocator.Resolve<ProductFacade>();
-            _unitFacade = ServiceLocator.Resolve<UnitFacade>();
+            _sanPhamFacade = ServiceLocator.Resolve<SanPhamFacade>();
+            _donViTinhFacade = ServiceLocator.Resolve<DonViTinhFacade>();
         }
 
         private void frmSanPham_Load(object sender, EventArgs e)
         {
-            _unitFacade.ConfigureComboBox(cmbDVT);
-            dataGridView.Columns.Add(_unitFacade.CreateColumn());
+            _donViTinhFacade.ConfigureComboBox(cmbDVT);
+            dataGridView.Columns.Add(_donViTinhFacade.CreateColumn());
 
-            _productBinding = _productFacade.BindProducts(
+            _productBinding = _sanPhamFacade.BindProducts(
                 dataGridView,
                 bindingNavigator,
                 txtMaSanPham,
@@ -43,12 +43,12 @@ namespace CuahangNongduoc
         private void toolLuu_Click(object sender, EventArgs e)
         {
             bindingNavigatorPositionItem.Focus();
-            _productFacade.SaveChanges();
+            _sanPhamFacade.SaveChanges();
         }
 
         private void bindingNavigatorAddNewItem_Click(object sender, EventArgs e)
         {
-            DataRow row = _productFacade.CreateRow();
+            DataRow row = _sanPhamFacade.CreateRow();
             long maso = ThamSo.SanPham;
             ThamSo.SanPham = maso + 1;
             row["ID"] = maso;
@@ -57,7 +57,7 @@ namespace CuahangNongduoc
             row["DON_GIA_NHAP"] = 0;
             row["GIA_BAN_SI"] = 0;
             row["GIA_BAN_LE"] = 0;
-            _productFacade.Add(row);
+            _sanPhamFacade.Add(row);
             _productBinding.MoveLast();
         }
 
@@ -86,7 +86,7 @@ namespace CuahangNongduoc
                 dvt.ShowDialog();
             }
 
-            _unitFacade.ConfigureComboBox(cmbDVT);
+            _donViTinhFacade.ConfigureComboBox(cmbDVT);
         }
 
         private void toolTimMaSanPham_Click(object sender, EventArgs e)
@@ -122,11 +122,11 @@ namespace CuahangNongduoc
 
             if (toolTimMaSanPham.Checked)
             {
-                dt = _productFacade.SearchByCode(toolTimSanPham.Text);
+                dt = _sanPhamFacade.SearchByCode(toolTimSanPham.Text);
             }
             else
             {
-                dt = _productFacade.SearchByName(toolTimSanPham.Text);
+                dt = _sanPhamFacade.SearchByName(toolTimSanPham.Text);
             }
 
             _productBinding.DataSource = dt;

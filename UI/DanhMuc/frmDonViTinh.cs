@@ -8,18 +8,18 @@ namespace CuahangNongduoc
 {
     public partial class frmDonViTinh : Form
     {
-        private readonly UnitFacade _unitFacade;
+        private readonly DonViTinhFacade _donViTinhFacade;
         private BindingSource _bindingSource;
 
         public frmDonViTinh()
         {
             InitializeComponent();
-            _unitFacade = ServiceLocator.Resolve<UnitFacade>();
+            _donViTinhFacade = ServiceLocator.Resolve<DonViTinhFacade>();
         }
 
         private void frmDonViTinh_Load(object sender, EventArgs e)
         {
-            _bindingSource = _unitFacade.BindUnits(dataGridView, bindingNavigator);
+            _bindingSource = _donViTinhFacade.BindUnits(dataGridView, bindingNavigator);
             AppTheme.ApplyTheme(this);
             Refresh();
         }
@@ -32,7 +32,7 @@ namespace CuahangNongduoc
                 Validate();
                 _bindingSource.EndEdit();
 
-                _unitFacade.SaveChanges();
+                _donViTinhFacade.SaveChanges();
             }
             catch (Exception ex)
             {

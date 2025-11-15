@@ -7,7 +7,7 @@ namespace CuahangNongduoc.BLL.Interfaces
     /// <summary>
     /// Exposes product-centric business logic without Windows Forms dependencies.
     /// </summary>
-    public interface IProductService
+    public interface ISanPhamService
     {
         DataTable GetProducts();
         DataTable FindByCode(string code);

@@ -22,16 +22,16 @@ namespace CuahangNongduoc
 
         private static void ConfigureServices()
         {
-            ServiceLocator.Register<IUnitService>(() => new UnitService(new DonViTinhDAL()));
-            ServiceLocator.Register<IProductService>(() => new ProductService(new SanPhamFactory(), ServiceLocator.Resolve<IUnitService>()));
-            ServiceLocator.Register<IProductLotService>(() => new ProductLotService(new MaSanPhanFactory(), ServiceLocator.Resolve<IProductService>()));
+            ServiceLocator.Register<IDonViTinhService>(() => new DonViTinhService(new DonViTinhDAL()));
+            ServiceLocator.Register<ISanPhamService>(() => new SanPhamService(new SanPhamFactory(), ServiceLocator.Resolve<IDonViTinhService>()));
+            ServiceLocator.Register<IMaSanPhamService>(() => new MaSanPhamService(new MaSanPhanFactory(), ServiceLocator.Resolve<ISanPhamService>()));
 
-            ServiceLocator.Register<ProductFacade>(() => new ProductFacade(
-                ServiceLocator.Resolve<IProductService>(),
-                ServiceLocator.Resolve<IUnitService>()));
+            ServiceLocator.Register<SanPhamFacade>(() => new SanPhamFacade(
+                ServiceLocator.Resolve<ISanPhamService>(),
+                ServiceLocator.Resolve<IDonViTinhService>()));
 
-            ServiceLocator.Register<UnitFacade>(() => new UnitFacade(ServiceLocator.Resolve<IUnitService>()));
-            ServiceLocator.Register<ProductLotFacade>(() => new ProductLotFacade(ServiceLocator.Resolve<IProductLotService>()));
+            ServiceLocator.Register<DonViTinhFacade>(() => new DonViTinhFacade(ServiceLocator.Resolve<IDonViTinhService>()));
+            ServiceLocator.Register<MaSanPhamFacade>(() => new MaSanPhamFacade(ServiceLocator.Resolve<IMaSanPhamService>()));
         }
     }
 }

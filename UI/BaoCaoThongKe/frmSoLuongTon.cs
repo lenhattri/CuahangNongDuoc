@@ -17,7 +17,7 @@ namespace CuahangNongduoc
 
         private void frmSoLuongTon_Load(object sender, EventArgs e)
         {
-            var raw = ServiceLocator.Resolve<IProductService>().GetInventoryLevels();
+            var raw = ServiceLocator.Resolve<ISanPhamService>().GetInventoryLevels();
 
             var view = raw.Select(it => new SoLuongTonView
             {

@@ -6,7 +6,7 @@ namespace CuahangNongduoc.BLL.Interfaces
     /// <summary>
     /// Abstraction for unit of measurement operations.
     /// </summary>
-    public interface IUnitService
+    public interface IDonViTinhService
     {
         DataTable GetUnits();
         DonViTinh GetUnit(int id);

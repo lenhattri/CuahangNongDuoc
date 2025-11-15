@@ -9,22 +9,22 @@ namespace CuahangNongduoc.UI.Facades
 {
     /// <summary>
     /// UI façade that encapsulates Windows Forms binding logic for products
-    /// while delegating business rules to <see cref="IProductService"/>.
+    /// while delegating business rules to <see cref="ISanPhamService"/>.
     /// </summary>
-    public class ProductFacade
+    public class SanPhamFacade
     {
-        private readonly IProductService _productService;
-        private readonly IUnitService _unitService;
+        private readonly ISanPhamService _sanPhamService;
+        private readonly IDonViTinhService _donViTinhService;
 
-        public ProductFacade(IProductService productService, IUnitService unitService)
+        public SanPhamFacade(ISanPhamService sanPhamService, IDonViTinhService donViTinhService)
         {
-            _productService = productService ?? throw new ArgumentNullException(nameof(productService));
-            _unitService = unitService ?? throw new ArgumentNullException(nameof(unitService));
+            _sanPhamService = sanPhamService ?? throw new ArgumentNullException(nameof(sanPhamService));
+            _donViTinhService = donViTinhService ?? throw new ArgumentNullException(nameof(donViTinhService));
         }
 
         public void BindAutoComplete(ComboBox comboBox)
         {
-            var table = _productService.GetProducts();
+            var table = _sanPhamService.GetProducts();
             comboBox.DataSource = table;
             comboBox.DisplayMember = "TEN_SAN_PHAM";
             comboBox.ValueMember = "ID";
@@ -34,7 +34,7 @@ namespace CuahangNongduoc.UI.Facades
 
         public DataGridViewComboBoxColumn CreateProductColumn()
         {
-            var table = _productService.GetProducts();
+            var table = _sanPhamService.GetProducts();
             return new DataGridViewComboBoxColumn
             {
                 DataSource = table,
@@ -57,7 +57,7 @@ namespace CuahangNongduoc.UI.Facades
             NumericUpDown numGiaBanSi,
             NumericUpDown numGiaBanLe)
         {
-            var bindingSource = new BindingSource { DataSource = _productService.GetProducts() };
+            var bindingSource = new BindingSource { DataSource = _sanPhamService.GetProducts() };
 
             BindTextBox(txtMaSp, bindingSource, "ID");
             BindTextBox(txtTenSp, bindingSource, "TEN_SAN_PHAM");
@@ -76,25 +76,25 @@ namespace CuahangNongduoc.UI.Facades
             return bindingSource;
         }
 
-        public DataTable SearchByCode(string code) => _productService.FindByCode(code);
+        public DataTable SearchByCode(string code) => _sanPhamService.FindByCode(code);
 
-        public DataTable SearchByName(string name) => _productService.FindByName(name);
+        public DataTable SearchByName(string name) => _sanPhamService.FindByName(name);
 
-        public DataRow CreateRow() => _productService.CreateRow();
+        public DataRow CreateRow() => _sanPhamService.CreateRow();
 
-        public void Add(DataRow row) => _productService.Add(row);
+        public void Add(DataRow row) => _sanPhamService.Add(row);
 
-        public bool SaveChanges() => _productService.SaveChanges();
+        public bool SaveChanges() => _sanPhamService.SaveChanges();
 
-        public SanPham GetProduct(string id) => _productService.GetProduct(id);
+        public SanPham GetProduct(string id) => _sanPhamService.GetProduct(id);
 
-        public IList<SoLuongTon> GetInventoryLevels() => _productService.GetInventoryLevels();
+        public IList<SoLuongTon> GetInventoryLevels() => _sanPhamService.GetInventoryLevels();
 
-        public void UpdatePurchasePrice(string id, long newPrice, long quantity) => _productService.UpdatePurchasePrice(id, newPrice, quantity);
+        public void UpdatePurchasePrice(string id, long newPrice, long quantity) => _sanPhamService.UpdatePurchasePrice(id, newPrice, quantity);
 
         public void RefreshUnitCombo(ComboBox comboBox)
         {
-            var table = _unitService.GetUnits();
+            var table = _donViTinhService.GetUnits();
             comboBox.DataSource = table;
             comboBox.DisplayMember = table.Columns.Contains("TEN_DON_VI") ? "TEN_DON_VI" : "TEN";
             comboBox.ValueMember = table.Columns.Contains("ID") ? "ID" : table.Columns[0].ColumnName;

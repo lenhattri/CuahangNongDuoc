@@ -7,15 +7,15 @@ using CuahangNongduoc.DataLayer;
 
 namespace CuahangNongduoc.BLL.Services
 {
-    public class ProductService : IProductService
+    public class SanPhamService : ISanPhamService
     {
         private readonly ISanPhamFactory _factory;
-        private readonly IUnitService _unitService;
+        private readonly IDonViTinhService _donViTinhService;
 
-        public ProductService(ISanPhamFactory factory, IUnitService unitService)
+        public SanPhamService(ISanPhamFactory factory, IDonViTinhService donViTinhService)
         {
             _factory = factory ?? throw new ArgumentNullException(nameof(factory));
-            _unitService = unitService ?? throw new ArgumentNullException(nameof(unitService));
+            _donViTinhService = donViTinhService ?? throw new ArgumentNullException(nameof(donViTinhService));
         }
 
         public DataTable GetProducts() => _factory.DanhsachSanPham();
@@ -48,7 +48,7 @@ namespace CuahangNongduoc.BLL.Services
                 : 0;
             if (unitId > 0)
             {
-                product.DonViTinh = _unitService.GetUnit(unitId);
+                product.DonViTinh = _donViTinhService.GetUnit(unitId);
             }
 
             return product;
@@ -73,7 +73,7 @@ namespace CuahangNongduoc.BLL.Services
 
                 if (row.Table.Columns.Contains("ID_DON_VI_TINH"))
                 {
-                    product.DonViTinh = _unitService.GetUnit(Convert.ToInt32(row["ID_DON_VI_TINH"]));
+                    product.DonViTinh = _donViTinhService.GetUnit(Convert.ToInt32(row["ID_DON_VI_TINH"]));
                 }
 
                 result.Add(new SoLuongTon

@@ -7,15 +7,15 @@ using CuahangNongduoc.DataLayer;
 
 namespace CuahangNongduoc.BLL.Services
 {
-    public class ProductLotService : IProductLotService
+    public class MaSanPhamService : IMaSanPhamService
     {
         private readonly IMaSanPhanFactory _factory;
-        private readonly IProductService _productService;
+        private readonly ISanPhamService _sanPhamService;
 
-        public ProductLotService(IMaSanPhanFactory factory, IProductService productService)
+        public MaSanPhamService(IMaSanPhanFactory factory, ISanPhamService sanPhamService)
         {
             _factory = factory ?? throw new ArgumentNullException(nameof(factory));
-            _productService = productService ?? throw new ArgumentNullException(nameof(productService));
+            _sanPhamService = sanPhamService ?? throw new ArgumentNullException(nameof(sanPhamService));
         }
 
         public DataTable GetProductLots(string productId = null)
@@ -67,7 +67,7 @@ namespace CuahangNongduoc.BLL.Services
                 NgayNhap = Convert.ToDateTime(row["NGAY_NHAP"]),
                 NgaySanXuat = Convert.ToDateTime(row["NGAY_SAN_XUAT"]),
                 NgayHetHan = Convert.ToDateTime(row["NGAY_HET_HAN"]),
-                SanPham = _productService.GetProduct(Convert.ToString(row["ID_SAN_PHAM"]))
+                SanPham = _sanPhamService.GetProduct(Convert.ToString(row["ID_SAN_PHAM"]))
             };
         }
 
@@ -85,7 +85,7 @@ namespace CuahangNongduoc.BLL.Services
                     NgayNhap = Convert.ToDateTime(row["NGAY_NHAP"]),
                     NgaySanXuat = Convert.ToDateTime(row["NGAY_SAN_XUAT"]),
                     NgayHetHan = Convert.ToDateTime(row["NGAY_HET_HAN"]),
-                    SanPham = _productService.GetProduct(Convert.ToString(row["ID_SAN_PHAM"]))
+                    SanPham = _sanPhamService.GetProduct(Convert.ToString(row["ID_SAN_PHAM"]))
                 });
             }
 
@@ -106,7 +106,7 @@ namespace CuahangNongduoc.BLL.Services
                     NgayNhap = Convert.ToDateTime(row["NGAY_NHAP"]),
                     NgaySanXuat = Convert.ToDateTime(row["NGAY_SAN_XUAT"]),
                     NgayHetHan = Convert.ToDateTime(row["NGAY_HET_HAN"]),
-                    SanPham = _productService.GetProduct(Convert.ToString(row["ID_SAN_PHAM"]))
+                    SanPham = _sanPhamService.GetProduct(Convert.ToString(row["ID_SAN_PHAM"]))
                 };
                 lot.ThanhTien = lot.GiaNhap * lot.SoLuong;
                 result.Add(lot);
