@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Security.Policy;
 using System.Text;
 using System.Windows.Forms;
+using CuahangNongduoc.BLL.Controller;
 using CuahangNongduoc.BusinessObject;
 using CuahangNongduoc.Controller;
 using CuahangNongduoc.DataLayer;
@@ -30,7 +31,7 @@ namespace CuahangNongduoc
             new KhachHangController()
             );
         KhachHangController ctrlKH = new KhachHangController();
-        
+        PhieuBanChiPhiController ctrlPBCP = new PhieuBanChiPhiController();
         private void frmDanhsachPhieuNhap_Load(object sender, EventArgs e)
         {
             ctrlKH.HienthiKhachHangDataGridviewComboBox(colKhachhang);
@@ -93,7 +94,7 @@ namespace CuahangNongduoc
                 {
                     factory.CapNhatSoLuong(ct.MaSanPham.Id, ct.SoLuong);
                 }
-                ctrl.Save();
+                this.ctrl.Save();
             }
         }
 
@@ -111,8 +112,11 @@ namespace CuahangNongduoc
                      {
                          factory.CapNhatSoLuong(ct.MaSanPham.Id, ct.SoLuong);
                      }
+
+
                      bindingNavigator.BindingSource.RemoveCurrent();
-                     ctrl.Save();
+                     ctrlPBCP.XoaTheoPhieuBan(view["ID"].ToString());
+                    this.ctrl.Save();
                  }
              }
         }
