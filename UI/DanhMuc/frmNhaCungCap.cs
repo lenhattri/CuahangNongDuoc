@@ -1,17 +1,22 @@
-﻿using CuahangNongduoc.Utils;
+﻿using CuahangNongduoc.DataLayer;
+using CuahangNongduoc.Utils;
+using CuahangNongduoc.Utils.Functions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Drawing;
+using System.Security.Policy;
 using System.Text;
 using System.Windows.Forms;
-using CuahangNongduoc.DataLayer;
 namespace CuahangNongduoc
 {
     public partial class frmNhaCungCap : Form
     {
         CuahangNongduoc.Controller.NhaCungCapController ctrl = new CuahangNongduoc.Controller.NhaCungCapController(new NhaCungCapDAL());
+        private string Url = ConfigurationManager.AppSettings["Url"].ToString();
+
         public frmNhaCungCap()
         {
             InitializeComponent();
@@ -38,6 +43,20 @@ namespace CuahangNongduoc
             ctrl.HienthiDataGridview(dataGridView, bindingNavigator);
             AppTheme.ApplyTheme(this);
             this.Refresh();
+            this.KeyPreview = true;
+            this.KeyDown += OnKeyDown;
+        }
+
+        private void OnKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control && (e.KeyCode == Keys.F1))
+            {
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+
+                string url = Url + "/quan-ly/nha-cung-cap";
+                IFU_Helper.IFU(url);
+            }
         }
 
         private void bindingNavigatorAddNewItem_Click(object sender, EventArgs e)

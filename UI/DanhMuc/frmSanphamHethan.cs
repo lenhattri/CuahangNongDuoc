@@ -1,9 +1,15 @@
-﻿using CuahangNongduoc.Utils;
+﻿using CuahangNongduoc.Controller;
+using CuahangNongduoc.DataLayer;
+using CuahangNongduoc.DTO;
+using CuahangNongduoc.Utils;
+using CuahangNongduoc.Utils.Functions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Drawing;
+using System.Security.Policy;
 using System.Text;
 using System.Windows.Forms;
 using CuahangNongduoc.Controller;
@@ -15,6 +21,8 @@ namespace CuahangNongduoc
 {
     public partial class frmSanphamHethan : Form
     {
+        private string Url = ConfigurationManager.AppSettings["Url"].ToString();
+
         public frmSanphamHethan()
         {
             InitializeComponent();
@@ -63,6 +71,20 @@ namespace CuahangNongduoc
         private void frmSanphamHethan_Load(object sender, EventArgs e)
         {
             AppTheme.ApplyTheme(this);
+            this.KeyPreview = true;
+            this.KeyDown += OnKeyDown;
+        }
+
+        private void OnKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control && (e.KeyCode == Keys.F1))
+            {
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+
+                string url = Url + "/bao-cao/san-pham-het-han";
+                IFU_Helper.IFU(url);
+            }
         }
     }
 }
