@@ -540,29 +540,45 @@ namespace CuahangNongduoc
 
         private void btnRemove_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Bạn chắc chắn xóa dòng chi tiết này không?", "Phiếu Nhập",
-                MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            if (dataGridView.SelectedRows.Count == 0) return;
+
+            if (MessageBox.Show("Bạn chắc chắn xóa các dòng chi tiết đã chọn?", "Phiếu Nhập",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
             {
-                // Xóa dòng đang chọn trên lưới (KHÔNG trừ numTongTien thủ công)
-                foreach (DataGridViewRow r in dataGridView.SelectedRows)
+                return;
+            }
+
+            // Tạo một danh sách các DataRowView cần xóa
+            List<DataRowView> rowsToDelete = new List<DataRowView>();
+            foreach (DataGridViewRow gridRow in dataGridView.SelectedRows)
+            {
+                if (!gridRow.IsNewRow)
                 {
-                    if (!r.IsNewRow)
+                    // Lấy đối tượng dữ liệu thật (DataRowView)
+                    DataRowView drv = gridRow.DataBoundItem as DataRowView;
+                    if (drv != null)
                     {
-                        dataGridView.Rows.Remove(r);
+                        rowsToDelete.Add(drv);
                     }
                 }
-
-                // Sau xóa → RowsRemoved đã gọi RecalcTotalsFromGrid(); 
-                // gọi thêm lần nữa cho chắc:
-                RecalcTotalsFromGrid();
             }
+
+            // Bây giờ mới thực hiện xóa
+            foreach (DataRowView drv in rowsToDelete)
+            {
+                // Đây là lệnh xóa đúng:
+                // Đánh dấu dòng này là "Deleted" trong DataTable
+                drv.Delete();
+            }
+
         }
 
         private void dataGridView_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
         {
             if (MessageBox.Show("Bạn chắc chắn xóa dòng chi tiết này không?", "Phiếu Nhập",
-                MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+        MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
             {
+                // Nếu người dùng chọn "No" -> Hủy việc xóa
                 e.Cancel = true;
             }
             // KHÔNG trừ numTongTien thủ công ở đây nữa (RowsRemoved sẽ tự tổng)
