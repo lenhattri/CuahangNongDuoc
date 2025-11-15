@@ -35,7 +35,7 @@ namespace CuahangNongduoc
 
             if (NhapHang == null || NhapHang.IsDisposed)
             {
-                NhapHang = new frmNhapHang(ctrl); // truyền controller + mã phiếu (có thể null)
+                NhapHang = new frmNhapHang(ctrl, id); // truyền controller + mã phiếu (có thể null)
                 NhapHang.Show();
             }
             else
@@ -49,7 +49,7 @@ namespace CuahangNongduoc
             // Mở form nhập hàng ở chế độ "Thêm mới"
             if (NhapHang == null || NhapHang.IsDisposed)
             {
-                NhapHang = new frmNhapHang(ctrl);
+                NhapHang = new frmNhapHang();
                 NhapHang.Show();
             }
             else
