@@ -105,24 +105,27 @@
     <Compile Include="BLL\Controller\ChiPhiPhatSinhController.cs" />
     <Compile Include="BLL\Controller\PhieuBanChiPhiController.cs" />
     <Compile Include="BLL\Controller\UserController.cs" />
+    <Compile Include="BLL\Interfaces\ISanPhamService.cs" />
+    <Compile Include="BLL\Services\Commands\IProductAverageCostCommand.cs" />
+    <Compile Include="BLL\Services\Commands\UpdateAverageCostCommand.cs" />
     <Compile Include="BLL\Helpers\CauHinhCuaHang.cs" />
     <Compile Include="DAL\DataLayer\ChiPhiPhatSinhFactory.cs" />
-    <Compile Include="DAL\DataLayer\IChiPhiPhatSinhFactory.cs" />
-    <Compile Include="DAL\DataLayer\IChiTietPhieuBanDAL.cs" />
-    <Compile Include="DAL\DataLayer\IChiTietPhieuNhapFactory.cs" />
-    <Compile Include="DAL\DataLayer\IDonViTinhDAL.cs" />
-    <Compile Include="DAL\DataLayer\IDuNoKhachHangDAL.cs" />
-    <Compile Include="DAL\DataLayer\IKhachHangFactory.cs" />
-    <Compile Include="DAL\DataLayer\ILyDoChiFactory.cs" />
-    <Compile Include="DAL\DataLayer\IMaSanPhanFactory.cs" />
-    <Compile Include="DAL\DataLayer\INhaCungCapDAL.cs" />
-    <Compile Include="DAL\DataLayer\IPhieuBanChiPhiFactory.cs" />
-    <Compile Include="DAL\DataLayer\IPhieuBanFactory.cs" />
-    <Compile Include="DAL\DataLayer\IPhieuChiFactory.cs" />
-    <Compile Include="DAL\DataLayer\IPhieuNhapFactory.cs" />
-    <Compile Include="DAL\DataLayer\IPhieuThanhToanDAL.cs" />
-    <Compile Include="DAL\DataLayer\ISanPhamFactory.cs" />
-    <Compile Include="DAL\DataLayer\IUserDAL.cs" />
+    <Compile Include="DAL\Interfaces\IChiPhiPhatSinhFactory.cs" />
+    <Compile Include="DAL\Interfaces\IChiTietPhieuBanDAL.cs" />
+    <Compile Include="DAL\Interfaces\IChiTietPhieuNhapFactory.cs" />
+    <Compile Include="DAL\Interfaces\IDonViTinhDAL.cs" />
+    <Compile Include="DAL\Interfaces\IDuNoKhachHangDAL.cs" />
+    <Compile Include="DAL\Interfaces\IKhachHangFactory.cs" />
+    <Compile Include="DAL\Interfaces\ILyDoChiFactory.cs" />
+    <Compile Include="DAL\Interfaces\IMaSanPhanFactory.cs" />
+    <Compile Include="DAL\Interfaces\INhaCungCapDAL.cs" />
+    <Compile Include="DAL\Interfaces\IPhieuBanChiPhiFactory.cs" />
+    <Compile Include="DAL\Interfaces\IPhieuBanFactory.cs" />
+    <Compile Include="DAL\Interfaces\IPhieuChiFactory.cs" />
+    <Compile Include="DAL\Interfaces\IPhieuNhapFactory.cs" />
+    <Compile Include="DAL\Interfaces\IPhieuThanhToanDAL.cs" />
+    <Compile Include="DAL\Interfaces\ISanPhamFactory.cs" />
+    <Compile Include="DAL\Interfaces\IUserDAL.cs" />
     <Compile Include="DAL\DataLayer\PhieuBanChiPhiFactory.cs" />
     <Compile Include="DAL\DataLayer\UserDAL.cs" />
     <Compile Include="DAL\Infrastructure\DbClient.cs" />
@@ -414,6 +417,7 @@
       <DependentUpon>frmTimPhieuThu.cs</DependentUpon>
     </Compile>
     <Compile Include="Utils\AppTheme.cs" />
+    <Compile Include="Utils\Binding\ControlBindingBuilder.cs" />
     <Compile Include="Utils\Functions\DataAccessHelper.cs" />
     <Compile Include="Utils\Functions\DataTableHelper.cs" />
     <Compile Include="Utils\Functions\IFU_Helper.cs" />
@@ -618,6 +622,8 @@
     <Compile Include="Utils\Functions\ReportHanler.cs" />
     <Compile Include="Utils\Functions\Settings.cs" />
     <Compile Include="Utils\Functions\ThamSo.cs" />
+    <Compile Include="Utils\Mapping\IDataRowMapper.cs" />
+    <Compile Include="Utils\Mapping\SanPhamMapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\save.png" />
