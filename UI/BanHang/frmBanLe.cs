@@ -458,13 +458,6 @@ namespace CuahangNongduoc
 
         private void btnThemChiPhi_Click(object sender, EventArgs e)
         {
-            if (_status == Controll.AddNew)
-            {
-                MessageBox.Show("Vui lòng lưu phiếu bán trước khi chọn chi phí!",
-                                "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
             using (var f = new frmPhieuBanChiPhi(txtMaPhieu.Text, _dsChiPhiDaChon))
             {
                 if (f.ShowDialog() == DialogResult.OK)
