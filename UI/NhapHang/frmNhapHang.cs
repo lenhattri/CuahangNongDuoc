@@ -2,6 +2,7 @@
 using CuahangNongduoc.Controller;
 using CuahangNongduoc.DAL.Infrastructure;
 using CuahangNongduoc.DataLayer;
+using CuahangNongduoc.Utils;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -36,18 +37,20 @@ namespace CuahangNongduoc
         private readonly SanPhamController _ctrlSanPham;
         private readonly NhaCungCapController _ctrlNCC;
 
-        SanPhamController ctrlSanPham = new SanPhamController(new SanPhamFactory());
-        IPhieuNhapFactory factories = new PhieuNhapFactory(DbClient.Instance);
-        PhieuNhapController ctrl = new PhieuNhapController(new PhieuNhapFactory(DbClient.Instance));
+        //SanPhamController ctrlSanPham = new SanPhamController(new SanPhamFactory());
+        //IPhieuNhapFactory factories = new PhieuNhapFactory(DbClient.Instance);
+        //PhieuNhapController ctrl = new PhieuNhapController(new PhieuNhapFactory(DbClient.Instance));
 
-        MaSanPhamController ctrlMaSP = new MaSanPhamController(new MaSanPhanFactory(), new SanPhamFactory());
-        NhaCungCapController ctrlNCC = new NhaCungCapController(new NhaCungCapDAL());
-        PhieuNhap m_PhieuNhap = null;
+        //MaSanPhamController ctrlMaSP = new MaSanPhamController(new MaSanPhanFactory(), new SanPhamFactory());
+        //NhaCungCapController ctrlNCC = new NhaCungCapController(new NhaCungCapDAL());
+        //PhieuNhap m_PhieuNhap = null;
 
         Controll status = Controll.Normal;
 
         private readonly ErrorProvider errorProvider1 = new ErrorProvider();
         private bool _isSubmitting = false;
+
+        private string _maPhieuNhap = null;
 
         public frmNhapHang()
         {
@@ -106,27 +109,60 @@ namespace CuahangNongduoc
             status = Controll.Normal;
         }
 
+        public frmNhapHang(PhieuNhapController ctrlPN, string MaPhieuNhap) : this(ctrlPN)
+        {
+            _maPhieuNhap = MaPhieuNhap;
+            // status đã được set là Normal bởi constructor bên trên (this(ctrlPN))
+        }
+
         void BindingSource_CurrentChanged(object sender, EventArgs e)
         {
-            if (status == Controll.Normal)
+            if (status != Controll.Normal && status != Controll.Edit)
             {
-                ctrlMaSP.HienThiChiTietPhieuNhap(txtMaPhieu.Text, dataGridView);
-                // Khi đổi phiếu → tính lại tổng
-                RecalcTotalsFromGrid();
+                return;
             }
+
+            string currentMaPhieu = null;
+
+            BindingSource bs = sender as BindingSource;
+            if (bs != null && bs.Current != null)
+            {
+                DataRowView drv = bs.Current as DataRowView;
+                if (drv != null)
+                {
+                    currentMaPhieu = drv["ID"]?.ToString();
+                }
+            }
+
+            if (string.IsNullOrEmpty(currentMaPhieu))
+            {
+                currentMaPhieu = txtMaPhieu.Text;
+            }
+
+            if (!string.IsNullOrWhiteSpace(currentMaPhieu))
+            {
+                _ctrlMaSP.HienThiChiTietPhieuNhap(currentMaPhieu, dataGridView);
+            }
+            else
+            {
+                _ctrlMaSP.HienThiChiTietPhieuNhap(null, dataGridView);
+            }
+
+            // Luôn tính lại tổng sau khi lưới thay đổi
+            RecalcTotalsFromGrid();
         }
 
         private void frmNhapHang_Load(object sender, EventArgs e)
         {
-            ctrlSanPham.HienthiAutoComboBox(cmbSanPham);
-            ctrlSanPham.HienthiDataGridViewComboBoxColumn(colSanPham);
-            ctrlNCC.HienthiAutoComboBox(cmbNhaCungCap);
+            _ctrlSanPham.HienthiAutoComboBox(cmbSanPham);
+            _ctrlSanPham.HienthiDataGridViewComboBoxColumn(colSanPham);
+            _ctrlNCC.HienthiAutoComboBox(cmbNhaCungCap);
 
-            ctrl.HienthiPhieuNhap(bindingNavigator, txtMaPhieu, cmbNhaCungCap, dtNgayNhap, numTongTien, numDaTra, numConNo);
+            // Tải dữ liệu header
+            _ctrlPhieuNhap.HienthiPhieuNhap(bindingNavigator, txtMaPhieu, cmbNhaCungCap, dtNgayNhap, numTongTien, numDaTra, numConNo);
+            // Gắn event
             bindingNavigator.BindingSource.CurrentChanged -= new EventHandler(BindingSource_CurrentChanged);
             bindingNavigator.BindingSource.CurrentChanged += new EventHandler(BindingSource_CurrentChanged);
-
-            ctrlMaSP.HienThiChiTietPhieuNhap(txtMaPhieu.Text, dataGridView);
 
             // Cột Thành tiền trên lưới (nếu có) → chỉ đọc
             if (dataGridView.Columns.Contains(COL_THANH_TIEN_GRID))
@@ -137,22 +173,45 @@ namespace CuahangNongduoc
 
             if (status == Controll.AddNew)
             {
+                // --- CHẾ ĐỘ THÊM MỚI ---
                 txtMaPhieu.Text = ThamSo.LayMaPhieuNhap().ToString();
                 Allow(true);
                 // reset số liệu
                 numTongTien.Value = 0;
                 numDaTra.Value = 0;
                 numConNo.Value = 0;
+                // Tải lưới chi tiết rỗng
+                _ctrlMaSP.HienThiChiTietPhieuNhap(txtMaPhieu.Text, dataGridView);
             }
             else
             {
+                // --- CHẾ ĐỘ XEM (NORMAL) ---
                 Allow(false);
+
+                // Nếu có mã phiếu được truyền vào, tìm và nhảy tới đó
+                if (!string.IsNullOrEmpty(_maPhieuNhap))
+                {
+                    int index = bindingNavigator.BindingSource.Find("ID", _maPhieuNhap);
+                    if (index != -1)
+                    {
+                        bindingNavigator.BindingSource.Position = index;
+                    }
+                    _maPhieuNhap = null; // Xóa đi để không dùng lại
+                }
+
+                // *** THAY ĐỔI QUAN TRỌNG ***
+                // Xóa dòng này đi:
+                // ctrlMaSP.HienThiChiTietPhieuNhap(txtMaPhieu.Text, dataGridView);
+
+                // Thay bằng cách: Kích hoạt sự kiện CurrentChanged bằng tay
+                // để tải lưới cho vị trí ĐÚNG (dù là 0 hay vị trí vừa nhảy tới).
+                // Hàm này giờ đã an toàn (ở Bước 1).
+                BindingSource_CurrentChanged(bindingNavigator.BindingSource, EventArgs.Empty);
             }
 
             numDaTra.ValueChanged += numDaTra_ValueChanged;
 
-            // Khi mở form, tính tổng 1 lần
-            RecalcTotalsFromGrid();
+            AppTheme.ApplyTheme(this);
         }
 
         // ===== Recalc ô Thành tiền ở panel nhập nhanh =====
@@ -207,7 +266,7 @@ namespace CuahangNongduoc
                     // Không cộng tay vào numTongTien nữa
                     numThanhTien.Value = numGiaNhap.Value * numSoLuong.Value;
 
-                    DataRow row = ctrlMaSP.NewRow();
+                    DataRow row = _ctrlMaSP.NewRow();
                     row["ID_SAN_PHAM"] = cmbSanPham.SelectedValue;
                     row["ID_PHIEU_NHAP"] = txtMaPhieu.Text;
                     row["ID"] = txtMaSo.Text.Trim();
@@ -216,7 +275,7 @@ namespace CuahangNongduoc
                     row["NGAY_NHAP"] = dtNgayNhap.Value.Date;
                     row["NGAY_SAN_XUAT"] = dtNgaySanXuat.Value.Date;
                     row["NGAY_HET_HAN"] = dtNgayHetHan.Value.Date;
-                    ctrlMaSP.Add(row);
+                    _ctrlMaSP.Add(row);
 
                     // Sau khi Add → tính lại tổng từ lưới
                     RecalcTotalsFromGrid();
@@ -336,9 +395,9 @@ namespace CuahangNongduoc
         void CapNhat()
         {
             // Lưu chi tiết
-            ctrlMaSP.Save();
+            _ctrlMaSP.Save();
             // Cập nhật header
-            ctrl.Update();
+            _ctrlPhieuNhap.Update();
         }
 
         void ThemMoi()
@@ -352,14 +411,14 @@ namespace CuahangNongduoc
                 return;
             }
 
-            DataRow row = ctrl.NewRow();
+            DataRow row = _ctrlPhieuNhap.NewRow();
             row["ID"] = txtMaPhieu.Text.Trim();
             row["NGAY_NHAP"] = dtNgayNhap.Value.Date;
             row["TONG_TIEN"] = numTongTien.Value;
             row["ID_NHA_CUNG_CAP"] = cmbNhaCungCap.SelectedValue;
             row["DA_TRA"] = numDaTra.Value;
             row["CON_NO"] = numConNo.Value;
-            ctrl.Add(row);
+            _ctrlPhieuNhap.Add(row);
 
             // Tự tăng mã phiếu nếu là số
             if (ThamSo.LaSoNguyen(txtMaPhieu.Text))
@@ -372,8 +431,8 @@ namespace CuahangNongduoc
             }
 
             // Lưu header + chi tiết
-            ctrl.Save();
-            ctrlMaSP.Save();
+            _ctrlPhieuNhap.Save();
+            _ctrlMaSP.Save();
 
             // Cập nhật giá nhập mặc định sản phẩm
             SanPhamController ctrlSP = new SanPhamController(new SanPhamFactory());
@@ -406,7 +465,7 @@ namespace CuahangNongduoc
             numConNo.Value = 0;
 
             // Refresh chi tiết rỗng cho mã mới
-            ctrlMaSP.HienThiChiTietPhieuNhap(txtMaPhieu.Text, dataGridView);
+            _ctrlMaSP.HienThiChiTietPhieuNhap(txtMaPhieu.Text, dataGridView);
             this.Allow(true);
 
             // Sau refresh → tính tổng
@@ -452,7 +511,7 @@ namespace CuahangNongduoc
         {
             frmSanPham SanPham = new frmSanPham();
             SanPham.ShowDialog();
-            ctrlSanPham.HienthiAutoComboBox(cmbSanPham);
+            _ctrlSanPham.HienthiAutoComboBox(cmbSanPham);
         }
 
         private void dataGridView_DataError(object sender, DataGridViewDataErrorEventArgs e)
@@ -481,29 +540,45 @@ namespace CuahangNongduoc
 
         private void btnRemove_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Bạn chắc chắn xóa dòng chi tiết này không?", "Phiếu Nhập",
-                MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            if (dataGridView.SelectedRows.Count == 0) return;
+
+            if (MessageBox.Show("Bạn chắc chắn xóa các dòng chi tiết đã chọn?", "Phiếu Nhập",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
             {
-                // Xóa dòng đang chọn trên lưới (KHÔNG trừ numTongTien thủ công)
-                foreach (DataGridViewRow r in dataGridView.SelectedRows)
+                return;
+            }
+
+            // Tạo một danh sách các DataRowView cần xóa
+            List<DataRowView> rowsToDelete = new List<DataRowView>();
+            foreach (DataGridViewRow gridRow in dataGridView.SelectedRows)
+            {
+                if (!gridRow.IsNewRow)
                 {
-                    if (!r.IsNewRow)
+                    // Lấy đối tượng dữ liệu thật (DataRowView)
+                    DataRowView drv = gridRow.DataBoundItem as DataRowView;
+                    if (drv != null)
                     {
-                        dataGridView.Rows.Remove(r);
+                        rowsToDelete.Add(drv);
                     }
                 }
-
-                // Sau xóa → RowsRemoved đã gọi RecalcTotalsFromGrid(); 
-                // gọi thêm lần nữa cho chắc:
-                RecalcTotalsFromGrid();
             }
+
+            // Bây giờ mới thực hiện xóa
+            foreach (DataRowView drv in rowsToDelete)
+            {
+                // Đây là lệnh xóa đúng:
+                // Đánh dấu dòng này là "Deleted" trong DataTable
+                drv.Delete();
+            }
+
         }
 
         private void dataGridView_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
         {
             if (MessageBox.Show("Bạn chắc chắn xóa dòng chi tiết này không?", "Phiếu Nhập",
-                MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+        MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
             {
+                // Nếu người dùng chọn "No" -> Hủy việc xóa
                 e.Cancel = true;
             }
             // KHÔNG trừ numTongTien thủ công ở đây nữa (RowsRemoved sẽ tự tổng)
@@ -515,7 +590,7 @@ namespace CuahangNongduoc
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 bindingNavigator.BindingSource.RemoveCurrent();
-                ctrl.Save();
+                _ctrlPhieuNhap.Save();
             }
         }
 
@@ -528,7 +603,7 @@ namespace CuahangNongduoc
         {
             frmNhaCungCap NCC = new frmNhaCungCap();
             NCC.ShowDialog();
-            ctrlNCC.HienthiAutoComboBox(cmbNhaCungCap);
+            _ctrlNCC.HienthiAutoComboBox(cmbNhaCungCap);
         }
 
         // =========================
