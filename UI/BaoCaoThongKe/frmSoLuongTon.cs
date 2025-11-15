@@ -1,10 +1,12 @@
 using Microsoft.Reporting.WinForms;
 using System;
+using System.Configuration;
 using System.Linq;
 using System.Windows.Forms;
 using CuahangNongduoc.BLL.Interfaces;
 using CuahangNongduoc.DTO;
 using CuahangNongduoc.Utils;
+using CuahangNongduoc.Utils.Functions;
 
 namespace CuahangNongduoc
 {

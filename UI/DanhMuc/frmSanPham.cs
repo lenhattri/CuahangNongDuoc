@@ -2,6 +2,7 @@ using CuahangNongduoc.UI.Facades;
 using CuahangNongduoc.Utils;
 using CuahangNongduoc.Utils.Functions;
 using System;
+using System.Configuration;
 using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
@@ -13,6 +14,7 @@ namespace CuahangNongduoc
         private readonly SanPhamFacade _sanPhamFacade;
         private readonly DonViTinhFacade _donViTinhFacade;
         private BindingSource _productBinding;
+        private readonly string Url = ConfigurationManager.AppSettings["Url"].ToString();
 
         public frmSanPham()
         {
