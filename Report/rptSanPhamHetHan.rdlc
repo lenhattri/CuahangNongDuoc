@@ -2,25 +2,24 @@
 <Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
-    <DataSource Name="DummyDataSource">
+    <DataSource Name="CuahangNongduocDTO">
       <ConnectionProperties>
-        <DataProvider>SQL</DataProvider>
-        <ConnectString />
+        <DataProvider>System.Data.DataSet</DataProvider>
+        <ConnectString>/* Local Connection */</ConnectString>
       </ConnectionProperties>
-      <rd:DataSourceID>1a728297-ab5b-4d31-9faf-18f36d04dd80</rd:DataSourceID>
+      <rd:DataSourceID>0f909cbc-3d2f-44f5-a811-e371900beec8</rd:DataSourceID>
     </DataSource>
   </DataSources>
   <DataSets>
-    <DataSet Name="CuahangNongduoc_BusinessObject_MaSanPham">
+    <DataSet Name="SanPhamHetHan">
       <Query>
-        <DataSourceName>DummyDataSource</DataSourceName>
-        <CommandText />
-        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+        <DataSourceName>CuahangNongduocDTO</DataSourceName>
+        <CommandText>/* Local Query */</CommandText>
       </Query>
       <Fields>
         <Field Name="GiaNhap">
           <DataField>GiaNhap</DataField>
-          <rd:TypeName>System.Int64</rd:TypeName>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Id">
           <DataField>Id</DataField>
@@ -38,27 +37,19 @@
           <DataField>NgaySanXuat</DataField>
           <rd:TypeName>System.DateTime</rd:TypeName>
         </Field>
-        <Field Name="PhieuNhap">
-          <DataField>PhieuNhap</DataField>
-          <rd:TypeName>CuahangNongduoc.BusinessObject.PhieuNhap</rd:TypeName>
-        </Field>
-        <Field Name="SanPham">
-          <DataField>SanPham</DataField>
-          <rd:TypeName>CuahangNongduoc.BusinessObject.SanPham</rd:TypeName>
-        </Field>
         <Field Name="SoLuong">
           <DataField>SoLuong</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
-        <Field Name="ThanhTien">
-          <DataField>ThanhTien</DataField>
-          <rd:TypeName>System.Int64</rd:TypeName>
+        <Field Name="TenSanPham">
+          <DataField>TenSanPham</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
       <rd:DataSetInfo>
-        <rd:DataSetName>CuahangNongduoc.BusinessObject</rd:DataSetName>
-        <rd:TableName>MaSanPham</rd:TableName>
-        <rd:ObjectDataSourceType>CuahangNongduoc.BusinessObject.MaSanPham, CuahangNongduoc, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</rd:ObjectDataSourceType>
+        <rd:DataSetName>CuahangNongduoc.DTO</rd:DataSetName>
+        <rd:TableName>SanPhamHetHanReport</rd:TableName>
+        <rd:ObjectDataSourceType>CuahangNongduoc.DTO.SanPhamHetHanReport, CuahangNongduoc, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</rd:ObjectDataSourceType>
       </rd:DataSetInfo>
     </DataSet>
   </DataSets>
@@ -756,7 +747,7 @@ hết hạn</Value>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!SanPham.Value.TenSanPham</Value>
+                                  <Value>=Fields!TenSanPham.Value</Value>
                                   <Style>
                                     <FontFamily />
                                     <FontWeight>Bold</FontWeight>
@@ -830,6 +821,7 @@ hết hạn</Value>
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
+                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
@@ -1076,7 +1068,7 @@ hết hạn</Value>
                 <TablixMember>
                   <Group Name="sanpham">
                     <GroupExpressions>
-                      <GroupExpression>=Fields!SanPham.Value.TenSanPham</GroupExpression>
+                      <GroupExpression>=Fields!TenSanPham.Value</GroupExpression>
                     </GroupExpressions>
                   </Group>
                   <TablixMembers>
@@ -1099,7 +1091,7 @@ hết hạn</Value>
                 </TablixMember>
               </TablixMembers>
             </TablixRowHierarchy>
-            <DataSetName>CuahangNongduoc_BusinessObject_MaSanPham</DataSetName>
+            <DataSetName>SanPhamHetHan</DataSetName>
             <Height>3.9246cm</Height>
             <Width>15.75cm</Width>
             <Style />

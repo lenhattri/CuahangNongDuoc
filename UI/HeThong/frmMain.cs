@@ -121,7 +121,7 @@ namespace CuahangNongduoc
 
             DataService.OpenConnection();
 
-            helpProvider1.HelpNamespace = Url+"/cua-hang-nong-duoc";
+            helpProvider1.HelpNamespace = Url;
             helpProvider1.SetShowHelp(this, true);
 
         }

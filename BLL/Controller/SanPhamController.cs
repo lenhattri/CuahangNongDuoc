@@ -1,161 +1,199 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Data;
 using System.Windows.Forms;
+using CuahangNongduoc.BLL.Interfaces;
+using CuahangNongduoc.BLL.Services.Commands;
 using CuahangNongduoc.BusinessObject;
 using CuahangNongduoc.DataLayer;
-
-
-
-
+using CuahangNongduoc.Utils.Binding;
+using CuahangNongduoc.Utils.Mapping;
 
 namespace CuahangNongduoc.Controller
 {
-    public class SanPhamController
+    public class SanPhamController : ISanPhamService
     {
-        private readonly ISanPhamFactory _dal;  // interface của DAL
+        private readonly ISanPhamFactory _dal;
+        private readonly IDataRowMapper<SanPham> _sanPhamMapper;
+        private readonly IProductAverageCostCommand _averageCostCommand;
 
         public SanPhamController(ISanPhamFactory dal)
+            : this(dal, new DonViTinhController(new DonViTinhDAL()))
         {
-            _dal = dal ?? throw new ArgumentNullException(nameof(dal));
         }
 
-        public void HienthiAutoComboBox(System.Windows.Forms.ComboBox cmb)
+        internal SanPhamController(
+            ISanPhamFactory dal,
+            DonViTinhController donViTinhController)
+            : this(
+                dal,
+                donViTinhController,
+                new SanPhamMapper(id => donViTinhController.LayDVT(id)),
+                new UpdateAverageCostCommand(dal))
         {
-            DataTable tbl = _dal.DanhsachSanPham(); 
+        }
+
+        internal SanPhamController(
+            ISanPhamFactory dal,
+            DonViTinhController donViTinhController,
+            IDataRowMapper<SanPham> sanPhamMapper,
+            IProductAverageCostCommand averageCostCommand)
+        {
+            _dal = dal ?? throw new ArgumentNullException(nameof(dal));
+            _ = donViTinhController ?? throw new ArgumentNullException(nameof(donViTinhController));
+            _sanPhamMapper = sanPhamMapper ?? throw new ArgumentNullException(nameof(sanPhamMapper));
+            _averageCostCommand = averageCostCommand ?? throw new ArgumentNullException(nameof(averageCostCommand));
+        }
+
+        public DataTable LoadAll()
+        {
+            return _dal.DanhsachSanPham();
+        }
+
+        public DataTable FindByIdLike(string id)
+        {
+            return _dal.TimMaSanPham(id);
+        }
+
+        public DataTable FindByNameLike(string name)
+        {
+            return _dal.TimTenSanPham(name);
+        }
+
+        public void HienthiAutoComboBox(ComboBox cmb)
+        {
+            DataTable tbl = LoadAll();
             cmb.DataSource = tbl;
             cmb.DisplayMember = "TEN_SAN_PHAM";
             cmb.ValueMember = "ID";
-            cmb.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
-            cmb.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            cmb.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+            cmb.AutoCompleteSource = AutoCompleteSource.ListItems;
         }
-        public void HienthiDataGridViewComboBoxColumn(System.Windows.Forms.DataGridViewComboBoxColumn cmb)
+
+        public void HienthiDataGridViewComboBoxColumn(DataGridViewComboBoxColumn cmb)
         {
-            cmb.DataSource = _dal.DanhsachSanPham();
+            cmb.DataSource = LoadAll();
             cmb.DisplayMember = "TEN_SAN_PHAM";
             cmb.ValueMember = "ID";
             cmb.AutoComplete = true;
         }
-        public DataTable TimMaSanPham(String ma)
+
+        public DataTable TimMaSanPham(string ma)
         {
-            return _dal.TimMaSanPham(ma);
-        }
-        public DataTable TimTenSanPham(String ten)
-        {
-            return _dal.TimTenSanPham(ten);
+            return FindByIdLike(ma);
         }
 
-        public void HienthiDataGridview(System.Windows.Forms.DataGridView dg, System.Windows.Forms.BindingNavigator bn,
-            TextBox txtMaSp, TextBox txtTenSp, ComboBox cmbDVT, NumericUpDown numSL, NumericUpDown numDonGiaNhap, NumericUpDown numGiaBanSi, NumericUpDown numGiaBanLe)
+        public DataTable TimTenSanPham(string ten)
         {
-            System.Windows.Forms.BindingSource bs = new System.Windows.Forms.BindingSource();
-            bs.DataSource = _dal.DanhsachSanPham();
-            
-            txtMaSp.DataBindings.Clear();
-            txtMaSp.DataBindings.Add("Text", bs, "ID");
-
-            txtTenSp.DataBindings.Clear();
-            txtTenSp.DataBindings.Add("Text", bs, "TEN_SAN_PHAM");
-
-            cmbDVT.DataBindings.Clear();
-            cmbDVT.DataBindings.Add("SelectedValue", bs, "ID_DON_VI_TINH");
-
-            numSL.DataBindings.Clear();
-            numSL.DataBindings.Add("Value", bs, "SO_LUONG");
-
-            numDonGiaNhap.DataBindings.Clear();
-            numDonGiaNhap.DataBindings.Add("Value", bs, "DON_GIA_NHAP");
-
-            numGiaBanSi.DataBindings.Clear();
-            numGiaBanSi.DataBindings.Add("Value", bs, "GIA_BAN_SI");
-
-            numGiaBanLe.DataBindings.Clear();
-            numGiaBanLe.DataBindings.Add("Value", bs, "GIA_BAN_LE");
-            bn.BindingSource = bs;
-            dg.DataSource = bs;
-
-            
+            return FindByNameLike(ten);
         }
-        public void CapNhatGiaNhap(String id, long gia_moi ,long so_luong)
+
+        public void HienthiDataGridview(DataGridView dg, BindingNavigator bn,
+            TextBox txtMaSp, TextBox txtTenSp, ComboBox cmbDVT, NumericUpDown numSL,
+            NumericUpDown numDonGiaNhap, NumericUpDown numGiaBanSi, NumericUpDown numGiaBanLe)
+        {
+            var bindingSource = new BindingSource
+            {
+                DataSource = LoadAll()
+            };
+
+            var builder = new ControlBindingBuilder(bindingSource);
+            builder.BindText(txtMaSp, "ID")
+                   .BindText(txtTenSp, "TEN_SAN_PHAM")
+                   .BindSelectedValue(cmbDVT, "ID_DON_VI_TINH")
+                   .BindValue(numSL, "SO_LUONG")
+                   .BindValue(numDonGiaNhap, "DON_GIA_NHAP")
+                   .BindValue(numGiaBanSi, "GIA_BAN_SI")
+                   .BindValue(numGiaBanLe, "GIA_BAN_LE");
+
+            if (bn != null)
+            {
+                bn.BindingSource = bindingSource;
+            }
+
+            dg.DataSource = bindingSource;
+        }
+
+        public void CapNhatGiaNhap(string id, long giaMoi, long soLuong)
+        {
+            _averageCostCommand.Execute(id, giaMoi, soLuong);
+        }
+
+        public SanPham LaySanPham(string id)
         {
             DataTable tbl = _dal.LaySanPham(id);
-            if (tbl.Rows.Count > 0)
+            if (tbl.Rows.Count == 0)
             {
-                long tong_so = Convert.ToInt32(tbl.Rows[0]["SO_LUONG"]);
-                long tong_gia = Convert.ToInt64(tbl.Rows[0]["DON_GIA_NHAP"]);
-                if (tong_gia != gia_moi)
+                return null;
+            }
+
+            return _sanPhamMapper.Map(tbl.Rows[0]);
+        }
+
+        public IList<SoLuongTon> GetInventory()
+        {
+            DataTable tbl = _dal.LaySoLuongTon();
+            IList<SoLuongTon> ds = new List<SoLuongTon>();
+
+            foreach (DataRow row in tbl.Rows)
+            {
+                var sanPham = _sanPhamMapper.Map(row);
+                SoLuongTon slt = new SoLuongTon
                 {
-                    long thanh_tien = gia_moi * so_luong + tong_gia * tong_so;
-                    tong_so += so_luong;
-                    tbl.Rows[0]["DON_GIA_NHAP"] = thanh_tien / tong_so;
-                    tbl.Rows[0]["SO_LUONG"] = tong_so;
-                }
-                _dal.Save();
+                    SanPham = sanPham,
+                    SoLuong = Convert.ToInt32(row["SO_LUONG_TON"])
+                };
+                ds.Add(slt);
             }
 
-        }
-    
-        public SanPham LaySanPham(String id)
-        {
-            DataTable tbl = _dal.LaySanPham(id);
-            SanPham sp = new SanPham();
-            var dalDVT = new DonViTinhDAL();                         // tạo instance DAL
-            var ctrlDVT = new DonViTinhController(dalDVT);
-            if (tbl.Rows.Count > 0)
-            {
-                sp.Id = Convert.ToString(tbl.Rows[0]["ID"]);
-                sp.TenSanPham =  Convert.ToString(tbl.Rows[0]["TEN_SAN_PHAM"]);
-                sp.SoLuong = Convert.ToInt32(tbl.Rows[0]["SO_LUONG"]);
-                sp.DonGiaNhap = Convert.ToInt64(tbl.Rows[0]["DON_GIA_NHAP"]);
-                sp.GiaBanLe = Convert.ToInt64(tbl.Rows[0]["GIA_BAN_LE"]);
-                sp.GiaBanSi = Convert.ToInt64(tbl.Rows[0]["GIA_BAN_SI"]);
-                sp.DonViTinh = ctrlDVT.LayDVT(Convert.ToInt32(tbl.Rows[0]["ID_DON_VI_TINH"]));
-            }
-            return sp;
-
+            return ds;
         }
 
         public static IList<SoLuongTon> LaySoLuongTon()
         {
-            SanPhamFactory f = new SanPhamFactory();
-            DataTable tbl = f.LaySoLuongTon();
-
-            IList<SoLuongTon> ds = new List<SoLuongTon>();
-
-
-            var dalDVT = new DonViTinhDAL();                         // tạo instance DAL
-            var ctrlDVT = new DonViTinhController(dalDVT);
-            foreach (DataRow row in tbl.Rows)
-            {
-                SoLuongTon slt = new SoLuongTon();
-                SanPham sp = new SanPham();
-                sp.Id = Convert.ToString(row["ID"]);
-                sp.TenSanPham = Convert.ToString(row["TEN_SAN_PHAM"]);
-                sp.SoLuong = Convert.ToInt32(row["SO_LUONG"]);
-                sp.DonGiaNhap = Convert.ToInt64(row["DON_GIA_NHAP"]);
-                sp.GiaBanLe = Convert.ToInt64(row["GIA_BAN_LE"]);
-                sp.GiaBanSi = Convert.ToInt64(row["GIA_BAN_SI"]);
-                sp.DonViTinh = ctrlDVT.LayDVT(Convert.ToInt32(row["ID_DON_VI_TINH"]));
-                slt.SanPham = sp;
-                slt.SoLuong = Convert.ToInt32(row["SO_LUONG_TON"]);
-                ds.Add(slt);
-            }
-            return ds;
-
+            var controller = new SanPhamController(new SanPhamFactory());
+            return controller.GetInventory();
         }
 
         public DataRow NewRow()
         {
             return _dal.NewRow();
         }
+
         public void Add(DataRow row)
         {
             _dal.Add(row);
         }
+
         public bool Save()
         {
             return _dal.Save();
         }
+
+        public DataRow CreateRow()
+        {
+            return NewRow();
+        }
+
+        public void AddRow(DataRow row)
+        {
+            Add(row);
+        }
+
+        public bool SaveChanges()
+        {
+            return Save();
+        }
+
+        public SanPham GetById(string id)
+        {
+            return LaySanPham(id);
+        }
+
+        public void UpdateAverageCost(string productId, long newCost, long quantityChange)
+        {
+            CapNhatGiaNhap(productId, newCost, quantityChange);
+        }
+
     }
 }

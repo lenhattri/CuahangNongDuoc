@@ -1,5 +1,6 @@
 using CuahangNongduoc.UI.Facades;
 using CuahangNongduoc.Utils;
+using CuahangNongduoc.Utils.Functions;
 using System;
 using System.Data;
 using System.Windows.Forms;

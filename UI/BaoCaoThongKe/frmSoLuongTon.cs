@@ -10,6 +10,8 @@ namespace CuahangNongduoc
 {
     public partial class frmSoLuongTon : Form
     {
+        private string Url = ConfigurationManager.AppSettings["Url"].ToString();
+
         public frmSoLuongTon()
         {
             InitializeComponent();
@@ -36,6 +38,20 @@ namespace CuahangNongduoc
 
             reportViewer.RefreshReport();
             AppTheme.ApplyTheme(this);
+            this.KeyPreview = true;
+            this.KeyDown += OnKeyDown;
+        }
+
+        private void OnKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control && (e.KeyCode == Keys.F1))
+            {
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+
+                string url = Url + "/bao-cao/so-luong-ton";
+                IFU_Helper.IFU(url);
+            }
         }
 
         private void SoLuongTonBindingSource_CurrentChanged(object sender, EventArgs e)

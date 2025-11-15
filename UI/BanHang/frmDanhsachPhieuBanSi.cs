@@ -1,4 +1,10 @@
-﻿using System;
+﻿using CuahangNongduoc.BLL.Controller;
+using CuahangNongduoc.BusinessObject;
+using CuahangNongduoc.Controller;
+using CuahangNongduoc.DataLayer;
+using CuahangNongduoc.Utils;
+using CuahangNongduoc.Utils.Functions;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
@@ -6,11 +12,6 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using CuahangNongduoc.BusinessObject;
-using CuahangNongduoc.Controller;
-using CuahangNongduoc.DataLayer;
-using CuahangNongduoc.Utils;
-using CuahangNongduoc.Utils.Functions;
 
 namespace CuahangNongduoc
 {
@@ -29,6 +30,8 @@ namespace CuahangNongduoc
             new PhieuBanFactory(),
     new KhachHangController());
         KhachHangController ctrlKH = new KhachHangController();
+        PhieuBanChiPhiController ctrlPBCP = new PhieuBanChiPhiController();
+
         private void frmDanhsachPhieuNhap_Load(object sender, EventArgs e)
         {
             ctrlKH.HienthiDaiLyDataGridviewComboBox(colKhachhang);
@@ -92,7 +95,7 @@ namespace CuahangNongduoc
                     factory.CapNhatSoLuong(ct.MaSanPham.Id, ct.SoLuong); // gọi qua object
                 }
 
-                ctrl.Save();
+                this.ctrl.Save();
             }
         }
 
@@ -112,7 +115,9 @@ namespace CuahangNongduoc
                          factory.CapNhatSoLuong(ct.MaSanPham.Id, ct.SoLuong);
                      }
                      bindingNavigator.BindingSource.RemoveCurrent();
-                     ctrl.Save();
+
+                    ctrlPBCP.XoaTheoPhieuBan(view["ID"].ToString());
+                    this.ctrl.Save();
                  }
              }
         }
