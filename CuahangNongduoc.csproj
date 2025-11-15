@@ -172,6 +172,7 @@
     <Compile Include="DTO\PhieuNhapReport.cs" />
     <Compile Include="DTO\PhieuThanhToanReport.cs" />
     <Compile Include="DTO\SoLuongBanReport.cs" />
+    <Compile Include="DTO\SanPhamHetHanReport.cs" />
     <Compile Include="DTO\SoLuongTonView.cs" />
     <Compile Include="UI\BaoCaoThongKe\frmChiPhiVaKhuyenMai.cs">
       <SubType>Form</SubType>
