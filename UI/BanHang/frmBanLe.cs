@@ -108,6 +108,7 @@ namespace CuahangNongduoc
             else
             {
                 Allow(false);
+                ctrlChiTiet.HienThiChiTiet(dgvDanhsachSP, txtMaPhieu.Text);
             }
 
             AppTheme.ApplyTheme(this);

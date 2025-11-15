@@ -2,8 +2,12 @@
 using CuahangNongduoc.Controller;
 using CuahangNongduoc.DataLayer;
 using CuahangNongduoc.Utils;
+using CuahangNongduoc.Utils.Functions;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Security.Policy;
 using System.Windows.Forms;
 
 namespace CuahangNongduoc
@@ -11,6 +15,7 @@ namespace CuahangNongduoc
     public partial class frmSoLuongBan : Form
     {
         private readonly ChiTietPhieuBanController _ctrlChiTiet;
+        private string Url = ConfigurationManager.AppSettings["Url"].ToString();
 
         public frmSoLuongBan()
         {
@@ -28,6 +33,21 @@ namespace CuahangNongduoc
             cmbThang.SelectedIndex = DateTime.Now.Month - 1;
             numNam.Value = DateTime.Now.Year;
             AppTheme.ApplyTheme(this);
+            this.reportViewer.RefreshReport();
+            this.KeyPreview = true;
+            this.KeyDown += OnKeyDown;
+        }
+
+        private void OnKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control && (e.KeyCode == Keys.F1))
+            {
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+
+                string url = Url + "/bao-cao/so-luong-ban";
+                IFU_Helper.IFU(url);
+            }
         }
 
         private void btnXemNgay_Click(object sender, EventArgs e)
