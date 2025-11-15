@@ -1,39 +1,32 @@
-﻿using CuahangNongduoc.Controller;
-using CuahangNongduoc.DataLayer;
+using CuahangNongduoc.UI.Facades;
 using CuahangNongduoc.Utils;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 
 namespace CuahangNongduoc
 {
     public partial class frmSanPham : Form
     {
-        private readonly SanPhamController ctrl;
-        private readonly DonViTinhController ctrlDVT;
+        private readonly ProductFacade _productFacade;
+        private readonly UnitFacade _unitFacade;
+        private BindingSource _productBinding;
 
         public frmSanPham()
         {
             InitializeComponent();
 
-            // Tạo DAL và inject vào controller
-            var dalSanPham = new SanPhamFactory();           // giả sử bạn có SanPhamDAL : ISanPhamDAL
-            var dalDVT = new DonViTinhDAL();            // DonViTinhDAL : IDonViTinhDAL
-
-            ctrl = new SanPhamController(dalSanPham);  // inject DAL
-            ctrlDVT = new DonViTinhController(dalDVT); // inject DAL
+            _productFacade = ServiceLocator.Resolve<ProductFacade>();
+            _unitFacade = ServiceLocator.Resolve<UnitFacade>();
         }
 
         private void frmSanPham_Load(object sender, EventArgs e)
         {
-            ctrlDVT.HienthiAutoComboBox(cmbDVT);
-            dataGridView.Columns.Add(ctrlDVT.HienthiDataGridViewComboBoxColumn());
+            _unitFacade.ConfigureComboBox(cmbDVT);
+            dataGridView.Columns.Add(_unitFacade.CreateColumn());
 
-            ctrl.HienthiDataGridview(
+            _productBinding = _productFacade.BindProducts(
                 dataGridView,
                 bindingNavigator,
                 txtMaSanPham,
@@ -42,8 +35,7 @@ namespace CuahangNongduoc
                 numSoLuong,
                 numDonGiaNhap,
                 numGiaBanSi,
-                numGiaBanLe
-            );
+                numGiaBanLe);
 
             AppTheme.ApplyTheme(this);
         }
@@ -51,59 +43,57 @@ namespace CuahangNongduoc
         private void toolLuu_Click(object sender, EventArgs e)
         {
             bindingNavigatorPositionItem.Focus();
-            ctrl.Save();
+            _productFacade.SaveChanges();
         }
 
         private void bindingNavigatorAddNewItem_Click(object sender, EventArgs e)
         {
-            DataRow row = ctrl.NewRow();
+            DataRow row = _productFacade.CreateRow();
             long maso = ThamSo.SanPham;
-            ThamSo.SanPham = maso+1;
+            ThamSo.SanPham = maso + 1;
             row["ID"] = maso;
             row["TEN_SAN_PHAM"] = "";
             row["SO_LUONG"] = 0;
             row["DON_GIA_NHAP"] = 0;
             row["GIA_BAN_SI"] = 0;
             row["GIA_BAN_LE"] = 0;
-            ctrl.Add(row);
-            bindingNavigator.BindingSource.MoveLast();
-            
+            _productFacade.Add(row);
+            _productBinding.MoveLast();
         }
 
-      
         private void bindingNavigatorDeleteItem_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show("Bạn có chắc chắn xóa không?", "San Pham", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                bindingNavigator.BindingSource.RemoveCurrent();
+                _productBinding.RemoveCurrent();
             }
         }
 
         private void toolThoat_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         private void dataGridView_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
             e.Cancel = true;
-            
         }
 
         private void btnThemDVT_Click(object sender, EventArgs e)
         {
-            frmDonViTinh DVT = new frmDonViTinh();
-            DVT.ShowDialog();
-            ctrlDVT.HienthiAutoComboBox(cmbDVT);
-        }
+            using (var dvt = new frmDonViTinh())
+            {
+                dvt.ShowDialog();
+            }
 
+            _unitFacade.ConfigureComboBox(cmbDVT);
+        }
 
         private void toolTimMaSanPham_Click(object sender, EventArgs e)
         {
             toolTimMaSanPham.Checked = true;
             toolTimTenSanPham.Checked = false;
             toolTimSanPham.Text = "";
-
         }
 
         private void mnuTimTenSanPham_Click(object sender, EventArgs e)
@@ -132,17 +122,15 @@ namespace CuahangNongduoc
 
             if (toolTimMaSanPham.Checked)
             {
-                dt = ctrl.TimMaSanPham(toolTimSanPham.Text);
+                dt = _productFacade.SearchByCode(toolTimSanPham.Text);
             }
             else
             {
-                dt = ctrl.TimTenSanPham(toolTimSanPham.Text);
+                dt = _productFacade.SearchByName(toolTimSanPham.Text);
             }
 
-            // ✅ Cập nhật hiển thị
-            dataGridView.DataSource = dt;
+            _productBinding.DataSource = dt;
         }
-
 
         private void toolTimSanPham_Enter(object sender, EventArgs e)
         {

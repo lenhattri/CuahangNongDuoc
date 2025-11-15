@@ -127,6 +127,12 @@
     <Compile Include="DAL\DataLayer\UserDAL.cs" />
     <Compile Include="DAL\Infrastructure\DbClient.cs" />
     <Compile Include="BLL\Controller\ChiTietPhieuNhapController.cs" />
+    <Compile Include="BLL\Interfaces\IProductLotService.cs" />
+    <Compile Include="BLL\Interfaces\IProductService.cs" />
+    <Compile Include="BLL\Interfaces\IUnitService.cs" />
+    <Compile Include="BLL\Services\ProductLotService.cs" />
+    <Compile Include="BLL\Services\ProductService.cs" />
+    <Compile Include="BLL\Services\UnitService.cs" />
     <Compile Include="Domain\Entities\ChiPhiPhatSinh.cs" />
     <Compile Include="Domain\Entities\ChiTietPhieuBan.cs" />
     <Compile Include="Domain\Entities\ChiTietPhieuNhap.cs" />
@@ -157,6 +163,10 @@
     <Compile Include="BLL\Controller\PhieuBanController.cs" />
     <Compile Include="BLL\Controller\SanPhamController.cs" />
     <Compile Include="BLL\Controller\DonViTinhController.cs" />
+    <Compile Include="UI\Facades\ProductFacade.cs" />
+    <Compile Include="UI\Facades\ProductLotFacade.cs" />
+    <Compile Include="UI\Facades\UnitFacade.cs" />
+    <Compile Include="Utils\ServiceLocator.cs" />
     <Compile Include="DAL\DataLayer\PhieuChiFactory.cs" />
     <Compile Include="Domain\Entities\NguoiDung.cs" />
     <Compile Include="DTO\ChiPhiKhuyenMaiReport.cs" />

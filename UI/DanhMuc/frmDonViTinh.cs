@@ -1,46 +1,38 @@
-﻿using CuahangNongduoc.Controller;
-using CuahangNongduoc.DataLayer;
+using CuahangNongduoc.UI.Facades;
 using CuahangNongduoc.Utils;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 
 namespace CuahangNongduoc
 {
     public partial class frmDonViTinh : Form
     {
-        private readonly DonViTinhController ctrl;
+        private readonly UnitFacade _unitFacade;
+        private BindingSource _bindingSource;
 
         public frmDonViTinh()
         {
             InitializeComponent();
-
-            // Khởi tạo DAL và inject vào controller
-            IDonViTinhDAL dal = new DonViTinhDAL();
-            ctrl = new DonViTinhController(dal);
+            _unitFacade = ServiceLocator.Resolve<UnitFacade>();
         }
 
         private void frmDonViTinh_Load(object sender, EventArgs e)
         {
-            ctrl.HienthiDataGridview(dataGridView, bindingNavigator);
+            _bindingSource = _unitFacade.BindUnits(dataGridView, bindingNavigator);
             AppTheme.ApplyTheme(this);
-            this.Refresh();
+            Refresh();
         }
 
         private void toolLuu_Click(object sender, EventArgs e)
         {
             try
             {
-                // Đẩy các thay đổi từ cell đang edit xuống DataTable
                 bindingNavigatorPositionItem.Focus();
-                this.Validate();
-                ((BindingSource)bindingNavigator.BindingSource).EndEdit();
+                Validate();
+                _bindingSource.EndEdit();
 
-                ctrl.Save();
+                _unitFacade.SaveChanges();
             }
             catch (Exception ex)
             {
@@ -50,14 +42,13 @@ namespace CuahangNongduoc
 
         private void bindingNavigatorAddNewItem_Click(object sender, EventArgs e)
         {
-            var drv = bindingNavigator.BindingSource.Current as DataRowView;
+            var drv = _bindingSource.Current as DataRowView;
             if (drv != null)
             {
                 drv["TEN_DON_VI"] = "";
             }
 
-            // Di chuyển đến cuối để bắt đầu nhập
-            bindingNavigator.BindingSource.MoveLast();
+            _bindingSource.MoveLast();
         }
     }
 }
