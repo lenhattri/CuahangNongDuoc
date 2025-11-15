@@ -1,15 +1,23 @@
-using Microsoft.Reporting.WinForms;
-using System;
-using System.Linq;
-using System.Windows.Forms;
-using CuahangNongduoc.BLL.Interfaces;
 using CuahangNongduoc.DTO;
 using CuahangNongduoc.Utils;
-
+using CuahangNongduoc.Utils.Functions;
+using Microsoft.Reporting.WinForms;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Configuration;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Security.Policy;
+using System.Text;
+using System.Windows.Forms;
 namespace CuahangNongduoc
 {
     public partial class frmSoLuongTon : Form
     {
+        private string Url = ConfigurationManager.AppSettings["Url"].ToString();
+
         public frmSoLuongTon()
         {
             InitializeComponent();
@@ -36,6 +44,20 @@ namespace CuahangNongduoc
 
             reportViewer.RefreshReport();
             AppTheme.ApplyTheme(this);
+            this.KeyPreview = true;
+            this.KeyDown += OnKeyDown;
+        }
+
+        private void OnKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control && (e.KeyCode == Keys.F1))
+            {
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+
+                string url = Url + "/bao-cao/so-luong-ton";
+                IFU_Helper.IFU(url);
+            }
         }
 
         private void SoLuongTonBindingSource_CurrentChanged(object sender, EventArgs e)

@@ -55,6 +55,11 @@ namespace CuahangNongduoc.BLL.Controller
             _dal.LuuChiPhiPhatSinh(maPhieuBan, chiPhis);
         }
 
+        public void XoaTheoPhieuBan(string maPhieuBan)
+        {
+            _dal.DeletedByPhieuBan(maPhieuBan);
+        }
+
         public void HienThiDataGridView(DataGridView dgv, BindingNavigator bnv, string maPhieuBan)
         {
             DataTable table = LayDanhSachTheoPhieuBan(maPhieuBan);

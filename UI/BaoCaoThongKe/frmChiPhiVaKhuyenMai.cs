@@ -127,5 +127,10 @@ namespace CuahangNongduoc.UI.BaoCaoThongKe
         {
             LoadReport(phieuBanFactory.DanhsachPhieu(chkKM_GG.Checked));
         }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

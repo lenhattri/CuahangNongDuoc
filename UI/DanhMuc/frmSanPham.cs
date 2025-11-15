@@ -1,8 +1,14 @@
 using CuahangNongduoc.UI.Facades;
 using CuahangNongduoc.Utils;
+using CuahangNongduoc.Utils.Functions;
 using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Drawing;
+using System.Security.Policy;
+using System.Text;
 using System.Windows.Forms;
 
 namespace CuahangNongduoc
@@ -12,6 +18,9 @@ namespace CuahangNongduoc
         private readonly SanPhamFacade _sanPhamFacade;
         private readonly DonViTinhFacade _donViTinhFacade;
         private BindingSource _productBinding;
+        private readonly SanPhamController ctrl;
+        private readonly DonViTinhController ctrlDVT;
+        private string Url = ConfigurationManager.AppSettings["Url"].ToString();
 
         public frmSanPham()
         {
@@ -38,6 +47,21 @@ namespace CuahangNongduoc
                 numGiaBanLe);
 
             AppTheme.ApplyTheme(this);
+
+            this.KeyPreview = true;
+            this.KeyDown += OnKeyDown;
+        }
+
+        private void OnKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control && (e.KeyCode == Keys.F1))
+            {
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+
+                string url = Url + "/quan-ly/san-pham";
+                IFU_Helper.IFU(url);
+            }
         }
 
         private void toolLuu_Click(object sender, EventArgs e)
