@@ -50,14 +50,29 @@ namespace CuahangNongduoc.Controller
             return _dal.DanhsachSanPham();
         }
 
+        public DataTable GetProducts()
+        {
+            return LoadAll();
+        }
+
         public DataTable FindByIdLike(string id)
         {
             return _dal.TimMaSanPham(id);
         }
 
+        public DataTable FindByCode(string code)
+        {
+            return FindByIdLike(code);
+        }
+
         public DataTable FindByNameLike(string name)
         {
             return _dal.TimTenSanPham(name);
+        }
+
+        public DataTable FindByName(string name)
+        {
+            return FindByNameLike(name);
         }
 
         public void HienthiAutoComboBox(ComboBox cmb)
@@ -119,6 +134,11 @@ namespace CuahangNongduoc.Controller
             _averageCostCommand.Execute(id, giaMoi, soLuong);
         }
 
+        public void UpdatePurchasePrice(string id, long newPrice, long quantity)
+        {
+            CapNhatGiaNhap(id, newPrice, quantity);
+        }
+
         public SanPham LaySanPham(string id)
         {
             DataTable tbl = _dal.LaySanPham(id);
@@ -128,6 +148,11 @@ namespace CuahangNongduoc.Controller
             }
 
             return _sanPhamMapper.Map(tbl.Rows[0]);
+        }
+
+        public SanPham GetProduct(string id)
+        {
+            return LaySanPham(id);
         }
 
         public IList<SoLuongTon> GetInventory()
@@ -147,6 +172,11 @@ namespace CuahangNongduoc.Controller
             }
 
             return ds;
+        }
+
+        public IList<SoLuongTon> GetInventoryLevels()
+        {
+            return GetInventory();
         }
 
         public static IList<SoLuongTon> LaySoLuongTon()
