@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Windows.Forms;
+using CuahangNongduoc.BLL.Interfaces;
 using CuahangNongduoc.BusinessObject;
 using CuahangNongduoc.DataLayer;
 
@@ -10,13 +11,19 @@ namespace CuahangNongduoc.Controller
     public class MaSanPhamController
     {
         private readonly IMaSanPhanFactory _dal;
-        private readonly ISanPhamFactory _sanPhamDal;
+        private readonly ISanPhamService _sanPhamService;
 
         // ✅ Inject DAL qua constructor
         public MaSanPhamController(IMaSanPhanFactory dal, ISanPhamFactory sanPhamDal)
+            : this(dal, sanPhamDal, new SanPhamController(sanPhamDal))
+        {
+        }
+
+        internal MaSanPhamController(IMaSanPhanFactory dal, ISanPhamFactory sanPhamDal, ISanPhamService sanPhamService)
         {
             _dal = dal ?? throw new ArgumentNullException(nameof(dal));
-            _sanPhamDal = sanPhamDal ?? throw new ArgumentNullException(nameof(sanPhamDal));
+            _ = sanPhamDal ?? throw new ArgumentNullException(nameof(sanPhamDal));
+            _sanPhamService = sanPhamService ?? throw new ArgumentNullException(nameof(sanPhamService));
         }
 
         /* ===================== CRUD ===================== */
@@ -50,8 +57,6 @@ namespace CuahangNongduoc.Controller
             if (tbl.Rows.Count == 0) return null;
 
             var row = tbl.Rows[0];
-            var spCtrl = new SanPhamController(_sanPhamDal); // Inject đúng DAL dùng chung
-
             return new MaSanPham
             {
                 Id = Convert.ToString(row["ID"]),
@@ -60,7 +65,7 @@ namespace CuahangNongduoc.Controller
                 NgayNhap = Convert.ToDateTime(row["NGAY_NHAP"]),
                 NgaySanXuat = Convert.ToDateTime(row["NGAY_SAN_XUAT"]),
                 NgayHetHan = Convert.ToDateTime(row["NGAY_HET_HAN"]),
-                SanPham = spCtrl.LaySanPham(row["ID_SAN_PHAM"].ToString())
+                SanPham = _sanPhamService.GetById(row["ID_SAN_PHAM"].ToString())
             };
         }
 
@@ -68,8 +73,6 @@ namespace CuahangNongduoc.Controller
         {
             var ds = new List<MaSanPham>();
             var tbl = _dal.DanhsachMaSanPhamHetHan(dt);
-            var spCtrl = new SanPhamController(_sanPhamDal);
-
             foreach (DataRow row in tbl.Rows)
             {
                 ds.Add(new MaSanPham
@@ -80,7 +83,7 @@ namespace CuahangNongduoc.Controller
                     NgayNhap = Convert.ToDateTime(row["NGAY_NHAP"]),
                     NgaySanXuat = Convert.ToDateTime(row["NGAY_SAN_XUAT"]),
                     NgayHetHan = Convert.ToDateTime(row["NGAY_HET_HAN"]),
-                    SanPham = spCtrl.LaySanPham(row["ID_SAN_PHAM"].ToString())
+                    SanPham = _sanPhamService.GetById(row["ID_SAN_PHAM"].ToString())
                 });
             }
 
@@ -114,8 +117,6 @@ namespace CuahangNongduoc.Controller
         {
             IList<MaSanPham> ds = new List<MaSanPham>();
             DataTable tbl = _dal.DanhsachChiTiet(id);
-            var spCtrl = new SanPhamController(_sanPhamDal);
-
             foreach (DataRow row in tbl.Rows)
             {
                 ds.Add(new MaSanPham
@@ -127,7 +128,7 @@ namespace CuahangNongduoc.Controller
                     NgayNhap = Convert.ToDateTime(row["NGAY_NHAP"]),
                     NgaySanXuat = Convert.ToDateTime(row["NGAY_SAN_XUAT"]),
                     NgayHetHan = Convert.ToDateTime(row["NGAY_HET_HAN"]),
-                    SanPham = spCtrl.LaySanPham(row["ID_SAN_PHAM"].ToString())
+                    SanPham = _sanPhamService.GetById(row["ID_SAN_PHAM"].ToString())
                 });
             }
 
