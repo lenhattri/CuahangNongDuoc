@@ -742,8 +742,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="BLL\DTOs\" />
-    <Folder Include="BLL\Interfaces\" />
-    <Folder Include="BLL\Services\" />
     <Folder Include="DAL\Repositories\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
