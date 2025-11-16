@@ -1,3 +1,4 @@
+using CuahangNongduoc.DAL.Interfaces;
 ﻿using CuahangNongduoc.BLL.Controller;
 using CuahangNongduoc.BLL.Helpers;
 using CuahangNongduoc.BusinessObject;

@@ -1,4 +1,5 @@
 ﻿// DAL/DataLayer/MaSanPhanFactory.cs
+using CuahangNongduoc.DAL.Interfaces;
 using System;
 using System.Data;
 using System.Data.SqlClient;

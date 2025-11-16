@@ -1,3 +1,4 @@
+﻿using CuahangNongduoc.DAL.Interfaces;
 using System;
 using System.Data;
 using CuahangNongduoc.DataLayer;

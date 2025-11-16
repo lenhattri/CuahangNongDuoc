@@ -1,4 +1,5 @@
 ﻿// DAL/DataLayer/UserDAL.cs
+using CuahangNongduoc.DAL.Interfaces;
 using BCrypt.Net;                                        // CHANGED: BCrypt.Net-Next (nuget)
 using CuahangNongduoc.DAL.Infrastructure;                 // CHANGED: dùng DbClient
 using CuahangNongduoc.Utils.Functions;

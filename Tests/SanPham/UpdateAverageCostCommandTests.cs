@@ -1,3 +1,4 @@
+using CuahangNongduoc.DAL.Interfaces;
 using System.Data;
 using CuahangNongduoc.BLL.Services.Commands;
 using CuahangNongduoc.DataLayer;

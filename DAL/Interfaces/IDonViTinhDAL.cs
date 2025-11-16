@@ -1,7 +1,7 @@
 ﻿// DAL/DataLayer/DonViTinhDAL.cs
 using System.Data;
 
-namespace CuahangNongduoc.DataLayer
+namespace CuahangNongduoc.DAL.Interfaces
 {
     public interface IDonViTinhDAL
     {

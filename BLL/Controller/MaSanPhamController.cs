@@ -1,4 +1,5 @@
-﻿using CuahangNongduoc.BLL.Helpers;
+﻿using CuahangNongduoc.DAL.Interfaces;
+using CuahangNongduoc.BLL.Helpers;
 using CuahangNongduoc.BLL.Interfaces;
 using CuahangNongduoc.BusinessObject;
 using CuahangNongduoc.DataLayer;

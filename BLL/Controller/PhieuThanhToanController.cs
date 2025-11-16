@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CuahangNongduoc.DAL.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using CuahangNongduoc.DataLayer;
