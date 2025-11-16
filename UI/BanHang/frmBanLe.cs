@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Runtime.ConstrainedExecution;
 using System.Windows.Forms;
 
 
@@ -151,15 +152,25 @@ namespace CuahangNongduoc
             if (cmbSanPham.SelectedValue == null) return;
 
             string idSanPham = cmbSanPham.SelectedValue.ToString();
+            bool isFIFO = (CauHinhCuaHang.PhuongThucXuatKhoHienTai == CauHinhCuaHang.PhuongThucXuatKho.FIFO);
+            cmbMaSanPham.Visible = !isFIFO;
+            if (!isFIFO)
+            {
+                // Rebind mã sản phẩm theo SP
+                cmbMaSanPham.SelectedIndexChanged -= cmbMaSanPham_SelectedIndexChanged;
+                ctrlMaSanPham.HienThiAutoComboBox(idSanPham, cmbMaSanPham);
+                EnforceCombo(cmbMaSanPham, valueMember: "ID", displayMember: "TEN");
+                cmbMaSanPham.SelectedIndexChanged += cmbMaSanPham_SelectedIndexChanged;
 
-            // Rebind mã sản phẩm theo SP
-            cmbMaSanPham.SelectedIndexChanged -= cmbMaSanPham_SelectedIndexChanged;
-            ctrlMaSanPham.HienThiAutoComboBox(idSanPham, cmbMaSanPham);
-            EnforceCombo(cmbMaSanPham, valueMember: "ID", displayMember: "TEN");
-            cmbMaSanPham.SelectedIndexChanged += cmbMaSanPham_SelectedIndexChanged;
-
-            // Tính giá xuất gợi ý (BQGQ hoặc FIFO)
-            decimal giaXuat = 0;
+            }
+            else
+            {
+                // FIFO: Ẩn và clear combobox
+                cmbMaSanPham.DataSource = null;
+                cmbMaSanPham.Text = "[Hệ thống tự chọn lô theo FIFO]";
+            }
+                // Tính giá xuất gợi ý (BQGQ hoặc FIFO)
+                decimal giaXuat = 0;
             try
             {
                 giaXuat = (CauHinhCuaHang.PhuongThucTinhGiaHienTai == CauHinhCuaHang.PhuongThucTinhGia.BQGQ)
@@ -170,6 +181,11 @@ namespace CuahangNongduoc
             {
                 giaXuat = 0;
             }
+            SanPham sanPham = ctrlSanPham.LaySanPham(idSanPham);
+            numDonGia.Value = sanPham.GiaBanLe; // mặc định bán lẻ
+            txtGiaNhap.Text = sanPham.DonGiaNhap.ToString("#,###0");
+            txtGiaBanSi.Text = sanPham.GiaBanSi.ToString("#,###0");
+            txtGiaBanLe.Text = sanPham.GiaBanLe.ToString("#,###0");
             txtGiaBQGQ.Text = giaXuat.ToString("#,###0");
         }
 
@@ -521,9 +537,6 @@ namespace CuahangNongduoc
             if (cmbSanPham.SelectedValue == null)
             { error = "Chưa chọn Sản phẩm."; return false; }
 
-            if (cmbMaSanPham.SelectedValue == null)
-            { error = "Chưa chọn Mã sản phẩm (lô)."; return false; }
-
             if (numSoLuong.Value <= 0)
             { error = "Số lượng phải > 0."; return false; }
 
@@ -543,6 +556,9 @@ namespace CuahangNongduoc
             var phuongPhap = CauHinhCuaHang.PhuongThucXuatKhoHienTai;
             if (phuongPhap == CauHinhCuaHang.PhuongThucXuatKho.ChonLo)
             {
+                if (cmbMaSanPham.SelectedValue == null)
+                { error = "Chưa chọn Mã sản phẩm (lô)."; return false; }
+
                 var lo = ((ChiTietPhieuBanDAL)chiTietDal).LayThongTinMotLo(idLo);
                 if (lo == null || lo.Rows.Count == 0)
                 { error = $"Không tìm thấy thông tin lô {idLo}."; return false; }

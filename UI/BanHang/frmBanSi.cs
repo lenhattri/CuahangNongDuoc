@@ -146,14 +146,32 @@ namespace CuahangNongduoc
             if (cmbSanPham.SelectedValue == null) return;
 
             var idSanPham = cmbSanPham.SelectedValue.ToString();
+            bool isFIFO = (CauHinhCuaHang.PhuongThucXuatKhoHienTai == CauHinhCuaHang.PhuongThucXuatKho.FIFO);
+            cmbMaSanPham.Visible = !isFIFO;
+            if (!isFIFO)
+            {
+                cmbMaSanPham.SelectedIndexChanged -= cmbMaSanPham_SelectedIndexChanged;
+                ctrlMaSanPham.HienThiAutoComboBox(idSanPham, cmbMaSanPham);
+                EnforceCombo(cmbMaSanPham, "ID", "TEN"); // sửa DisplayMember nếu cần
+                cmbMaSanPham.SelectedIndexChanged += cmbMaSanPham_SelectedIndexChanged;
 
-            cmbMaSanPham.SelectedIndexChanged -= cmbMaSanPham_SelectedIndexChanged;
-            ctrlMaSanPham.HienThiAutoComboBox(idSanPham, cmbMaSanPham);
-            EnforceCombo(cmbMaSanPham, "ID", "TEN"); // sửa DisplayMember nếu cần
-            cmbMaSanPham.SelectedIndexChanged += cmbMaSanPham_SelectedIndexChanged;
+            }
+            else
+            {
+                // FIFO: Ẩn và clear combobox
+                cmbMaSanPham.DataSource = null;
+                cmbMaSanPham.Text = "[Hệ thống tự chọn lô theo FIFO]";
+            }
+           
             decimal giaXuat = (Properties.Settings.Default.PPTinhGia == CauHinhCuaHang.PhuongThucTinhGia.BQGQ.ToString())
                 ? ctrlChiTiet.TinhGiaBinhQuanGiaQuyen(idSanPham)
                 : ctrlChiTiet.TinhGiaFIFO(idSanPham);
+
+            SanPham sanPham = ctrlSanPham.LaySanPham(idSanPham);
+            numDonGia.Value = sanPham.GiaBanLe; // mặc định bán lẻ
+            txtGiaNhap.Text = sanPham.DonGiaNhap.ToString("#,###0");
+            txtGiaBanSi.Text = sanPham.GiaBanSi.ToString("#,###0");
+            txtGiaBanLe.Text = sanPham.GiaBanLe.ToString("#,###0");
             txtGiaBQGQ.Text = giaXuat.ToString("#,###0");
         }
 
@@ -495,8 +513,7 @@ namespace CuahangNongduoc
             if (cmbSanPham.SelectedValue == null)
             { error = "Chưa chọn Sản phẩm."; return false; }
 
-            if (cmbMaSanPham.SelectedValue == null)
-            { error = "Chưa chọn Mã sản phẩm (lô)."; return false; }
+            
 
             if (numSoLuong.Value <= 0)
             { error = "Số lượng phải > 0."; return false; }
@@ -517,6 +534,9 @@ namespace CuahangNongduoc
             var phuongPhap = CauHinhCuaHang.PhuongThucXuatKhoHienTai;
             if (phuongPhap == CauHinhCuaHang.PhuongThucXuatKho.ChonLo)
             {
+                if (cmbMaSanPham.SelectedValue == null)
+                { error = "Chưa chọn Mã sản phẩm (lô)."; return false; }
+
                 var lo = (_chiTietDal as ChiTietPhieuBanDAL)?.LayThongTinMotLo(idLo);
                 if (lo == null || lo.Rows.Count == 0)
                 { error = $"Không tìm thấy thông tin lô {idLo}."; return false; }
