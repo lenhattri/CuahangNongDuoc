@@ -26,5 +26,7 @@ namespace CuahangNongduoc.DataLayer
         void XuatTheoFIFO(DataRow row, SqlTransaction tx, string idPhieuBan);
         // Lấy toàn bộ chi tiết phiếu bán
         DataTable LayTatCaChiTietPhieuBan();
+        // Báo cáo doanh thu
+        DataTable BaoCaoDoanhThu();
     }
 }

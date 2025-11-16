@@ -483,7 +483,5 @@ namespace CuahangNongduoc
                 ChiPhiPhatSinh.Activate();
             }
         }
-
-        
     }
 }

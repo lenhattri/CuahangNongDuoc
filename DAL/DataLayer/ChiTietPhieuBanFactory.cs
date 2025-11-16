@@ -218,6 +218,24 @@ namespace CuahangNongduoc.DataLayer
 
             return _db.ExecuteDataTable(sql, CommandType.Text);
         }
+        // Báo cáo doanh thu
+        public DataTable BaoCaoDoanhThu()
+        {
+            const string sql =
+               @"SELECT  
+                    sp.TEN_SAN_PHAM,
+                    msp.DON_GIA_NHAP,
+                    ct.DON_GIA,
+                    ct.THANH_TIEN,
+                    ct.SO_LUONG,
+                    ct.ID_MA_SAN_PHAM,
+                    pb.NGAY_BAN
+                FROM CHI_TIET_PHIEU_BAN ct
+                INNER JOIN PHIEU_BAN pb ON pb.ID = ct.ID_PHIEU_BAN
+                INNER JOIN MA_SAN_PHAM msp ON msp.ID = ct.ID_MA_SAN_PHAM
+                INNER JOIN SAN_PHAM sp ON sp.ID = msp.ID_SAN_PHAM";
+            return _db.ExecuteDataTable(sql, CommandType.Text);
+        }
 
         /* ===================== INSERT/UPDATE/DELETE ===================== */
 

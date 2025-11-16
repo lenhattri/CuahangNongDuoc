@@ -193,6 +193,11 @@ namespace CuahangNongduoc.Controller
         {
             return MapToList(_dal.LayTatCaChiTietPhieuBan());
         }
+        // Báo cáo doanh thu
+        public IList<ChiTietPhieuBan> BaoCaoDoanhThu()
+        {
+            return MapToList(_dal.BaoCaoDoanhThu());
+        }
         private static DataTable CreateBufferSchema()
         {
             var t = new DataTable("CHI_TIET_PHIEU_BAN");
