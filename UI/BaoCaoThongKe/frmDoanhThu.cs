@@ -1,4 +1,5 @@
 ﻿using CuahangNongduoc.BusinessObject;
+using CuahangNongduoc.DAL.Interfaces;
 using CuahangNongduoc.Controller;
 using CuahangNongduoc.DataLayer;
 using CuahangNongduoc.DTO;
