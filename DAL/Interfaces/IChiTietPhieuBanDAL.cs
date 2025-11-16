@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 
-namespace CuahangNongduoc.DataLayer
+namespace CuahangNongduoc.DAL.Interfaces
 {
     public interface IChiTietPhieuBanDAL
     {

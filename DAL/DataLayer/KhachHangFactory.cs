@@ -1,4 +1,5 @@
 ﻿// DAL/DataLayer/KhachHangFactory.cs
+using CuahangNongduoc.DAL.Interfaces;
 using CuahangNongduoc.DAL.Infrastructure;                 // CHANGED: dùng DbClient (singleton)
 using CuahangNongduoc.Utils.Functions;
 using System;

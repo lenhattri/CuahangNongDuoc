@@ -3,7 +3,7 @@ using CuahangNongduoc.Domain.Entities;
 using System.Collections.Generic;
 using System.Data;
 
-namespace CuahangNongduoc.DAL.DataLayer
+namespace CuahangNongduoc.DAL.Interfaces
 {
     public interface IPhieuBanChiPhiFactory
     {

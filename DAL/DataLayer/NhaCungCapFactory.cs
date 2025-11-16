@@ -1,4 +1,5 @@
 ﻿// DAL/DataLayer/NhaCungCapFactory.cs
+using CuahangNongduoc.DAL.Interfaces;
 using CuahangNongduoc.BusinessObject;        // NEW: Thêm BusinessObject
 using CuahangNongduoc.DAL.Infrastructure;
 using CuahangNongduoc.Utils.Functions;       // NEW: Thêm để dùng ValidationRule

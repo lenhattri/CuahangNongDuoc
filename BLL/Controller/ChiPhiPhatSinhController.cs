@@ -1,4 +1,5 @@
-﻿/*using CuahangNongduoc.BusinessObject;
+﻿using CuahangNongduoc.DAL.Interfaces;
+/*using CuahangNongduoc.BusinessObject;
 using CuahangNongduoc.DataLayer;
 using System;
 using System.Collections.Generic;

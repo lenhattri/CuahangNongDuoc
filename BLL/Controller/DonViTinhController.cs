@@ -1,4 +1,5 @@
 ﻿// BLL/Controller/DonViTinhController.cs
+using CuahangNongduoc.DAL.Interfaces;
 using System;
 using System.Data;
 using System.Windows.Forms;

@@ -1,4 +1,5 @@
-﻿using CuahangNongduoc.DAL.DataLayer;
+﻿using CuahangNongduoc.DAL.Interfaces;
+using CuahangNongduoc.DAL.DataLayer;
 using CuahangNongduoc.Domain.Entities;
 using CuahangNongduoc.DTO;
 using System;

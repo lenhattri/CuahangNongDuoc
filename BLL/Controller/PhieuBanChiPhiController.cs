@@ -1,4 +1,5 @@
-﻿using CuahangNongduoc.BusinessObject;
+﻿using CuahangNongduoc.DAL.Interfaces;
+using CuahangNongduoc.BusinessObject;
 using CuahangNongduoc.DAL.DataLayer;
 using CuahangNongduoc.Domain.Entities;
 using System;

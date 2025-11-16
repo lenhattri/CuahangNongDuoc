@@ -1,4 +1,5 @@
 ﻿// DAL/DataLayer/ChiTietPhieuBanFactory.cs
+using CuahangNongduoc.DAL.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Data;

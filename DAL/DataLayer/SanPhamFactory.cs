@@ -1,4 +1,5 @@
 ﻿// DAL/DataLayer/SanPhamFactory.cs
+using CuahangNongduoc.DAL.Interfaces;
 using CuahangNongduoc.BusinessObject;
 using CuahangNongduoc.DAL.Infrastructure;
 using CuahangNongduoc.Utils.Functions;

@@ -1,7 +1,7 @@
 ﻿// DAL/DataLayer/UserDAL.cs
 using System.Data;
 
-namespace CuahangNongduoc.DAL.DataLayer
+namespace CuahangNongduoc.DAL.Interfaces
 {
     public interface IUserDAL
     {

@@ -1,3 +1,4 @@
+using CuahangNongduoc.DAL.Interfaces;
 ﻿using CuahangNongduoc.Controller;
 using CuahangNongduoc.Utils;
 using System;

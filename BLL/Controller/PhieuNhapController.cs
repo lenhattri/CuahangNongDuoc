@@ -1,4 +1,5 @@
 ﻿// fix mapping tiền tệ, binding an toàn
+using CuahangNongduoc.DAL.Interfaces;
 
 using System;
 using System.Data;

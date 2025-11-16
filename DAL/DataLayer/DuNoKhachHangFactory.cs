@@ -1,4 +1,5 @@
 ﻿// DAL/DataLayer/DuNoKhachHangFactory.cs
+using CuahangNongduoc.DAL.Interfaces;
 using System;
 using System.Configuration; // (giữ lại nếu nơi khác cần, nhưng không dùng trực tiếp nữa)
 using System.Data;

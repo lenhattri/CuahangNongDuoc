@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using CuahangNongduoc.DAL.Interfaces;
 using System.Data.SqlClient;
 using CuahangNongduoc.DAL.Infrastructure;
 

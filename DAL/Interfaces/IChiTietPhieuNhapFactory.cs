@@ -1,7 +1,7 @@
 ﻿// DAL/DataLayer/ChiTietPhieuNhapFactory.cs
 using System.Data;
 
-namespace CuahangNongduoc.DataLayer
+namespace CuahangNongduoc.DAL.Interfaces
 {
     public interface IChiTietPhieuNhapFactory
     {
