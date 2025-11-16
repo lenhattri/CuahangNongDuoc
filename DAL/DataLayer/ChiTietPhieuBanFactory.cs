@@ -69,7 +69,7 @@ namespace CuahangNongduoc.DataLayer
             SELECT ID, SO_LUONG, DON_GIA_NHAP, NGAY_HET_HAN
             FROM MA_SAN_PHAM
             WHERE ID_SAN_PHAM = @idSanPham AND SO_LUONG > 0
-            ORDER BY NGAY_HET_HAN ASC";
+            ORDER BY NGAY_HET_HAN ASC, NGAY_NHAP ASC";
 
             return _db.ExecuteDataTable(sql, CommandType.Text,
                 _db.P("@idSanPham", SqlDbType.VarChar, idSanPham, 50));

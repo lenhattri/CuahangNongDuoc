@@ -199,10 +199,8 @@ namespace CuahangNongduoc
                 MessageBox.Show(err, "Phiếu Bán", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-
             var bs = dgvDanhsachSP.DataSource as BindingSource;
             var dt = bs?.DataSource as DataTable;
-
             if (dt == null)
             {
                 // Fallback: tạo qua controller rồi ép grid refresh
@@ -626,7 +624,7 @@ namespace CuahangNongduoc
                 if (spOfLo == idSanPham) sum += Convert.ToInt32(r["SO_LUONG"]);
             }
             return sum;
-          
+
         }
 
         // Tính tổng tiền dựa trên DataTable đang gắn vào grid + chi phí phát sinh
