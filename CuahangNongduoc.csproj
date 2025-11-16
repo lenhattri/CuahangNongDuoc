@@ -165,6 +165,7 @@
     <Compile Include="DTO\ChiPhiKhuyenMaiReport.cs" />
     <Compile Include="DTO\ChiTietPhieuBanReport.cs" />
     <Compile Include="DTO\ChiTietPhieuNhapReport.cs" />
+    <Compile Include="DTO\DoanhThuReport.cs" />
     <Compile Include="DTO\DuNoKhachHangReport.cs" />
     <Compile Include="DTO\NguoiDungDTO.cs" />
     <Compile Include="DTO\PhieuBanReport.cs" />
@@ -430,6 +431,7 @@
     <Compile Include="Utils\Functions\SqlHelper.cs" />
     <Compile Include="Utils\Functions\Validation.cs" />
     <EmbeddedResource Include="Report\rptChiPhi_KhuyenMai.rdlc" />
+    <EmbeddedResource Include="Report\rptDoanhThu.rdlc" />
     <EmbeddedResource Include="UI\BaoCaoThongKe\frmChiPhiVaKhuyenMai.resx">
       <DependentUpon>frmChiPhiVaKhuyenMai.cs</DependentUpon>
     </EmbeddedResource>
@@ -604,6 +606,7 @@
     <None Include="Properties\DataSources\CuahangNongduoc.DTO.ChiPhiKhuyenMaiReport.datasource" />
     <None Include="Properties\DataSources\CuahangNongduoc.DTO.ChiTietPhieuBanReport.datasource" />
     <None Include="Properties\DataSources\CuahangNongduoc.DTO.ChiTietPhieuNhapReport.datasource" />
+    <None Include="Properties\DataSources\CuahangNongduoc.DTO.DoanhThuReport.datasource" />
     <None Include="Properties\DataSources\CuahangNongduoc.DTO.DuNoKhachHangReport.datasource" />
     <None Include="Properties\DataSources\CuahangNongduoc.DTO.NguoiDungDTO.datasource" />
     <None Include="Properties\DataSources\CuahangNongduoc.DTO.PhieuBanReport.datasource" />
