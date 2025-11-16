@@ -18,5 +18,6 @@ namespace CuahangNongduoc.DataLayer
         void LoadSchema();
         DataRow NewRow();
         bool Save();
+        int LaySoLuongTon(string maSP);
     }
 }

@@ -150,20 +150,29 @@ namespace CuahangNongduoc
         {
             if (cmbSanPham.SelectedValue == null) return;
 
+            string idSanPham = cmbSanPham.SelectedValue.ToString();
+
             // Rebind mã sản phẩm theo SP
             cmbMaSanPham.SelectedIndexChanged -= cmbMaSanPham_SelectedIndexChanged;
-            ctrlMaSanPham.HienThiAutoComboBox(cmbSanPham.SelectedValue.ToString(), cmbMaSanPham);
-            EnforceCombo(cmbMaSanPham, valueMember: "ID", displayMember: "TEN"); // display bạn tùy chỉnh
+            ctrlMaSanPham.HienThiAutoComboBox(idSanPham, cmbMaSanPham);
+            EnforceCombo(cmbMaSanPham, valueMember: "ID", displayMember: "TEN");
             cmbMaSanPham.SelectedIndexChanged += cmbMaSanPham_SelectedIndexChanged;
 
-            // Tính giá xuất gợi ý (BQGQ hoặc FIFO) theo ID_SAN_PHAM
-            string idSanPham = cmbSanPham.SelectedValue.ToString();
-            decimal giaXuat = (CauHinhCuaHang.PhuongThucTinhGiaHienTai == CauHinhCuaHang.PhuongThucTinhGia.BQGQ)
-                ? ctrlChiTiet.TinhGiaBinhQuanGiaQuyen(idSanPham)
-                : ctrlChiTiet.TinhGiaFIFO(idSanPham);
-
+            // Tính giá xuất gợi ý (BQGQ hoặc FIFO)
+            decimal giaXuat = 0;
+            try
+            {
+                giaXuat = (CauHinhCuaHang.PhuongThucTinhGiaHienTai == CauHinhCuaHang.PhuongThucTinhGia.BQGQ)
+                    ? ctrlChiTiet.TinhGiaBinhQuanGiaQuyen(idSanPham)
+                    : ctrlChiTiet.TinhGiaFIFO(idSanPham);
+            }
+            catch
+            {
+                giaXuat = 0;
+            }
             txtGiaBQGQ.Text = giaXuat.ToString("#,###0");
         }
+
 
         // ===== Khi chọn MÃ SẢN PHẨM: hiển thị đủ Giá nhập/giá sỉ/giá lẻ + set đơn giá mặc định =====
         private void cmbMaSanPham_SelectedIndexChanged(object sender, EventArgs e)
@@ -178,6 +187,8 @@ namespace CuahangNongduoc
             txtGiaNhap.Text = masp.GiaNhap.ToString("#,###0");
             txtGiaBanSi.Text = masp.SanPham.GiaBanSi.ToString("#,###0");
             txtGiaBanLe.Text = masp.SanPham.GiaBanLe.ToString("#,###0");
+
+            numSoLuong.Maximum = ctrlMaSanPham.LaySoLuongTon(cmbMaSanPham.SelectedValue.ToString());
         }
 
         // ===== Nút Add: validate UI + kiểm tồn ngay trên form + thêm vào grid hiện tại + cập nhật tổng =====

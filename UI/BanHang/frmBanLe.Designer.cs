@@ -627,15 +627,20 @@
             0,
             0});
             this.numSoLuong.Minimum = new decimal(new int[] {
-            1000000000,
+            1,
             0,
             0,
-            -2147483648});
+            0});
             this.numSoLuong.Name = "numSoLuong";
             this.numSoLuong.Size = new System.Drawing.Size(203, 22);
             this.numSoLuong.TabIndex = 56;
             this.numSoLuong.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.numSoLuong.ThousandsSeparator = true;
+            this.numSoLuong.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numSoLuong.ValueChanged += new System.EventHandler(this.numDonGia_ValueChanged);
             // 
             // label9

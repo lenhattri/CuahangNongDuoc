@@ -170,6 +170,9 @@ namespace CuahangNongduoc
             txtGiaNhap.Text = masp.GiaNhap.ToString("#,###0");
             txtGiaBanSi.Text = masp.SanPham.GiaBanSi.ToString("#,###0");
             txtGiaBanLe.Text = masp.SanPham.GiaBanLe.ToString("#,###0");
+
+            //Ràng buộc số lượng bán ko được vượt quá số lượng tồn kho
+            numSoLuong.Maximum = ctrlMaSanPham.LaySoLuongTon(cmbMaSanPham.SelectedValue.ToString());
         }
 
         // ======= Add dòng =======

@@ -145,6 +145,11 @@ namespace CuahangNongduoc.Controller
             return ds;
         }
 
+        public int LaySoLuongTon(string maSP)
+        {
+            return _dal.LaySoLuongTon(maSP);
+        }
+
         public void CapNhatSoLuong(string maSP, int soLuong)
         {
             _dal.CapNhatSoLuong(maSP, soLuong);

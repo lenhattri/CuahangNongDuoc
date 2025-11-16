@@ -144,5 +144,13 @@ namespace CuahangNongduoc.DataLayer
                 return da.Update(_table) > 0;
             }
         }
+
+        public int LaySoLuongTon(string maSP)
+        {
+            var db = DbClient.Instance;
+            const string sql = "SELECT SO_LUONG FROM MA_SAN_PHAM WHERE ID = @id";
+            return db.ExecuteScalar<int>(sql, CommandType.Text,
+                db.P("@id", SqlDbType.NVarChar, maSP, 50));
+        }
     }
 }
