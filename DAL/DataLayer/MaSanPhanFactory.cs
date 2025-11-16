@@ -51,6 +51,15 @@ namespace CuahangNongduoc.DataLayer
             return dt;
         }
 
+        public DataTable DanhsachMaSanPhamFIFO(string sp)
+        {
+            const string sql = "SELECT TOP 1 ID FROM MA_SAN_PHAM WHERE ID_SAN_PHAM = @id AND SO_LUONG > 0 ORDER BY NGAY_NHAP ASC";
+            var dt = _db.ExecuteDataTable(sql, CommandType.Text,
+                _db.P("@id", SqlDbType.NVarChar, sp, 50));            // CHANGED: tham số hóa qua DbClient
+            _table = dt;                                              // NEW: đồng bộ để NewRow/Add/Save dùng chung schema
+            return dt;
+        }
+
         public DataTable DanhsachChiTiet(string sp)
         {
             const string sql = "SELECT * FROM MA_SAN_PHAM WHERE ID_PHIEU_NHAP = @id";
@@ -134,6 +143,14 @@ namespace CuahangNongduoc.DataLayer
             {
                 return da.Update(_table) > 0;
             }
+        }
+
+        public int LaySoLuongTon(string maSP)
+        {
+            var db = DbClient.Instance;
+            const string sql = "SELECT SO_LUONG FROM MA_SAN_PHAM WHERE ID = @id";
+            return db.ExecuteScalar<int>(sql, CommandType.Text,
+                db.P("@id", SqlDbType.NVarChar, maSP, 50));
         }
     }
 }
