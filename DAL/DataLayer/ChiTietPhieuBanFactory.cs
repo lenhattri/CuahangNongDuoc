@@ -124,8 +124,8 @@ namespace CuahangNongduoc.DataLayer
             const string sql = @"
             SELECT TOP 1 DON_GIA_NHAP
             FROM MA_SAN_PHAM
-            WHERE ID_SAN_PHAM = @idSanPham AND SO_LUONG > 0
-            ORDER BY NGAY_NHAP ASC";
+            WHERE ID_SAN_PHAM = @idSanPham AND SO_LUONG > 0  
+            ORDER BY NGAY_NHAP ASC, NGAY_HET_HAN ASC";
             decimal? result = _db.ExecuteScalar<decimal>(sql, CommandType.Text,
                 _db.P("@idSanPham", SqlDbType.VarChar, idSanPham, 50));
             return result ?? 0;
@@ -134,13 +134,12 @@ namespace CuahangNongduoc.DataLayer
         {
 
             //duplicate
-            string idMaSanPham = Convert.ToString(row["ID_MA_SAN_PHAM"]);
+            string idSanPham = Convert.ToString(row["ID_SAN_PHAM"]);
             //string idSanPham = Convert.ToString(row["ID_MA_SAN_PHAM"]);
 
             int soLuongConPhaiXuat = Convert.ToInt32(row["SO_LUONG"]);
             decimal donGia = Convert.ToDecimal(row["DON_GIA"]);
 
-            string idSanPham = LayIdSanPhamTuMaSanPham(idMaSanPham);
             DataTable loSanPhams = LayDanhSachMaTheoSanPham(idSanPham);
 
             foreach (DataRow lo in loSanPhams.Rows)
@@ -216,7 +215,7 @@ namespace CuahangNongduoc.DataLayer
                 FROM CHI_TIET_PHIEU_BAN ct
                 INNER JOIN MA_SAN_PHAM msp ON msp.ID = ct.ID_MA_SAN_PHAM
                 INNER JOIN SAN_PHAM sp ON sp.ID = msp.ID_SAN_PHAM";
-            
+
             return _db.ExecuteDataTable(sql, CommandType.Text);
         }
 
