@@ -122,9 +122,9 @@ namespace CuahangNongduoc.DataLayer
         public decimal TinhGiaFIFO(string idSanPham)
         {
             const string sql = @"
-            SELECT TOP 1 GIA_NHAP
+            SELECT TOP 1 DON_GIA_NHAP
             FROM MA_SAN_PHAM
-            WHERE ID_MA_SAN_PHAM = @idSanPham AND SO_LUONG > 0
+            WHERE ID_SAN_PHAM = @idSanPham AND SO_LUONG > 0
             ORDER BY NGAY_NHAP ASC";
             decimal? result = _db.ExecuteScalar<decimal>(sql, CommandType.Text,
                 _db.P("@idSanPham", SqlDbType.VarChar, idSanPham, 50));

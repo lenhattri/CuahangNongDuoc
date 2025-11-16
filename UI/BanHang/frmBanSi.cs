@@ -3,6 +3,7 @@ using CuahangNongduoc.BLL.Helpers;
 using CuahangNongduoc.BusinessObject;
 using CuahangNongduoc.Controller;
 using CuahangNongduoc.DataLayer;
+using CuahangNongduoc.Properties;
 using CuahangNongduoc.UI.PhieuThuChi;
 using CuahangNongduoc.Utils;
 using System;
@@ -115,6 +116,11 @@ namespace CuahangNongduoc
                 ctrlChiTiet.HienThiChiTiet(dgvDanhsachSP, txtMaPhieu.Text);
             }
 
+            lb_PPTinhGia.Text =
+            Settings.Default.PPTinhGia == CauHinhCuaHang.PhuongThucTinhGia.BQGQ.ToString()
+                ? "Giá BQGQ"
+                : "Giá FIFO";
+
             AppTheme.ApplyTheme(this);
         }
 
@@ -145,11 +151,9 @@ namespace CuahangNongduoc
             ctrlMaSanPham.HienThiAutoComboBox(idSanPham, cmbMaSanPham);
             EnforceCombo(cmbMaSanPham, "ID", "TEN"); // sửa DisplayMember nếu cần
             cmbMaSanPham.SelectedIndexChanged += cmbMaSanPham_SelectedIndexChanged;
-
-            decimal giaXuat = (CauHinhCuaHang.PhuongThucTinhGiaHienTai == CauHinhCuaHang.PhuongThucTinhGia.BQGQ)
+            decimal giaXuat = (Properties.Settings.Default.PPTinhGia == CauHinhCuaHang.PhuongThucTinhGia.BQGQ.ToString())
                 ? ctrlChiTiet.TinhGiaBinhQuanGiaQuyen(idSanPham)
                 : ctrlChiTiet.TinhGiaFIFO(idSanPham);
-
             txtGiaBQGQ.Text = giaXuat.ToString("#,###0");
         }
 

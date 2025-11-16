@@ -22,5 +22,29 @@ namespace CuahangNongduoc.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string PPXuatHang {
+            get {
+                return ((string)(this["PPXuatHang"]));
+            }
+            set {
+                this["PPXuatHang"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string PPTinhGia {
+            get {
+                return ((string)(this["PPTinhGia"]));
+            }
+            set {
+                this["PPTinhGia"] = value;
+            }
+        }
     }
 }

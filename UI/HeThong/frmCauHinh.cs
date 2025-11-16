@@ -25,7 +25,7 @@ namespace CuahangNongduoc.UI.HeThong
 
         private void frmCauHinh_Load(object sender, EventArgs e)
         {
-            if(CauHinhCuaHang.PhuongThucXuatKhoHienTai == CauHinhCuaHang.PhuongThucXuatKho.FIFO)
+            if(Properties.Settings.Default.PPXuatHang == CauHinhCuaHang.PhuongThucXuatKho.FIFO.ToString())
             {
                 rdbFIFO.Checked = true;
             }
@@ -34,7 +34,7 @@ namespace CuahangNongduoc.UI.HeThong
                 rdbChonLo.Checked = true;
             }
             
-            if(CauHinhCuaHang.PhuongThucTinhGiaHienTai == CauHinhCuaHang.PhuongThucTinhGia.BQGQ)
+            if(Properties.Settings.Default.PPTinhGia == CauHinhCuaHang.PhuongThucTinhGia.BQGQ.ToString())
             {
                 rdbBQGQ.Checked = true;
             }
@@ -63,20 +63,27 @@ namespace CuahangNongduoc.UI.HeThong
             if(rdbFIFO.Checked)
             {
                 CauHinhCuaHang.PhuongThucXuatKhoHienTai = CauHinhCuaHang.PhuongThucXuatKho.FIFO;
+                Properties.Settings.Default.PPXuatHang = "FIFO";
             }
             else
             {
                 CauHinhCuaHang.PhuongThucXuatKhoHienTai = CauHinhCuaHang.PhuongThucXuatKho.ChonLo;
+                Properties.Settings.Default.PPXuatHang = "ChonLo";
             }
 
             if(rdbBQGQ.Checked)
             {
                 CauHinhCuaHang.PhuongThucTinhGiaHienTai = CauHinhCuaHang.PhuongThucTinhGia.BQGQ;
+                Properties.Settings.Default.PPTinhGia = "BQGQ";
             }
             else
             {
                 CauHinhCuaHang.PhuongThucTinhGiaHienTai = CauHinhCuaHang.PhuongThucTinhGia.FIFO;
+                Properties.Settings.Default.PPTinhGia = "FIFO";
             }
+
+            Properties.Settings.Default.Save();
+
             MessageBox.Show("Lưu cấu hình thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
             this.Close();
         }
