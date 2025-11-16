@@ -10,6 +10,7 @@ namespace CuahangNongduoc.DataLayer
         void Add(DataRow row);
         DataTable DanhsachChiTiet(string sp);
         DataTable DanhsachMaSanPham();
+        DataTable DanhsachMaSanPhamFIFO(string sp);
         DataTable DanhsachMaSanPham(string sp);
         DataTable DanhsachMaSanPhamHetHan(DateTime dt);
         DataTable LayMaSanPham(string idMaSanPham);

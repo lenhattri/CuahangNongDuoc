@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Windows.Forms;
+﻿using CuahangNongduoc.BLL.Helpers;
 using CuahangNongduoc.BLL.Interfaces;
 using CuahangNongduoc.BusinessObject;
 using CuahangNongduoc.DataLayer;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Windows.Forms;
 
 namespace CuahangNongduoc.Controller
 {
@@ -94,9 +95,18 @@ namespace CuahangNongduoc.Controller
 
         public void HienThiAutoComboBox(string sp, ComboBox cmb)
         {
-            cmb.DataSource = _dal.DanhsachMaSanPham(sp);
-            cmb.DisplayMember = "ID";
-            cmb.ValueMember = "ID";
+            if(Properties.Settings.Default.PPXuatHang == CauHinhCuaHang.PhuongThucXuatKho.ChonLo.ToString())
+            {
+                cmb.DataSource = _dal.DanhsachMaSanPham(sp);
+                cmb.DisplayMember = "ID";
+                cmb.ValueMember = "ID";
+            }
+            else
+            {
+                cmb.DataSource = _dal.DanhsachMaSanPhamFIFO(sp);
+                cmb.DisplayMember = "ID";
+                cmb.ValueMember = "ID";
+            }
         }
 
         public void HienThiDataGridViewComboBox(DataGridViewComboBoxColumn cmb)
