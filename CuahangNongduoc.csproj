@@ -438,7 +438,7 @@
     <EmbeddedResource Include="UI\HeThong\frmCauHinh.resx">
       <DependentUpon>frmCauHinh.cs</DependentUpon>
     </EmbeddedResource>
-    <Compile Include="Authenticatin\Session.cs" />
+    <Compile Include="Authentication\Session.cs" />
     <EmbeddedResource Include="UI\HeThong\frmChiTietNguoiDung.resx">
       <DependentUpon>frmChiTietNguoiDung.cs</DependentUpon>
     </EmbeddedResource>
