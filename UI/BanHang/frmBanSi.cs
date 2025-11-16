@@ -526,17 +526,17 @@ namespace CuahangNongduoc
                 numThanhTien.Value = ttCalc;
 
             // Kiểm tồn theo nghiệp vụ
-            string idLo = cmbMaSanPham.SelectedValue.ToString();
-            string idSanPham = (_chiTietDal as ChiTietPhieuBanDAL)?.LayIdSanPhamTuMaSanPham(idLo);
-            if (string.IsNullOrWhiteSpace(idSanPham))
-            { error = $"Không tìm thấy ID sản phẩm từ lô {idLo}."; return false; }
+            // Lấy ID Sản phẩm từ SelectedValue của cmbSanPham
+            string idSanPham = cmbSanPham.SelectedValue.ToString();
+            //if (string.IsNullOrWhiteSpace(idSanPham))
+            //{ error = $"Không tìm thấy ID sản phẩm từ lô {idLo}."; return false; }
 
             var phuongPhap = CauHinhCuaHang.PhuongThucXuatKhoHienTai;
             if (phuongPhap == CauHinhCuaHang.PhuongThucXuatKho.ChonLo)
             {
                 if (cmbMaSanPham.SelectedValue == null)
                 { error = "Chưa chọn Mã sản phẩm (lô)."; return false; }
-
+                string idLo = cmbMaSanPham.SelectedValue.ToString();
                 var lo = (_chiTietDal as ChiTietPhieuBanDAL)?.LayThongTinMotLo(idLo);
                 if (lo == null || lo.Rows.Count == 0)
                 { error = $"Không tìm thấy thông tin lô {idLo}."; return false; }
