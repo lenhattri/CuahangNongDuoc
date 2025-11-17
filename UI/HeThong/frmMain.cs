@@ -446,6 +446,12 @@ namespace CuahangNongduoc
             taskPane.Enabled = true;
             mnuQuanLy.Enabled = true;
             mnuNghiepVu.Enabled = true;
+
+            mnuBaocaoSoluongton.Enabled = true;
+            mnuSoLuongBan.Enabled = true;
+            mnuSanphamHethan.Enabled = true;
+            doanhThuToolStripMenuItem.Enabled = true;
+            mnuChiPhiKhuyenMai.Enabled = true;
         }
 
         private void QuyenNhanVien()
@@ -455,6 +461,12 @@ namespace CuahangNongduoc
             toolStrip.Enabled = true;
             taskPane.Enabled = true;
             mnuDangXuat.Enabled = true;
+            mnuBaocao.Enabled = true;
+
+            mnuBaocaoSoluongton.Enabled = false;
+            mnuSoLuongBan.Enabled = false;
+            mnuSanphamHethan.Enabled = false;
+            doanhThuToolStripMenuItem.Enabled = false;
         }
 
         private void PhanQuyen()
